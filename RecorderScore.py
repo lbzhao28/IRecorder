@@ -660,35 +660,37 @@ class showRqscoscr():
             dicrqscoscr.append(recordequestion)
 
 
-            recordequestion = {"itemID":"1","itemDesc":"开场白(真诚问候，专业身份与多美滋的关系 15%)","itemPerc":"10","subitems":subitem}
+            recordequestion = {"itemID":"5","itemDesc":"开场白(真诚问候，专业身份与多美滋的关系 15%)","itemPerc":"10","subitems":subitem}
 
             dicrqscoscr.append(recordequestion)
 
-            recordequestion = {"itemID":"2","itemDesc":"建议（评估结果 40%）","itemPerc":"10","subitems":subitem}
+            recordequestion = {"itemID":"6","itemDesc":"建议（评估结果 40%）","itemPerc":"10","subitems":subitem}
             dicrqscoscr.append(recordequestion)
 
-            recordequestion = {"itemID":"3","itemDesc":"开场白,(表达同理心,对妈妈/孕妇的关心 自然真诚 15%)","itemPerc":"10","subitems":subitem}
+            recordequestion = {"itemID":"7","itemDesc":"开场白,(表达同理心,对妈妈/孕妇的关心 自然真诚 15%)","itemPerc":"10","subitems":subitem}
 
             dicrqscoscr.append(recordequestion)
-            recordequestion = {"itemID":"4","itemDesc":"开场白,(告之目的和利益，明确告知致电的目的或利益 2，并确认生日，预产期15%)","itemPerc":"10","subitems":subitem}
+            recordequestion = {"itemID":"8","itemDesc":"开场白,(告之目的和利益，明确告知致电的目的或利益 2，并确认生日，预产期15%)","itemPerc":"10","subitems":subitem}
             dicrqscoscr.append(recordequestion)
 
-            recordequestion = {"itemID":"1","itemDesc":"开场白(真诚问候，专业身份与多美滋的关系 15%)","itemPerc":"10","subitems":subitem}
+            recordequestion = {"itemID":"9","itemDesc":"开场白(真诚问候，专业身份与多美滋的关系 15%)","itemPerc":"10","subitems":subitem}
 
             dicrqscoscr.append(recordequestion)
 
-            recordequestion = {"itemID":"2","itemDesc":"建议（评估结果 40%）","itemPerc":"10","subitems":subitem}
+            recordequestion = {"itemID":"10","itemDesc":"建议（评估结果 40%）","itemPerc":"10","subitems":subitem}
             dicrqscoscr.append(recordequestion)
 
-            recordequestion = {"itemID":"3","itemDesc":"开场白,(表达同理心,对妈妈/孕妇的关心 自然真诚 15%)","itemPerc":"10","subitems":subitem}
+            recordequestion = {"itemID":"11","itemDesc":"开场白,(表达同理心,对妈妈/孕妇的关心 自然真诚 15%)","itemPerc":"10","subitems":subitem}
 
             dicrqscoscr.append(recordequestion)
-            recordequestion = {"itemID":"4","itemDesc":"开场白,(告之目的和利益，明确告知致电的目的或利益 2，并确认生日，预产期15%)","itemPerc":"10","subitems":subitem}
+            recordequestion = {"itemID":"12","itemDesc":"开场白,(告之目的和利益，明确告知致电的目的或利益 2，并确认生日，预产期15%)","itemPerc":"10","subitems":subitem}
             dicrqscoscr.append(recordequestion)
 
-            print dicrqscoscr
-            dicrqscoscr = json.dumps(dicrqscoscr);
-            return render.rqscoscr(outdicrqscoscr=dicrqscoscr)
+            dicrqscoscrS = json.dumps(dicrqscoscr);
+
+            #print dicrqscoscr[0]
+            return render.rqscoscrView(outdicrqscoscr=dicrqscoscr)
+
 def checkUserAuth(inWeb):
     logger = getLogger()
     auth = inWeb.ctx.env.get('HTTP_AUTHORIZATION')

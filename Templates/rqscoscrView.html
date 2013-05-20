@@ -8,20 +8,17 @@
     <title>录音打分</title>
     <script type="text/javascript" src="../static/js/jquery-1.8.3.js"></script>
     <script type="text/javascript" src="../static/js/EsayUI/jquery.easyui.min.js"></script>
-
-
-
-
+    <!--
     <script type="text/javascript" language="javascript">
 
-        jQuery(document).ready(function(){
+    jQuery(document).ready(function(){
 
 
             var Pageobj =function()
             {
                 var _page =this;
                 _page.outdicrqscoscr =[];
-
+                _page.outdicrqscoscr = ${outdicrqscoscr};
 
                 this.init = function(){
                     _page.outdicrqscoscr = ${outdicrqscoscr};
@@ -100,7 +97,6 @@
                 };
 
 
-
                 // 得分
                 this.getBindScore = function(tables,itemPerc,selectradioValue)
                 {
@@ -136,12 +132,62 @@
             var pageObj = new Pageobj();
             pageObj.init();
         });
-
-
     </script>
+    -->
+    <script type="text/javascript">
+
+        jQuery(document).ready(function(){
+            var Pageobj =function()
+            {
+                var _page =this;
+
+            }
+
+            this.radio_click = function(object,itemPerc)
+            {
+                var table = $(object).parent().parent().parent().next("tr");
+                alert(table.html());
+
+                //var TxtScore = $(table).find("input[type='checkbox'][name='selectValue']");
+            }
+        })
+    </script>
+    ##prepare the order info
+    <%!
+    import OrderClient
+    import json
+
+    import configData
+    from configData import getConfig
+
+    import configObjData
+    from configObjData import getConfigPage
+
+    configPage = getConfigPage()
+
+    import sys
+    reload(sys)
+    #convert the show code.
+    sys.setdefaultencoding('utf8')
+    %>
 </head>
+
+
+
 <body>
 <form method="post" action="rqscoscr.aspx?fn=10.4.48.29_20130502091724901_11_3192_37051.wav" id="form1">
+
+    <%
+    localRqscoscrLst=[];
+    if len(outdicrqscoscr)==0:
+          localRqscoscrLst = None
+    else:
+          localRqscoscrLst = outdicrqscoscr
+    print "************************************"
+    print len(localRqscoscrLst);
+    %>
+
+
 <div class="aspNetHidden">
     <input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="/wEPDwUKMTA5Mzc2NTU4MGRk7haHf6aDWDtseDP0EHCWh8HNGtQlRD1LT4ViZFySEpc=" />
 </div>
@@ -162,17 +208,52 @@
 
     </tr>
     <tr>
-        <td colspan="3" valign="top" style="border-top:solid 1 Lime;"><div style="overflow:auto; width:100%; height:100%;">
+        <td colspan="3" valign="top" style="border-top:solid 1 Lime;">
+            <div style="overflow:auto; width:100%; height:100%;">
         <table class="myFullTable" id="myGridTables" cellpadding="0" cellspacing="0" border="0">
+            <tr>
+            <td id="jspnltdobj" valign="top">
+                <table class="myGridTable" border="1" cellpadding="0" cellspacing="0">
+            %if localRqscoscrLst is not None:
+                % for item in localRqscoscrLst:
+                    <% itemID = item['itemID'] %>
+                    <% itemPerc = item['itemPerc']%>
 
+                        <tr height="24" style="background-color:AliceBlue;">
+                            <td align="right" style="width:80px;">${item["itemID"]}：</td><td style="font-weight:bold;">${item["itemDesc"]}</td>
+                        </tr>
+                        <tr>
+                            <td align="right" style="background-color:#C1DFDF;">评级：</td><td>
+                            <table id="rl_C001" title="15">
+                                <tr>
+                                     % for subitem in item["subitems"]:
+                                        <% subitemname = subitem['subitemname'] %>
+                                        <% subitemvalue = subitem['subitemvalue'] %>
+                                        <td>
+                                            <input id="rl_C001_1" type="radio" name="${itemID}_rl_C00_${subitemvalue}" onclick="radio_click(this,${itemPerc})" value="${subitemvalue}" />
+                                            <label for="rl_C001_1">${subitemvalue}</label>
+                                        </td>
+                                     % endfor
+                                </tr>
+                            </table>
+                        </td>
+                        </tr>
+                        <tr>
+                            <td align="right" style="background-color:#C1DFDF;">得分：</td><td>
+                            <input name="${itemID}_cl_C001" type="text" value="0" readonly="readonly" id="${itemID}_cl_C001" style="width:100px;" /></td>
+                        </tr>
+                % endfor
+                </table>
+            </td>
+            %endif
+            </tr>
         </table>
     </div>
+
     </td>
     </tr>
 </table>
-
     <input type="button" id="btnSave" value="确定"  operType="AddControl">
-
 </form>
 </body>
 </html>
