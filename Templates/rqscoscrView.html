@@ -1,0 +1,259 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="robots" content="noodp,nodir,noydir">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>录音打分</title>
+    <script type="text/javascript" src="../static/js/jquery-1.8.3.js"></script>
+    <script type="text/javascript" src="../static/js/EsayUI/jquery.easyui.min.js"></script>
+    <!--
+    <script type="text/javascript" language="javascript">
+
+    jQuery(document).ready(function(){
+
+
+            var Pageobj =function()
+            {
+                var _page =this;
+                _page.outdicrqscoscr =[];
+                _page.outdicrqscoscr = ${outdicrqscoscr};
+
+                this.init = function(){
+                    _page.outdicrqscoscr = ${outdicrqscoscr};
+
+                    //绑定问题
+                    var tables = $("#myGridTables");
+                    _page.GetBidQuestion(tables);
+                };
+
+                this.GetBidQuestion=function(tables)
+                {
+                    var outdicrqscoscr = _page.outdicrqscoscr;
+
+                    for(var i = 0 ;i<outdicrqscoscr.length;i++)
+                    {
+                        var itemid =outdicrqscoscr[i]["itemID"];
+                        var itemDesc = outdicrqscoscr[i]["itemDesc"];
+                        var subitems= outdicrqscoscr[i]["subitems"];
+                        var itemPerc =  outdicrqscoscr[i]["itemPerc"];
+
+
+                        _page.getBindquestion(tables,itemid,itemDesc);
+                        _page.getBindAnswer(tables,subitems);
+                        _page.getBindScore(tables,itemPerc,1);
+                        _page.getBindSubDsc(tables,"描述");
+
+                    }
+                 //   alert(tables.html());
+                }
+
+
+
+
+                // 绑定问题
+                this.getBindquestion = function(tables,itemid,itemdesc)
+                {
+                    var rows = $("<tr height='24' style='background-color:AliceBlue;'></tr>");
+                    var tditemid =$("<td  align='right' style='width:80px;'>"+itemid+"</td>")
+                    var tditemdesc =$("<td style='font-weight:bold;'>"+itemdesc+"</td>")
+                    rows.append(tditemid);
+                    rows.append(tditemdesc);
+                    tables.append(rows);
+                };
+
+                ///评级
+                this.getBindAnswer = function(tables,subitems)
+                {
+                    var rows = $("<tr></tr>");
+                    var td = $("<td align='right' style='background-color:#C1DFDF;'>评级：</td>")
+                    rows.append(td);
+
+
+                    var td1= $("<td></td>");
+                    var tab = $("<table id='rl_C001'></table>");
+
+                    rows.append(td1);
+
+
+                    var tr = $("<tr></tr>")
+
+                    for(var i = 0; i<subitems.length;i++)
+                    {
+                        var subitem = subitems[i];
+                        var subitemvalue = subitem["subitemvalue"]
+                        var td = $("<td></td>")
+                        var radio = " <input type='radio'  name='rl_C001_"+i+"' id='rl_C001_"+i+"' value='"+i+"' />"
+                        var radiovalue =  "<label for='rl_C001_0'>"+i+"</label> ";
+
+                        td.append(radio);
+                        td.append(radiovalue);
+                        tr.append(td);
+                    }
+                    tab.append(tr);
+                    td1.append(tab);
+                    tables.append(rows);
+                };
+
+
+                // 得分
+                this.getBindScore = function(tables,itemPerc,selectradioValue)
+                {
+                    var trScore = $("<tr></tr>")
+                    var tdlblScoretd = $("<td align='right' style='background-color:#C1DFDF;'>得分：</td>")
+                    var tdl =$("<td><input name='cl_C001' type='text' value='0' readonly='readonly' id='cl_C001' style='width:100px;' /></td>")
+                    trScore.append(tdlblScoretd);
+                    trScore.append(tdl);
+                    tables.append(trScore);
+
+                };
+
+
+                // 描述
+                this.getBindSubDsc = function(tables,SubDsc)
+                {
+                    var trScore = $("<tr></tr>")
+                    var tdlblScoretd = $("<td align='right' style='background-color:#C1DFDF;'>备注：</td>")
+                    var tdl =$("<td><input name='cl_C001' type='text' value='0' readonly='readonly' id='cl_C001' style='width:100px;' /></td>")
+                    trScore.append(tdlblScoretd);
+                    trScore.append(tdl);
+                    tables.append(trScore);
+                };
+
+
+
+                // 页面 增加(+)按钮 添加事件
+                $("[operType='AddControl']").live('click', function(){
+                    var tables = $("#myGridTables");
+                    _page.GetBidQuestion(tables);
+                });
+            }
+            var pageObj = new Pageobj();
+            pageObj.init();
+        });
+    </script>
+    -->
+    <script type="text/javascript">
+
+        jQuery(document).ready(function(){
+            var Pageobj =function()
+            {
+                var _page =this;
+
+            }
+
+            this.radio_click = function(object,itemPerc)
+            {
+                var table = $(object).parent().parent().parent().next("tr");
+                alert(table.html());
+
+                //var TxtScore = $(table).find("input[type='checkbox'][name='selectValue']");
+            }
+        })
+    </script>
+    ##prepare the order info
+    <%!
+    import OrderClient
+    import json
+
+    import configData
+    from configData import getConfig
+
+    import configObjData
+    from configObjData import getConfigPage
+
+    configPage = getConfigPage()
+
+    import sys
+    reload(sys)
+    #convert the show code.
+    sys.setdefaultencoding('utf8')
+    %>
+</head>
+
+
+
+<body>
+<form method="post" action="rqscoscr.aspx?fn=10.4.48.29_20130502091724901_11_3192_37051.wav" id="form1">
+
+    <%
+    localRqscoscrLst=[];
+    if len(outdicrqscoscr)==0:
+          localRqscoscrLst = None
+    else:
+          localRqscoscrLst = outdicrqscoscr
+    print "************************************"
+    print len(localRqscoscrLst);
+    %>
+
+
+<div class="aspNetHidden">
+    <input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="/wEPDwUKMTA5Mzc2NTU4MGRk7haHf6aDWDtseDP0EHCWh8HNGtQlRD1LT4ViZFySEpc=" />
+</div>
+
+<div class="aspNetHidden">
+
+    <input type="hidden" name="__EVENTVALIDATION" id="__EVENTVALIDATION" value="/wEWdgKKyZPrDQK93L68BAKPsp8PAvzQp+AKAsatuPwBAtmtuPwBAtituPwBAtutuPwBAtbCkpINAoW+kpINAsat0F4C2a3QXgLWwvqwDAKFvvqwDAK3kcG/BwKokcG/BwKpkcG/BwKqkcG/BwKn/uvRCwLW+evRCwKc+uTSDQKD+uTSDQKC+uTSDQKB+uTSDQKMlc68AQK7kM68AQLNv42SAwLSv42SAwLTv42SAwLd0Kf8DwKMzKf8DwLSiKOJCQLNiKOJCQLMiKOJCQLPiKOJCQLC54nnBQLx4onnBQKDzMnICAKczMnICAKdzMnICAKTo+OmBALCnuOmBALo1u//BgL31u//BgL21u//BgL11u//BgL4ucWRCgKntcWRCgLZmrS/BALGmrS/BALHmrS/BALJ9Z7RCAL48J7RCAK+46vSAgKh46vSAgKg46vSAgKujIG8DgLdh4G8DgLhxJ7JCwL+xJ7JCwLxq7SnBwKgp7SnBwLGrbz8AQLZrbz8AQLYrbz8AQLbrbz8AQLarbz8AQLWwpaSDQKFvpaSDQK3kcW/BwKokcW/BwKpkcW/BwKqkcW/BwKn/u/RCwLW+e/RCwKc+vjSDQKD+vjSDQKC+vjSDQKB+vjSDQKA+vjSDQKH+vjSDQKG+vjSDQKF+vjSDQKU+vjSDQKb+vjSDQKD+rjRDQKMldK8AQK7kNK8AQLNv4GSAwLSv4GSAwLTv4GSAwLQv4GSAwLRv4GSAwLWv4GSAwLXv4GSAwLUv4GSAwLFv4GSAwLKv4GSAwLSv8GRAwLd0Kv8DwKMzKv8DwLSiKeJCQLNiKeJCQLMiKeJCQLPiKeJCQLOiKeJCQLJiKeJCQLIiKeJCQLLiKeJCQLaiKeJCQLViKeJCQLNiOeKCQLC543nBQLx4o3nBQLo1uP/BgL31uP/BgL4ucmRCgKntcmRCqWAc2incjuvHH6DOA0psyiUXcptqQgNNGCXand2JPla" />
+</div>
+<table class="myFullTable" cellpadding="0" cellspacing="0" border="0">
+    <tr>
+        <td height="25" align="center" class="myColorBar02" style="border-bottom:0px solid Lime">
+            <input name="labhidscriptvalue" type="hidden" id="labhidscriptvalue" value="C002#3|C015#2|C0016#1|" />
+            <input name="labhidscriptpers" type="hidden" id="labhidscriptpers" value="C001#15|C0016#100|C002#15|C003#15|C004#15|C005#30|C006#30|C007#30|C008#30|C009#30|C010#30|C011#30|C012#30|C013#5|C014#15|C015#5|C017#100|" />
+            <input name="labscriptnm" type="hidden" id="labscriptnm" value="CEM 电话质量评估标准" />
+        </td>
+        <td id="labrecfilename" height="25" align="center" class="myColorBar02" style="border-bottom:0px solid Lime; cursor:hand;">录音文件</td>
+        <td id="labscorenum" align="center" class="myColorBar02" style="width:80px;">0</td>
+
+    </tr>
+    <tr>
+        <td colspan="3" valign="top" style="border-top:solid 1 Lime;">
+            <div style="overflow:auto; width:100%; height:100%;">
+        <table class="myFullTable" id="myGridTables" cellpadding="0" cellspacing="0" border="0">
+            <tr>
+            <td id="jspnltdobj" valign="top">
+                <table class="myGridTable" border="1" cellpadding="0" cellspacing="0">
+            %if localRqscoscrLst is not None:
+                % for item in localRqscoscrLst:
+                    <% itemID = item['itemID'] %>
+                    <% itemPerc = item['itemPerc']%>
+
+                        <tr height="24" style="background-color:AliceBlue;">
+                            <td align="right" style="width:80px;">${item["itemID"]}：</td><td style="font-weight:bold;">${item["itemDesc"]}</td>
+                        </tr>
+                        <tr>
+                            <td align="right" style="background-color:#C1DFDF;">评级：</td><td>
+                            <table id="rl_C001" title="15">
+                                <tr>
+                                     % for subitem in item["subitems"]:
+                                        <% subitemname = subitem['subitemname'] %>
+                                        <% subitemvalue = subitem['subitemvalue'] %>
+                                        <td>
+                                            <input id="rl_C001_1" type="radio" name="${itemID}_rl_C00_${subitemvalue}" onclick="radio_click(this,${itemPerc})" value="${subitemvalue}" />
+                                            <label for="rl_C001_1">${subitemvalue}</label>
+                                        </td>
+                                     % endfor
+                                </tr>
+                            </table>
+                        </td>
+                        </tr>
+                        <tr>
+                            <td align="right" style="background-color:#C1DFDF;">得分：</td><td>
+                            <input name="${itemID}_cl_C001" type="text" value="0" readonly="readonly" id="${itemID}_cl_C001" style="width:100px;" /></td>
+                        </tr>
+                % endfor
+                </table>
+            </td>
+            %endif
+            </tr>
+        </table>
+    </div>
+
+    </td>
+    </tr>
+</table>
+    <input type="button" id="btnSave" value="确定"  operType="AddControl">
+</form>
+</body>
+</html>

@@ -1,0 +1,93 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head id="Head1">
+
+<%doc>
+    ##using Mako to create html file.
+</%doc>
+
+<%!
+import OrderClient
+import json
+
+import configObjData
+from configObjData import getConfigPage
+
+import staticDbModule
+from staticDbModule import getDictStatic
+
+import configData
+from configData import getConfig
+
+configPage = getConfigPage()
+
+localURL = getConfig('SERVERINFO','serverIP','str')
+
+import sys
+reload(sys)
+#convert the show code.
+sys.setdefaultencoding('utf8')
+
+import copy
+%>
+<%
+localScoreInfo = None
+
+#localScoreInfo = OrderClient.getOrderInfoOrder(orderid)
+localScoreInfo = outdicrqscoscr
+
+%>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <link href="http://${localURL}/static/css/bootstrap.css" rel="stylesheet" media="screen">
+    <link href="http://${localURL}/static/css/docs.css" rel="stylesheet" media="screen">
+    <title>
+       录音打分
+    </title>
+    <script src="http://${localURL}/static/js/jquery.js"></script>
+    <script src="http://${localURL}/static/js/bootstrap.js"></script>
+    <script src="http://${localURL}/static/js/My97DatePicker/WdatePicker.js"></script>
+    <script src="http://${localURL}/static/js/util.js"></script>
+    <script src="http://${localURL}/static/js/localAddressList.js"></script>
+    <script type="text/javascript">
+        jQuery(document).ready(function(){
+            var selectText = function(dropdown, selectedValue) {
+                var options = $(dropdown).find("option");
+                var matches = $.grep(options,
+                        function(n) { return $(n).text() == selectedValue; });
+                $(matches).attr("selected", "selected");
+            };
+        });
+    </script>
+
+</head>
+
+<body>
+
+<form id="formScore">
+
+    %if configPage.as_bool('hasPolicyHolder_Usr'):
+    <%!
+     print(configPage)
+    %>
+    <div class="bs-docs-div-compress">
+                <label class="label label-info label-large">录音打分模板</label>
+            <div>
+                <table class="table table-normal table-condensed">
+                    <%
+                        configPagePolicyHolder_Usr = configPage['PolicyHolder_Usr']
+                        configUsing =copy.deepcopy(configPagePolicyHolder_Usr)
+                    %>
+                    <%namespace name="comp" file="components.html" />
+                    ${comp.layoutControlList(configItem=configUsing,dataItem = localPolicyHolder_UsrInfo)}
+                    %endif
+
+                </table>
+            </div>
+    </div>
+    %endif
+
+</form>
+</body>
+</html>
+
