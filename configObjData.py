@@ -46,55 +46,55 @@ def getRecorderConfigPage():
     """get the recorder page config file"""
 
     #just return json.
-    #configPage = ConfigObj('recorderPagesConf.conf')
+    configPage = ConfigObj('recorderPagesConf.conf')
 
     #return a config list
-    configPage = ConfigObj()
-
-    #
-    configPage['hasShowScore'] = 'yes'
-    #
-    configPage['recorderScore'] = {}
-    configPage['recorderScore']['rowNumber'] = '1'
-    configPage['recorderScore']['itemCount'] = '4'
-
-    qBaseName = 'Q'
-    for i in range(4):
-        qName = qBaseName + str(i)
-        configPage['recorderScore'][qName] = {}
-        configPage['recorderScore'][qName]['titleText'] = '开场白(真诚问候，专业身份与多美滋的关系 15%)' + str(i)
-        configPage['recorderScore'][qName]['titleType'] = 'label'
-        configPage['recorderScore'][qName]['titleCss'] = 'label label-normal'
-        configPage['recorderScore'][qName]['dataType'] = 'input'
-        configPage['recorderScore'][qName]['dataShowType'] = 'radio'
-        configPage['recorderScore'][qName]['dataName'] = 'POLICYHOLDER_USR_SEX'+str(i)
-        configPage['recorderScore'][qName]['mustHave'] = 'no'
-
-        configPage['recorderScore'][qName]['radio'] = {}
-
-        radioBaseName = 'radio'
-        for j in range(i+1):
-            sectionRadio = {
-                'titleType': 'label',
-                'titleCss': 'radio inline',
-                'inDataType': 'label',
-                'inDataCss': 'label',
-                'inDataText': str(j),
-                'inDataValue': str(j),
-                'inDataID': 'PolicyInformation_txtSexMan'+str(j),
-            }
-            radioName = radioBaseName + str(j)
-            configPage['recorderScore'][qName]['radio'][radioName] = sectionRadio
-
-            #another write.
-            #configPage['recorderScore'][qName]['radio']['radio1'] = {}
-            #configPage['recorderScore'][qName]['radio']['radio1']['titleType'] = 'label'
-            #configPage['recorderScore'][qName]['radio']['radio1']['titleCss'] = 'radio inline'
-            #configPage['recorderScore'][qName]['radio']['radio1']['inDataType'] = 'label'
-            #configPage['recorderScore'][qName]['radio']['radio1']['inDataCss'] = 'label'
-            #configPage['recorderScore'][qName]['radio']['radio1']['inDataText'] = '1'
-            #configPage['recorderScore'][qName]['radio']['radio1']['inDataValue'] = '0'
-            #configPage['recorderScore'][qName]['radio']['radio1']['inDataID'] = 'PolicyInformation_txtSexMan'
+#    configPage = ConfigObj()
+#
+#    #
+#    configPage['hasShowScore'] = 'yes'
+#    #
+#    configPage['recorderScore'] = {}
+#    configPage['recorderScore']['rowNumber'] = '1'
+#    configPage['recorderScore']['itemCount'] = '4'
+#
+#    qBaseName = 'Q'
+#    for i in range(4):
+#        qName = qBaseName + str(i)
+#        configPage['recorderScore'][qName] = {}
+#        configPage['recorderScore'][qName]['titleText'] = '开场白(真诚问候，专业身份与多美滋的关系 15%)' + str(i)
+#        configPage['recorderScore'][qName]['titleType'] = 'label'
+#        configPage['recorderScore'][qName]['titleCss'] = 'label label-normal'
+#        configPage['recorderScore'][qName]['dataType'] = 'input'
+#        configPage['recorderScore'][qName]['dataShowType'] = 'radio'
+#        configPage['recorderScore'][qName]['dataName'] = 'POLICYHOLDER_USR_SEX'+str(i)
+#        configPage['recorderScore'][qName]['mustHave'] = 'no'
+#
+#        configPage['recorderScore'][qName]['radio'] = {}
+#
+#        radioBaseName = 'radio'
+#        for j in range(i+1):
+#            sectionRadio = {
+#                'titleType': 'label',
+#                'titleCss': 'radio inline',
+#                'inDataType': 'label',
+#                'inDataCss': 'label',
+#                'inDataText': str(j),
+#                'inDataValue': str(j),
+#                'inDataID': 'PolicyInformation_txtSexMan'+str(j),
+#            }
+#            radioName = radioBaseName + str(j)
+#            configPage['recorderScore'][qName]['radio'][radioName] = sectionRadio
+#
+#            #another write.
+#            #configPage['recorderScore'][qName]['radio']['radio1'] = {}
+#            #configPage['recorderScore'][qName]['radio']['radio1']['titleType'] = 'label'
+#            #configPage['recorderScore'][qName]['radio']['radio1']['titleCss'] = 'radio inline'
+#            #configPage['recorderScore'][qName]['radio']['radio1']['inDataType'] = 'label'
+#            #configPage['recorderScore'][qName]['radio']['radio1']['inDataCss'] = 'label'
+#            #configPage['recorderScore'][qName]['radio']['radio1']['inDataText'] = '1'
+#            #configPage['recorderScore'][qName]['radio']['radio1']['inDataValue'] = '0'
+#            #configPage['recorderScore'][qName]['radio']['radio1']['inDataID'] = 'PolicyInformation_txtSexMan'
 
     return configPage
 

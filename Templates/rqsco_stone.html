@@ -66,22 +66,17 @@ localScoreInfo = None
 
 <form id="formScore">
 
-    %if configPage.as_bool('hasShowScore'):
     <div class="bs-docs-div-compress">
-                <label class="label label-info label-large">录音打分模板</label>
+            <label class="label label-info label-large">录音打分模板</label>
             <div>
-                <table class="table table-normal table-condensed">
                     <%
-                        configPageRecorderScore = configPage['recorderScore']
+                        configPageRecorderScore = configPage
                         configUsing =copy.deepcopy(configPageRecorderScore)
                     %>
                     <%namespace name="comp" file="components.html" />
                     ${comp.layoutControlList(configItem=configUsing,dataItem = localScoreInfo)}
-
-                </table>
             </div>
     </div>
-    %endif
 
 </form>
 </body>
