@@ -36,7 +36,7 @@ j = 0
             itemMember=configItem[member]
             %>
             %if "titleType" in itemMember:
-				${layoutControlStatic(item=itemMember)} 
+				${layoutControlStatic(item=itemMember)}
 				<%
                     if "dataName" in itemMember:
                         dataValueName = itemMember["dataName"]
@@ -53,7 +53,8 @@ j = 0
             %endif
         %endfor
         <%
-        configItem.pop(member)
+        if len(configItem) > 0:
+            configItem.pop(member)
         %>
     %endfor
 </tr>

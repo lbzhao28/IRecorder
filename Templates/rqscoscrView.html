@@ -145,10 +145,10 @@
 
             this.radio_click = function(object,itemPerc)
             {
-                var table = $(object).parent().parent().parent().next("tr");
-                alert(table.html());
-
-                //var TxtScore = $(table).find("input[type='checkbox'][name='selectValue']");
+                var InputScore = $(object).parent().parent().parent().parent().parent().parent().next("tr").find("td:last");
+                var radioValue =  $(object).val();
+                var Score = parseInt (radioValue) * parseInt(itemPerc) / 100;
+                alert($(InputScore));
             }
         })
     </script>
@@ -230,7 +230,7 @@
                                         <% subitemname = subitem['subitemname'] %>
                                         <% subitemvalue = subitem['subitemvalue'] %>
                                         <td>
-                                            <input id="rl_C001_1" type="radio" name="${itemID}_rl_C00_${subitemvalue}" onclick="radio_click(this,${itemPerc})" value="${subitemvalue}" />
+                                            <input id="rl_C001_1" type="radio" name="rl_C00_${itemID}" onclick="radio_click(this,${itemPerc})" value="${subitemvalue}" />
                                             <label for="rl_C001_1">${subitemvalue}</label>
                                         </td>
                                      % endfor
@@ -239,8 +239,10 @@
                         </td>
                         </tr>
                         <tr>
-                            <td align="right" style="background-color:#C1DFDF;">得分：</td><td>
-                            <input name="${itemID}_cl_C001" type="text" value="0" readonly="readonly" id="${itemID}_cl_C001" style="width:100px;" /></td>
+                            <td align="right" style="background-color:#C1DFDF;">得分：</td>
+                            <td>
+                            <input name="${itemID}_cl_C001" type="text" opetype="Radio_Score" value="0" readonly="readonly" id="${itemID}_cl_C001" style="width:100px;" />
+                            </td>
                         </tr>
                 % endfor
                 </table>
