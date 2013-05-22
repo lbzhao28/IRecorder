@@ -72,6 +72,11 @@ localScoreInfo = None
                     <%
                         configPageRecorderScore = configPage
                         configUsing =copy.deepcopy(configPageRecorderScore)
+
+                        #print("configPageRecorderScore length:")
+                        #print len(configPageRecorderScore)
+
+
                     %>
                     <%namespace name="comp" file="components.html" />
                     ${comp.layoutControlList(configItem=configUsing)}

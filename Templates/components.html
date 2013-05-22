@@ -2,10 +2,15 @@
 
 <%def name="layoutControlList(configItem)">
 <table class="table table-normal table-condensed">
+
     %for member in configItem:
         <%
+        print 'configItem lenth'
+        print len(configItem)
         itemMember=configItem[member]
         i = 0
+        print 'itemMember'
+        print itemMember
         %>
         %for subMember in itemMember:
             <%
@@ -39,8 +44,6 @@
                 realDataValue = ''
                 if 'hasRealDataValue' in item:
                     realDataValue = item['hasRealDataValue']
-                    print 'realDataValue'
-                    print realDataValue
                 %>
                 %if 'tableColSpan' in item:
                     <td colspan="${item['tableColSpan']}">
