@@ -51,7 +51,7 @@ def getRecorderConfigPage():
 
     #return a config list
     #configPage = ConfigObj()
-    configPage=getRecorderConfigPage();
+    configPage=RecorderConfigPage();
 #
 #    #
 #    configPage['hasShowScore'] = 'yes'
@@ -150,7 +150,7 @@ def getTestData():
 
 
 # 创建录音打分的页面
-def getRecorderConfigPage():
+def RecorderConfigPage():
     tRacorderQuestions = RacorderClient.GetRacorderQuestion();
     if tRacorderQuestions is None or len(tRacorderQuestions)==0 :
         return render.error(error = 'no filename')
