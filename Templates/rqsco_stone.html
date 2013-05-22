@@ -11,7 +11,7 @@ import OrderClient
 import json
 
 import configObjData
-from configObjData import getConfigPage
+from configObjData import getRecorderConfigPage
 
 import staticDbModule
 from staticDbModule import getDictStatic
@@ -19,7 +19,7 @@ from staticDbModule import getDictStatic
 import configData
 from configData import getConfig
 
-configPage = getConfigPage()
+configPage = getRecorderConfigPage()
 
 localURL = getConfig('SERVERINFO','serverIP','str')
 
@@ -34,7 +34,7 @@ import copy
 localScoreInfo = None
 
 #localScoreInfo = OrderClient.getOrderInfoOrder(orderid)
-localScoreInfo = outdicrqscoscr
+#localScoreInfo = outdicrqscoscr
 
 %>
 
@@ -66,26 +66,22 @@ localScoreInfo = outdicrqscoscr
 
 <form id="formScore">
 
-    %if configPage.as_bool('hasPolicyHolder_Usr'):
-    <%!
-     print(configPage)
-    %>
     <div class="bs-docs-div-compress">
-                <label class="label label-info label-large">录音打分模板</label>
+            <label class="label label-info label-large">录音打分模板</label>
             <div>
-                <table class="table table-normal table-condensed">
                     <%
-                        configPagePolicyHolder_Usr = configPage['PolicyHolder_Usr']
-                        configUsing =copy.deepcopy(configPagePolicyHolder_Usr)
+                        configPageRecorderScore = configPage
+                        configUsing =copy.deepcopy(configPageRecorderScore)
+
+                        #print("configPageRecorderScore length:")
+                        #print len(configPageRecorderScore)
+
+
                     %>
                     <%namespace name="comp" file="components.html" />
-                    ${comp.layoutControlList(configItem=configUsing,dataItem = localPolicyHolder_UsrInfo)}
-                    %endif
-
-                </table>
+                    ${comp.layoutControlList(configItem=configUsing)}
             </div>
     </div>
-    %endif
 
 </form>
 </body>
