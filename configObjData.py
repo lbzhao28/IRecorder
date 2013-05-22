@@ -51,7 +51,7 @@ def getRecorderConfigPage():
 
     #return a config list
     #configPage = ConfigObj()
-    configPage=RecorderConfigPage();
+    configPage = RecorderConfigPage();
 #
 #    #
 #    configPage['hasShowScore'] = 'yes'
