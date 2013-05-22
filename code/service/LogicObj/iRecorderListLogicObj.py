@@ -1,6 +1,9 @@
 __author__ = 'JohannWong'
 #coding=UTF-8
-from iRecorderListModuleObj import iRecorderListModuleObj
+import sys
+import os
+sys.path.append(os.getcwd()+'\\ModuleObj')
+from ModuleObj.iRecorderListModuleObj import iRecorderListModuleObj
 from logHelper import getLogger
 """
 
@@ -9,7 +12,10 @@ class iRecorderListLogicObj:
     def getiRecorderListByFileName(self,filename):
         logger = getLogger()
         logger.debug("start iRecorderListLogicObj.getiRecorderListByFileName")
-        iRecorderDicList = iRecorderListModuleObj.getiRecorderListByFileName(filename)
+        moduleObj = iRecorderListModuleObj()
+        iRecorderDicList = moduleObj.getiRecorderListByFileName(filename)
+        if iRecorderDicList == None:
+            return None;
         iRecorderList = [];
         for iRecorderDic in iRecorderDicList:
             iRecorder = self.__iRecorderDic2Json(iRecorderDic)
@@ -19,7 +25,10 @@ class iRecorderListLogicObj:
     def getiRecorderListByParams(self,params):
         logger = getLogger()
         logger.debug("start iRecorderListLogicObj.getiRecorderListByParams")
-        iRecorderDicList = iRecorderListModuleObj.getiRecorderListByFileName(params)
+        moduleObj = iRecorderListModuleObj()
+        iRecorderDicList = moduleObj.getiRecorderListByFileName(params)
+        if iRecorderDicList == None:
+            return None;
         iRecorderList = [];
         for iRecorderDic in iRecorderDicList:
             iRecorder = self.__iRecorderDic2Json(iRecorderDic)

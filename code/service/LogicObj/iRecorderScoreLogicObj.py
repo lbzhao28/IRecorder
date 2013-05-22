@@ -1,15 +1,21 @@
 __author__ = 'JohannWong'
 #coding=UTF-8
-from iRecordeScoreModuleObj import iRecordeScoreModuleObj
+import sys
+import os
+sys.path.append(os.getcwd()+'\\ModuleObj')
+from ModuleObj.iRecorderScoreModuleObj import iRecorderScoreModuleObj
 from logHelper import getLogger
 """
 
 """
-class iRecordeScoreLogicObj:
-    def getiRecordeScoreByFileName(self,filename):
+class iRecorderScoreLogicObj:
+    def getiRecorderScoreByFileName(self,filename):
         logger = getLogger()
         logger.debug("start iRecordeScoreLogicObj.getiRecordeScoreByFileName")
-        iRecorderScoreDicList = iRecordeScoreLogicModuleObj.getiRecordeScoreByFileName(filename)
+        moduleObj = iRecordeScoreLogicModuleObj()
+        iRecorderScoreDicList = moduleObj.getiRecordeScoreByFileName(filename)
+        if iRecorderScoreDicList == None:
+            return None;
         iRecorderScoreList = [];
         for iRecorderScoreDic in iRecorderScoreDicList:
             iRecorderScore = self.__iRecorderScoreDic2Json(iRecorderScoreDic)

@@ -3,27 +3,31 @@ __author__ = 'JohannWong'
 import web
 import json
 import mimerender
+
 import globalDefine
 import traceback
 from logHelper import getLogger
 
-from iRecorderListLogicObj import iRecorderListLogicObj
+from LogicObj.iRecorderListLogicObj import iRecorderListLogicObj
+from LogicObj.iRecorderScoreLogicObj import iRecorderScoreLogicObj
 
-render_xml =  lambda ret:'<ret>%s</ret>'%ret
-render_json = lambda **args:json.dumps(args)
-render_html = lambda ret:'<html><body>ret is:%s<body></html>'%ret
-render_txt =  lambda ret:ret
+mimerender = mimerender.WebPyMimeRender()
+
+render_xml = lambda message: '<message>%s</message>'%message
+render_json = lambda**args: json.dumps(args)
+render_html = lambda message: '<html><body>%s</body></html>'%message
+render_txt = lambda message: message
 
 urls = (
-    "/irecorderservice/irecordelist(.+)","iRecordeList",
-    "/irecorderservice/irecordescore(.+)","iRecordeScore",
-    "/irecorderservice/irecordequestion(.+)","iRecordeQuestion",
+    "/irecorderservice/irecorderlist","iRecorderList",
+    "/irecorderservice/irecorderscore","iRecorderScore",
+    "/irecorderservice/irecorderquestion","iRecorderQuestion",
     )
 app = web.application(urls,globals())
 """
 
 """
-class iRecordeList:
+class iRecorderList:
     @mimerender(
         default = 'json',
         html = render_html,
@@ -34,9 +38,9 @@ class iRecordeList:
     def GET(self):
         try:
             logger = getLogger()
-            logger.debug("start iRecordeList GET response")
+            logger.debug("start iRecorderList GET response")
 
-            globalDefine.globaliRecordeListErrorlog = "No Error"
+            globalDefine.globaliRecorderListErrorlog = "No Error"
             #获取queryString
             params  = web.input(filename=None)
 
@@ -53,9 +57,9 @@ class iRecordeList:
             else:
                 return iRecorderList
         except:
-            logger.error("iRecordeList GET exception, see the traceback.log")
+            logger.error("iRecorderList GET exception, see the traceback.log")
             #异常写入日志文件.
-            f = open('traceback.txt','a')
+            f = open('logs/traceback.txt','a')
             traceback.print_exc()
             traceback.print_exc(file = f)
             f.flush()
@@ -74,27 +78,34 @@ class iRecordeScore:
             logger = getLogger()
             logger.debug("start iRecordeScore GET response")
 
-            globalDefine.globaliRecordeScoreErrorlog = "No Error"
+            globalDefine.globaliRecordeScorerErrorlog = "No Error"
             #获取queryString
             params  = web.input(filename=None)
 
-            logicObj = iRecordeScoreLogicObj()
+            logicObj = iRecorderScoreLogicObj()
             if params["filename"] != None :
                 #根据文件名精确查询
-                iRecordeScore = logicObj.getiRecordeScoreByFileName(params["filename"]);
+                iRecorderScore = logicObj.getiRecorderScoreByFileName(params["filename"]);
 
-            if iRecordeScore == None:
+            if iRecorderScore == None:
                 pass
             else:
-                return iRecordeScore
+                return iRecorderScore
         except:
-            logger.error("iRecordeScore GET exception, see the traceback.log")
+            logger.error("iRecorderScore GET exception, see the traceback.log")
             #异常写入日志文件.
-            f = open('traceback.txt','a')
+            f = open('logs/traceback.txt','a')
             traceback.print_exc()
             traceback.print_exc(file = f)
             f.flush()
             f.close()
+    def POST(self):
+        try:
+            logger = getLogger()
+            logger.debug("start iRecordeScore GET response")
+
+            globalDefine.globaliRecordeScorerErrorlog = "No Error"
+
 
 if __name__ == "__main__":
     app.run()

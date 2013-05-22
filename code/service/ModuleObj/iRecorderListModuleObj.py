@@ -37,7 +37,7 @@ class iRecorderListModuleObj:
         except :
             logger.error("exception occur, see the traceback.log")
             #异常写入日志文件.
-            f = open('traceback.txt','a')
+            f = open('logs/traceback.txt','a')
             traceback.print_exc()
             traceback.print_exc(file = f)
             f.flush()
@@ -96,7 +96,7 @@ class iRecorderListModuleObj:
         except :
             logger.error("exception occur, see the traceback.log")
             #异常写入日志文件.
-            f = open('traceback.txt','a')
+            f = open('logs/traceback.txt','a')
             traceback.print_exc()
             traceback.print_exc(file = f)
             f.flush()
