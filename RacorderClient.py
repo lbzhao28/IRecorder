@@ -8,6 +8,7 @@ import json
 import traceback
 from configData import getConfig
 from logHelper import getLogger
+import  web
 
 def getOrderInfoOrder(inOrderid):
     """get the order info from REST """
@@ -20,6 +21,11 @@ def getOrderInfoOrder(inOrderid):
 
         buf = cStringIO.StringIO() #define in function.
         c = pycurl.Curl()
+
+
+
+
+
         localURL = getConfig('RESTService','orderInfoOrderidUrl','str')+inOrderid
         localURL = str(localURL)
         c.setopt(pycurl.URL,localURL)
@@ -113,5 +119,16 @@ def GetRacorderQuestion():
 
 
     return dicrqscoscr
+
+class RacorderSave:
+    def POST(self,filename):
+        a = web.input()
+        data = web.data();
+        print data;
+        return True;
+
+    def GET(self,filename):
+        pass
+
 
 

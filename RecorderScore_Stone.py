@@ -9,6 +9,7 @@ import traceback
 import configData
 from configData import getConfig
 from logHelper import getLogger
+import RacorderClient
 
 import re
 import base64
@@ -21,7 +22,8 @@ import OrderDomainHandler
 web.config.debug = False
 
 urls = (
-        '/rqscoscr/(.*)','rqscoscr'
+        '/rqscoscr/(.*)','rqscoscr',
+        '/Saverqscoscr/(.*)','RacorderClient.RacorderSave'
         )
 
 app = web.application(urls,globals(),autoreload=True)
@@ -58,7 +60,17 @@ class rqscoscr():
 
                 globalDefine.globalOrderInfoErrorlog = "No Error"
 
-                #TODO: open the auth in future.also need purview.
+                #import  db
+                #userdb = db.database(dbn = "mssql", db = 'RaRecorder_CEM', user ='sa' ,pw ='sa.rayda',host='192.168.1.186',charset="utf8")
+
+                #str_query="select * from T_USER";
+                #returnjson=[]
+                #dic_result=userdb.query(str_query);
+                #print dic_result;
+
+
+
+#TODO: open the auth in future.also need purview.
                 #            authreq = checkUserAuth(web)
                 #
                 #            if authreq:
@@ -103,9 +115,7 @@ def getTestData():
     recordequestion = {"itemID":"4","itemDesc":"开场白,(告之目的和利益，明确告知致电的目的或利益 2，并确认生日，预产期15%)","itemPerc":"10","subitems":subitem}
     dicrqscoscr.append(recordequestion)
 
-
     recordequestion = {"itemID":"5","itemDesc":"开场白(真诚问候，专业身份与多美滋的关系 15%)","itemPerc":"10","subitems":subitem}
-
     dicrqscoscr.append(recordequestion)
 
     recordequestion = {"itemID":"6","itemDesc":"建议（评估结果 40%）","itemPerc":"10","subitems":subitem}

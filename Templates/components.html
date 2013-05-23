@@ -1,16 +1,14 @@
 ## components.html
 
 <%def name="layoutControlList(configItem)">
-<table class="table table-normal table-condensed">
+<table id="ComRacorder" class="table table-normal table-condensed">
 
     %for member in configItem:
         <%
-        print 'configItem lenth'
-        print len(configItem)
+
         itemMember=configItem[member]
         i = 0
-        print 'itemMember'
-        print itemMember
+
         %>
         %for subMember in itemMember:
             <%
@@ -58,6 +56,17 @@
 						%else:
 							<${item["controlType"]} class="${item["controlCss"]}">${item["controlText"]}</${item["controlType"]}>
 						%endif
+
+                    %elif item["controlType"] == 'labelName':
+                        %if 'mustHave' in item:
+                            %if item.as_bool('mustHave'):
+                                <label name=${item["controlName"]} id=${item["controlID"]} class="${item["controlCss"]}"><span style="color: red">*</span>${item["controlText"]}</label>
+                            %else:
+                                <label name=${item["controlName"]} id=${item["controlID"]} class="${item["controlCss"]}">${item["controlText"]}</label>
+                            %endif
+                        %else:
+                            <label name=${item["controlName"]} id=${item["controlID"]} class="${item["controlCss"]}">${item["controlText"]}</label>
+                        %endif
                     %elif item["controlType"] == 'input':
                         %if item["controlShowType"] == 'text':
                             %if "placeholder" in item:
@@ -79,9 +88,9 @@
                                 %>
                                 <${radioItemData["titleType"]} class="${radioItemData["titleCss"]}">
                                     %if realDataValue == radioItemData["inDataValue"]:
-                                        <${item["controlType"]} name=${item["controlName"]} id=${radioItemData["inDataID"]} type = "${item["controlShowType"]}" value="${radioItemData["inDataValue"]}" checked/>
+                                        <${item["controlType"]} name=${item["controlName"]} id=${radioItemData["inDataID"]} type = "${item["controlShowType"]}" value="${radioItemData["inDataValue"]}" onclick="${item["onClick"]}" checked/>
                                     %else:
-                                        <${item["controlType"]} name=${item["controlName"]} id=${radioItemData["inDataID"]} type = "${item["controlShowType"]}" value="${radioItemData["inDataValue"]}"/>
+                                        <${item["controlType"]} name=${item["controlName"]} id=${radioItemData["inDataID"]} type = "${item["controlShowType"]}" value="${radioItemData["inDataValue"]}" onclick="${item["onClick"]}"/>
                                     %endif
                                         <${radioItemData["inDataType"]} class="${radioItemData["inDataCss"]}"> ${radioItemData["inDataText"]}</${radioItemData["inDataType"]}>
                                 </${radioItemData["titleType"]}>

@@ -100,65 +100,12 @@ def getRecorderConfigPage():
 
     return configPage
 
-def getTestData():
-    subitem = [{"subitemname":"1","subitemvalue":"1"},{"subitemname":"2","subitemvalue":"2"},{"subitemname":"3","subitemvalue":"3"}]
-    dicrqscoscr = []
-    recordequestion = {"itemID":"1","itemDesc":"开场白(真诚问候，专业身份与多美滋的关系 15%)","itemPerc":"10","subitems":subitem}
-
-    dicrqscoscr.append(recordequestion)
-
-    recordequestion = {"itemID":"2","itemDesc":"建议（评估结果 40%）","itemPerc":"10","subitems":subitem}
-    dicrqscoscr.append(recordequestion)
-
-    recordequestion = {"itemID":"3","itemDesc":"开场白,(表达同理心,对妈妈/孕妇的关心 自然真诚 15%)","itemPerc":"10","subitems":subitem}
-
-    dicrqscoscr.append(recordequestion)
-    recordequestion = {"itemID":"4","itemDesc":"开场白,(告之目的和利益，明确告知致电的目的或利益 2，并确认生日，预产期15%)","itemPerc":"10","subitems":subitem}
-    dicrqscoscr.append(recordequestion)
-
-
-    recordequestion = {"itemID":"5","itemDesc":"开场白(真诚问候，专业身份与多美滋的关系 15%)","itemPerc":"10","subitems":subitem}
-
-    dicrqscoscr.append(recordequestion)
-
-    recordequestion = {"itemID":"6","itemDesc":"建议（评估结果 40%）","itemPerc":"10","subitems":subitem}
-    dicrqscoscr.append(recordequestion)
-
-    recordequestion = {"itemID":"7","itemDesc":"开场白,(表达同理心,对妈妈/孕妇的关心 自然真诚 15%)","itemPerc":"10","subitems":subitem}
-
-    dicrqscoscr.append(recordequestion)
-    recordequestion = {"itemID":"8","itemDesc":"开场白,(告之目的和利益，明确告知致电的目的或利益 2，并确认生日，预产期15%)","itemPerc":"10","subitems":subitem}
-    dicrqscoscr.append(recordequestion)
-
-    recordequestion = {"itemID":"9","itemDesc":"开场白(真诚问候，专业身份与多美滋的关系 15%)","itemPerc":"10","subitems":subitem}
-
-    dicrqscoscr.append(recordequestion)
-
-    recordequestion = {"itemID":"10","itemDesc":"建议（评估结果 40%）","itemPerc":"10","subitems":subitem}
-    dicrqscoscr.append(recordequestion)
-
-    recordequestion = {"itemID":"11","itemDesc":"开场白,(表达同理心,对妈妈/孕妇的关心 自然真诚 15%)","itemPerc":"10","subitems":subitem}
-
-    dicrqscoscr.append(recordequestion)
-    recordequestion = {"itemID":"12","itemDesc":"开场白,(告之目的和利益，明确告知致电的目的或利益 2，并确认生日，预产期15%)","itemPerc":"10","subitems":subitem}
-    dicrqscoscr.append(recordequestion)
-
-    dicrqscoscrS = json.dumps(dicrqscoscr)
-
-    return dicrqscoscrS
-
-
-
 # 创建录音打分的页面
 def RecorderConfigPage():
     tRacorderQuestions = RacorderClient.GetRacorderQuestion();
     if tRacorderQuestions is None or len(tRacorderQuestions)==0 :
         return render.error(error = 'no filename')
     else:
-        recorderScore = len(tRacorderQuestions)
-
-
-
     #return a config list
         configPage = ConfigObj()
 
@@ -169,27 +116,33 @@ def RecorderConfigPage():
         i = 0
         for item in tRacorderQuestions:
             itemDesc = item["itemDesc"];   # 问题描述
-            itemID = item["itemID"]
+            itemPerc = item["itemPerc"];   # 问题百分比
+            itemID = item["itemID"];
+            txtSCORE =(float(itemPerc) * 2)/100;
             i=i+1
 
             Sname = SBaseName + str(i)
+
             configPage[Sname] = {}
+
             configPage[Sname]['sequence'] = {}
-            configPage[Sname]['sequence']['controlText'] =itemID
-            configPage[Sname]['sequence']['controlType'] = 'label'
+            configPage[Sname]['sequence']['controlText'] =i
+            configPage[Sname]['sequence']['controlType'] = 'labelName'
             configPage[Sname]['sequence']['controlCss'] = 'label label-normal'
-            configPage[Sname]['sequence']['dataType'] = 'input'
-            configPage[Sname]['sequence']['controlName'] = 'lblSEQUENCE'+str(i)
+            #configPage[Sname]['sequence']['dataType'] = 'input'
+            configPage[Sname]['sequence']['controlName'] = 'lblSEQUENCEName'
+            configPage[Sname]['sequence']['controlID'] = 'lblSEQUENCEID'+str(i)
             configPage[Sname]['sequence']['mustHave'] = 'no'
 
 
 
             configPage[Sname]['question'] = {}
             configPage[Sname]['question']['controlText'] =itemDesc
-            configPage[Sname]['question']['controlType'] = 'label'
+            configPage[Sname]['question']['controlType'] = 'labelName'
             configPage[Sname]['question']['controlCss'] = 'label label-normal'
-            configPage[Sname]['question']['dataType'] = 'input'
-            configPage[Sname]['question']['controlName'] = 'lblQUESTION'+str(i)
+            #configPage[Sname]['question']['dataType'] = 'input'
+            configPage[Sname]['question']['controlName'] = 'lblQUESTIONNAME'
+            configPage[Sname]['question']['controlID'] = itemID
             configPage[Sname]['question']['mustHave'] = 'no'
 
 
@@ -207,6 +160,9 @@ def RecorderConfigPage():
             configPage[Sname]["class"]['controlShowType'] = 'radio'
             configPage[Sname]["class"]['controlName'] = 'radioCLASS'+str(i)
             configPage[Sname]['class']["hasRealDataValue"] = '2'
+            configPage[Sname]['class']["onClick"] = 'radioclick(this)'
+
+
 
 
 
@@ -241,9 +197,11 @@ def RecorderConfigPage():
             itemPerc = item["itemPerc"] #百分比
             configPage[Sname]['percent'] = {}
             configPage[Sname]['percent']['controlText'] = itemPerc +"%"
-            configPage[Sname]['percent']['controlType'] = 'label'
+            configPage[Sname]['percent']['controlType'] = 'labelName'
             configPage[Sname]['percent']['controlCss'] = 'label label-normal'
-            configPage[Sname]['percent']['controlName'] = 'lblPERCENT'+str(i)
+            configPage[Sname]['percent']['controlName'] = 'lblPERCENTName'+str(i)
+            configPage[Sname]['percent']['controlID'] = 'lblPERCENTId'+str(i)
+
 
 
             configPage[Sname]['defen'] = {}
@@ -257,9 +215,10 @@ def RecorderConfigPage():
             configPage[Sname]['score']['controlType'] = 'input'
             configPage[Sname]['score']['controlCss'] = 'input-mini'
             configPage[Sname]['score']['controlShowType'] = 'text'
-            configPage[Sname]['score']['controlName'] = 'txtSCORE'+str(i)
+            configPage[Sname]['score']['controlName'] = 'txtSCORE'
             configPage[Sname]['score']['controlID'] = 'idSCORE'+str(i)
             configPage[Sname]['score']['placeholder'] = '得分'
+            configPage[Sname]['score']['hasRealDataValue'] = txtSCORE
 
             configPage[Sname]['memo'] = {}
             configPage[Sname]['memo']['controlText'] = "备注"
@@ -272,7 +231,7 @@ def RecorderConfigPage():
             configPage[Sname]['memoText']['controlType'] = 'input'
             configPage[Sname]['memoText']['controlCss'] = 'input-large'
             configPage[Sname]['memoText']['controlShowType'] = 'text'
-            configPage[Sname]['memoText']['controlName'] = 'txtMemo'+str(i)
+            configPage[Sname]['memoText']['controlName'] = 'txtMemo'
             configPage[Sname]['memoText']['controlID'] = 'idMemo'+str(i)
             configPage[Sname]['memoText']['hasRealDataValue'] = ''
             configPage[Sname]['memoText']['placeholder'] = '备注'
