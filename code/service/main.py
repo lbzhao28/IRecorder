@@ -124,13 +124,3 @@ class iRecordeScore:
 
 if __name__ == "__main__":
     app.run()
-
-    #import pymssql
-
-    #conn = pymssql.connect(host='192.168.1.186\MSSQLSERVER2008',user='sa',password='sa.rayda',database='RaRecorder_CEM')
-    #conn = pymssql.connect(server="192.168.1.186\MSSQLSERVER2008",port="1433",user="sa",password="sa.rayda",database="RaRecorder_CEM",charset="UTF-8")
-    #cur = conn.cursor()
-    #cur.execute('SELECT * FROM T_RECORDER')
-    #for row in cur:
-    #    print row[0]
-    #conn.close()

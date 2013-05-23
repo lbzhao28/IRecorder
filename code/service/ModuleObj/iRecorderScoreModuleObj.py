@@ -1,7 +1,7 @@
 __author__ = 'JohannWong'
 #coding=UTF-8
 import traceback
-from dbConnection import dbConnect
+from dbConnection import dbMSSqlConnect
 from logHelper import getLogger
 """
 
@@ -11,7 +11,7 @@ class iRecorderScoreModuleObj:
         try:
             logger = getLogger()
             logger.debug("start iRecorderScoreModuleObj.getiRecorderScoreByFileName")
-            dbConn = dbConnect()
+            dbConn = dbMSSqlConnect()
             sql = """SELECT [RECKEY]
                 ,[RATERS]
                 ,[TOTAL]

@@ -1,12 +1,12 @@
 __author__ = 'JohannWong'
 #coding=UTF-8
 import traceback
-from dbConnection import *
+from dbConnection import dbMSSqlConnect
 from logHelper import getLogger
-"""
-
-"""
 class iRecorderListModuleObj:
+    """
+
+    """
     def getiRecorderListByFileName(self,filename):
         try:
             logger = getLogger()
@@ -51,7 +51,7 @@ class iRecorderListModuleObj:
         try:
             logger = getLogger()
             logger.debug("start iRecorderListModuleObj.getiRecorderListByFileName")
-            dbConn = dbConnect()
+            dbConn = dbMSSqlConnect()
             sql = """SELECT [HOSTNAME]
                 ,[FILENAME]
                 ,[CHANNELNO]
