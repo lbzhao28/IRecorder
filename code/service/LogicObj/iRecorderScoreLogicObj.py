@@ -22,6 +22,13 @@ class iRecorderScoreLogicObj:
             iRecorderScoreList.append(iRecorderScore)
         return  iRecorderScoreList
 
+    def postiRecorderScoreByJson(self,scoreJson):
+        logger = getLogger()
+        logger.debug("start iRecordeScoreLogicObj.postiRecorderScoreByJson")
+        moduleObj = iRecordeScoreLogicModuleObj()
+
+        return None
+
     def __iRecorderScoreDic2Json(self,iRecorderDic):
         return {
             'fileName':iRecorderDic['RECKEY'],

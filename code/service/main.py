@@ -59,7 +59,7 @@ class iRecorderList:
         except:
             logger.error("iRecorderList GET exception, see the traceback.log")
             #异常写入日志文件.
-            f = open('logs/traceback.txt','a')
+            f = open('Logs/traceback.txt','a')
             traceback.print_exc()
             traceback.print_exc(file = f)
             f.flush()
@@ -94,17 +94,32 @@ class iRecordeScore:
         except:
             logger.error("iRecorderScore GET exception, see the traceback.log")
             #异常写入日志文件.
-            f = open('logs/traceback.txt','a')
+            f = open('Logs/traceback.txt','a')
             traceback.print_exc()
             traceback.print_exc(file = f)
             f.flush()
             f.close()
+
     def POST(self):
         try:
             logger = getLogger()
-            logger.debug("start iRecordeScore GET response")
+            logger.debug("start iRecordeScore POST response")
 
             globalDefine.globaliRecordeScorerErrorlog = "No Error"
+
+            webData = web.data()
+            iRecordeScoreJson = json.loads(webData)
+
+            logicObj = iRecorderScoreLogicObj()
+
+        except:
+            logger.error("iRecorderScore POST exception, see the traceback.log")
+            #异常写入日志文件.
+            f = open('Logs/traceback.txt','a')
+            traceback.print_exc()
+            traceback.print_exc(file = f)
+            f.flush()
+            f.close()
 
 
 if __name__ == "__main__":
