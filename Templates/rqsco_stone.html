@@ -37,6 +37,220 @@ localScoreInfo = None
 #localScoreInfo = outdicrqscoscr
 
 %>
+<script type="text/javascript" src="../static/js/jquery-1.8.3.js"></script>
+<script type="text/javascript" src="../static/js/EsayUI/jquery.easyui.min.js"></script>
+
+　　<script type="text/javascript">
+           jQuery(document).ready(function (){
+
+
+                     //加法函数，用来得到精确的加法结果
+                    //说明：javascript的加法结果会有误差，在两个浮点数相加的时候会比较明显。这个函数返回较为精确的加法结果。
+                    //调用：accAdd(arg1,arg2)
+                    //返回值：arg1加上arg2的精确结果
+                       function accAdd(arg1,arg2){
+                           var r1,r2,m;
+                           try{r1=arg1.toString().split(".")[1].length}catch(e){r1=0}
+                           try{r2=arg2.toString().split(".")[1].length}catch(e){r2=0}
+                           m=Math.pow(10,Math.max(r1,r2))
+                           return (arg1*m+arg2*m)/m
+                       }
+                  //给Number类型增加一个add方法，调用起来更加方便。
+                       Number.prototype.add = function (arg){
+                           return accAdd(arg,this);
+                       }
+
+
+               // 总分 object
+               var objctscorenum =$("#labscorenum");
+
+               var radioDictName = "";
+               // 点击每一个radio按钮事件
+               this.radioclick = function(object)
+               {
+                   //radio 值
+                   var radioValue =  $(object).val();
+                   // 百分比的字段
+                   var percent = $(object).parent().parent().parent().next("tr").find("td:last").text();
+                   // 得分的字段 text
+                   var score = $(object).parent().parent().parent().next("tr").next("tr").find("td").find("input[type='text'][name ='txtSCORE']");
+
+                   //将每一题的radio 选择后得分 显示到得分字段
+                   var QanswerScore =  parseFloat (radioValue) * parseFloat(percent)/100;
+                   score.val(QanswerScore);
+
+                   // 需要重新计算 总分数
+                  var tatalScore =0;
+                   $("#ComRacorder tr").each(function(i){
+                               if($(this).find("td").find("input[type='text'][name='txtSCORE']").length > 0)
+                               {
+                                   var ScroreAnswer =  $(this).find("td").find("input[type='text'][name='txtSCORE']");
+                                   var ScoreAnswerScoreStr = ScroreAnswer[0].value;
+                                   if(ScoreAnswerScoreStr!="0")
+                                   {
+                                       var ScoreAnswerScore = parseFloat(ScoreAnswerScoreStr);
+
+                                       if(ScoreAnswerScore!=0)
+                                       {
+
+                                           tatalScore = tatalScore.add(ScoreAnswerScore)
+
+                                       }
+                                   }
+                               }
+                           }
+                   );
+                   objctscorenum.text(tatalScore);
+               }
+
+
+               var Racorderobj = function()
+               {
+                   var _page = this;
+                   _page.userid = "sa";
+                   _page.tatalScore = 0.0;
+                   // 初始化事件
+                   this.init = function()
+                   {
+                       _page.tatalScore = _page.getRacorderScore();
+                       objctscorenum.text( _page.tatalScore);
+                   }
+
+
+                   this.getRacorderScore = function()
+                   {
+                       var tatalScore = 0;
+
+                       $("#ComRacorder tr").each(function(i){
+                                   if($(this).find("td").find("input[type='text'][name='txtSCORE']").length > 0)
+                                   {
+                                       var ScroreAnswer =  $(this).find("td").find("input[type='text'][name ='txtSCORE']").val();
+                                       tatalScore = tatalScore+ parseFloat(ScroreAnswer);
+                                   }
+                               }
+                       );
+                       return tatalScore;
+                   }
+
+
+
+
+                   // 点击确认按钮的时候出发保存事件
+                   $("#btnConfirm").click (function(){
+                       _page.forConfirm();
+                   });
+
+
+
+
+
+
+                   // 获取问题的答案信息
+                   this.GetRacorderAnwser = function()
+                   {
+                       var StrJson = "[";
+                       var j = 0; //定义j 用于取得 序列号
+                       $("#ComRacorder tr").each(function(i){
+                                   if($(this).find("td").find("input[type='radio'][checked]").length > 0)
+                                   {
+                                       j++;
+                                       var lblSEQUENCEID = "#lblSEQUENCEID"+j
+                                       var mvalue=$(lblSEQUENCEID).text();// 可以记录问题的编号
+
+                                       var subitemAnswer =  $(this).find("td").find("input[type='radio'][checked]").val();
+                                       StrJson +="{'questionID':'"+ mvalue+"','subitemAnswer':'"+subitemAnswer+"','";
+                                   }
+                                   if($(this).find("td").find("input[type='text'][name='txtSCORE']").length > 0)
+                                   {
+                                       var ScroreAnswer =  $(this).find("td").find("input[type='text'][name ='txtSCORE']").val()
+                                       StrJson +="score"+"':'"+ScroreAnswer+"','"
+
+                                   }
+                                   if($(this).find("td").find("input[type='text'][name='txtMemo']").length > 0)
+                                   {
+                                       var tMemoAnswer =  $(this).find("td").find("input[type='text'][name ='txtMemo']").val();
+                                       StrJson +="note"+"':'"+tMemoAnswer+"'},"
+                                   }
+                               }
+                       );
+                       if(StrJson.length>2)
+                       {
+                           StrJson= StrJson.substring(0,StrJson.length-1);
+                       }
+                       StrJson +="]"
+                       return StrJson;
+                   }
+
+
+
+                   //组织录音质检，打分信息的 json 字符串
+                   this.GetRacorderScoreJsonStr = function()
+                   {
+
+                       var fileName =  $("#labrecfilename").text();
+                       var total =$("#labscorenum").text();
+                       var raters = _page.userid;
+                       var d = new Date();
+                       var sttm = d.getYear() + '-' + (d.getMonth()+1) + '-' + d.getDate() + ' ' + d.getHours() + ':' + d.getMinutes() + ':' + d.getSeconds();
+                       var reterTime = sttm;
+                       var remark = "备注值";
+                       var scrvals = _page.GetRacorderAnwser();
+
+
+                       //    RacorderSaveJson = {"fileName":"","raters":"","total":"","reterTime":"","remark":"","scrvals":""};
+                       //    RacorderSaveJson["scrvals"]=[{"question":"","score":"","note":""}]
+
+                       var RacorderSaveJson = "{'fileName':'"+fileName+"','";
+                            RacorderSaveJson += "raters':'"+raters+"','";
+                            RacorderSaveJson += "total':'"+total+"','";
+                            RacorderSaveJson += "reterTime':'"+reterTime+"','";
+                            RacorderSaveJson += "remark':'"+remark+"','";
+                            RacorderSaveJson += "scrvals':"+scrvals+"}";
+
+
+                       return RacorderSaveJson;
+                   }
+                   //保存录音事件
+                   this.forConfirm = function()
+                    {
+
+                        var filename = "ssssssssss"
+
+                       var  strJson = _page.GetRacorderScoreJsonStr();
+
+                        strJson = strJson.replace(/'/gm,"\"");
+                        alert("datajson:"+strJson)
+                        var datajson = jQuery.parseJSON(strJson)
+
+                        var result = true;
+                        $.ajax({
+                            url:"/Saverqscoscr/"+filename,
+                            type:"POST",
+                            cache:false,
+                            data:datajson,
+                            datatype:"json",
+                            success:function(data){
+                                if(data!=null)
+                                {
+                                   alert("保存成功了")
+                                   result = true;
+                                }
+                                else
+                                {
+                                    alert("保存失败了")
+                                    result = false;
+                                }
+                            }
+                        })
+
+
+                    }
+               }
+               var  Racorderobj = new Racorderobj();
+               Racorderobj.init();
+           });
+
+    </script>
 
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <link href="http://${localURL}/static/css/bootstrap.css" rel="stylesheet" media="screen">
@@ -64,10 +278,25 @@ localScoreInfo = None
 
 <body>
 
-<form id="formScore">
+<form id="formScore" method="POST">
 
     <div class="bs-docs-div-compress">
             <label class="label label-info label-large">录音打分模板</label>
+
+        <table class="myFullTable" cellpadding="0" cellspacing="0" border="0">
+            <tr>
+                <td height="25" align="center" class="myColorBar02" style="border-bottom:0px solid Lime">
+                    <input name="labhidscriptvalue" type="hidden" id="labhidscriptvalue" />
+                    <input name="labhidscriptpers" type="hidden" id="labhidscriptpers" value="SCRDMX01#10|SCRDMX02#5|SCRDMX03#10|SCRDMX04#10|SCRDMX05#10|SCRDMX06#10|SCRDMX07#10|" />
+                    <input name="labscriptnm" type="hidden" id="labscriptnm" value="IB 电话质量评估标准" />
+                </td>
+                <td id="labrecfilename" height="25" align="center" class="myColorBar02" style="border-bottom:0px solid Lime; cursor:hand;">10.4.48.29_20130502091648838_14_3195_37047.wav</td>
+                <td id="labscorenum" align="center" class="myColorBar02" style="width:80px;">0</td>
+
+            </tr>
+            <tr><td colspan="3" valign="top" style="border-top:solid 1 Lime;"><div style="overflow:auto; width:100%; height:100%;">
+                <table class="myFullTable" cellpadding="0" cellspacing="0" border="0"><tr>
+                    <td id="jspnltdobj" valign="top">
             <div>
                     <%
                         configPageRecorderScore = configPage
@@ -75,12 +304,19 @@ localScoreInfo = None
 
                         #print("configPageRecorderScore length:")
                         #print len(configPageRecorderScore)
-
-
                     %>
                     <%namespace name="comp" file="components.html" />
                     ${comp.layoutControlList(configItem=configUsing)}
             </div>
+                    </td>
+                </tr>
+                </table></div></td>
+            </tr>
+        </table>
+        <div class="modal-footer">
+          　  <button class="btn" data-dismiss="modal"  aria-hidden="true">取消</button>
+           　 <button class="btn btn-primary" id="btnConfirm" >确认</button>
+        </div>
     </div>
 
 </form>
