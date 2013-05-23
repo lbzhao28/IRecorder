@@ -1,0 +1,129 @@
+<html>
+<head>
+
+    <title>¼����ѯ</title>
+</head>
+<script type="text/javascript">
+    $(function () {
+        alert("1111111");
+        jQuery("#showReccem").jqGrid({ url:'/ReccemSelect/0', datatype:"json",
+
+            colNames:['ѡ��', '�ֻ�', '��ϯ', '��ʼʱ��', 'ͨ��ʱ��', '����', '�÷�', '����', '����'],
+            colModel:[
+                {name:'myradio', width:30, fixed:true, align:'center', resizable:false, sortable:false, formatter:function (cellValue, option) {
+                    return '<input type="radio" name="radio_' + option.gid + '"  />';
+                }},
+                {name:'Dnis', index:'Dnis', width:200, resizable:true, sortable:false, editable:false},
+                {name:'TsrName', index:'TsrName', width:200, resizable:true, sortable:false, editable:false},
+                {name:'StrTime', index:'StrTime', width:100, resizable:true, align:"center", sortable:true, search:true, editable:false},
+                {name:'CountTime', index:'CountTime', width:150, resizable:true, align:"left", sortable:true, search:true, editable:false},
+                {name:'Status', index:'Status', width:100, resizable:true, align:"center", sortable:true, stype:"select" },
+                {name:'Score', index:'Score', width:150, resizable:true, sortable:true, editable:true},
+                {name:'Zhu', index:'Zhu', width:80, resizable:true, sortable:true, editable:false, hidden:false},
+                {name:'Bei', index:'Bei', width:100, resizable:true, align:"center", sortable:false, hidden:true, stype:"select" }
+            ],
+            //��ѡ��ť�Ĳ���
+            beforeSelectRow:function (rowid, e) {
+                var $radio = $(e.target).closest('tr').find('input[type="radio"]');
+                $radio.attr('checked', 'checked');
+                return true; // allow row selection
+            },
+            jsonReader:{
+                repeatitems:false
+            },
+            caption:"&nbsp;",
+            height:320,
+            width:1050,
+            resizable:false,
+            multiselect:false, gridComplete:function () {
+                var rowIds = jQuery("#showReccem").jqGrid('getDataIDs');
+                for (var k = 0; k < rowIds.length; k++) {
+                    var curRowData = jQuery("#showReccem").jqGrid('getRowData', rowIds[k]);
+                    var curChk = $("#" + rowIds[k] + "").find(":checkbox");
+                    curChk.attr('name', 'checkboxname');   //��ÿһ��checkbox������
+                    curChk.attr('value', curRowData['disable']);   //��checkbox��ֵ
+                    curChk.attr('title', curRowData['name']);   //��checkbox������������ֵ
+                    //curChk.attr('checked', 'true');   //��������checkbox��ѡ��
+                }
+            }
+        })
+    })
+    alert("222");
+</script>
+<body>
+<form id="form1" runat="server">
+    <div width="60%">
+        <table id="Reccem">
+            <tr>
+                <td>����ʱ�䣺</td>
+                <td colspan="2"><input runat="server" id="StrTime" width="50"/></td>
+                <td>--</td>
+                <td><input runat="server" id="EndTime"/></td>
+                <td>���ͣ�</td>
+                <td><select id="dd">
+                    <option></option>
+                    <option>IN</option>
+                    <option>OUT</option>
+                </select></td>
+                <td align="right">0</td>
+            </tr>
+            <tr>
+                <td>��ϯ���ţ�</td>
+                <td colspan="2"><input align="" runat="server" id="txtNumber"/></td>
+                <td>�ֻ�</td>
+                <td><input align="" runat="server" id="txtDnis"/></td>
+                <td>״̬:</td>
+                <td><select id="status">
+                    <option>1->���</option>
+                    <option>3->�ص�</option>
+                </select></td>
+                <td>
+                    <button runat="server" id="btnSearch"> �� ѯ</button>
+                </td>
+            </tr>
+            <tr>
+                <td>�÷ִ�:</td>
+                <td><input runat="server" id="txtStrScore" style="width: 80;"/></td>
+                <td>��&nbsp;<input runat="server" id="txtendScore" style="width: 40;"/></td>
+                <td>����:</td>
+                <td><input runat="server" id="txtInCall"/></td>
+                <td>����:</td>
+                <td colspan="2"><input runat="server" id="txtOutCall"></td>
+            </tr>
+        </table>
+    </div>
+    <div>
+        <table id="showReccem"></table>
+        <div id="btndiv">
+            <table style="text-align: right">
+                <tr style="height: 10px"></tr>
+            </table>
+        </div>
+    </div>
+    <div>
+        <object id="bofang" classid="CLSID:6BF52A52-394A-11d3-B153-00C04F79FAA6" width="450"
+                height="45"
+                codebase="http://activex.microsoft.com/activex/controls/mplayer/en/nsmp2inf.cab#Version=5,1,52,701standby=Loading Microsoft? Windows Media? Player components..."
+                type="application/x-oleobject">
+            <param name="URL" value="D:\0502\10.4.48.29_20130502091255416_24_3205_37049_13918130810.wav">
+            <param name="UIMode" value="full">
+            <!--��������ʾģʽ:Full��ʾȫ��;mini���;None����ʾ���ſ���,ֻ��ʾ��Ƶ����;invisibleȫ������ʾ-->
+            <!--��������ʾģʽ:Full��ʾȫ��;mini���;None����ʾ���ſ���,ֻ��ʾ��Ƶ����;invisibleȫ������ʾ-->
+            <!--��������ʾģʽ:Full��ʾȫ��;mini���;None����ʾ���ſ���,ֻ��ʾ��Ƶ����;invisibleȫ������ʾ-->
+            <param name="AutoStart" value="1">
+            <!--�Ƿ��Զ�����-->
+            <param name="Enabled" value="1">
+            <!--�������Ƿ����Ϊ����-->
+            <param name="EnableContextMenu" value="0">
+            <%--�Ƿ�����Ҽ�--%>
+            <param name="windowlessVideo" value="0">
+            <!--�����0��������ȫ��,����ֻ���ڴ����в鿴-->
+            <param name='Volume' value='100'>
+            <%--��������--%>
+        </object>
+    </div>
+</form>
+
+
+</body>
+</html>
