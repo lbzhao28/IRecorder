@@ -15,7 +15,7 @@ class iRecorderScoreLogicObj:
         logger.debug("start iRecordeScoreLogicObj.getiRecordeScoreByFileName")
         moduleObj = iRecordeScoreLogicModuleObj()
         iRecorderScoreDicList = moduleObj.getiRecordeScoreByFileName(filename)
-        if iRecorderScoreDicList == None:
+        if iRecorderScoreDicList is None:
             return None;
         iRecorderScoreList = [];
         for iRecorderScoreDic in iRecorderScoreDicList:
@@ -29,7 +29,7 @@ class iRecorderScoreLogicObj:
         moduleObj = iRecordeScoreLogicModuleObj()
         scoreDic = self.__iRecorderScoreJson2Dic(scoreJson)
         filename = moduleObj.postiRecorderScoreByJson(scoreDic)
-        if filename == None or len(filename) <= 0:
+        if filename is None or len(filename) <= 0:
             return None
         iRecorderScoreList = self.getiRecorderScoreByFileName(filename)
         return iRecorderScoreList
@@ -67,21 +67,21 @@ class iRecorderScoreLogicObj:
             'TOTAL':iRecorderJson['total'],
             'UPDT':iRecorderJson['reterTime'],
             'REMARK':iRecorderJson['remark'],
-            'scrvals':iRecorderJson['SCRVALS'],
-            'scrval0':iRecorderJson['SCRVAL0'],
-            'scrval1':iRecorderJson['SCRVAL1'],
-            'scrval2':iRecorderJson['SCRVAL2'],
-            'scrval3':iRecorderJson['SCRVAL3'],
-            'scrval4':iRecorderJson['SCRVAL4'],
-            'scrval5':iRecorderJson['SCRVAL5'],
-            'scrval6':iRecorderJson['SCRVAL6'],
-            'scrval7':iRecorderJson['SCRVAL7'],
-            'scrval8':iRecorderJson['SCRVAL8'],
-            'scrval9':iRecorderJson['SCRVAL9'],
-            'scrval10':iRecorderJson['SCRVAL10'],
-            'scrval11':iRecorderJson['SCRVAL11'],
-            'scrval12':iRecorderJson['SCRVAL12'],
-            'scrval13':iRecorderJson['SCRVAL13'],
-            'scrval14':iRecorderJson['SCRVAL14'],
-            'scrval15':iRecorderJson['SCRVAL15']
+            'SCRVALS':iRecorderJson['scrvals'],
+            'SCRVAL0':iRecorderJson['scrval0'],
+            'SCRVAL1':iRecorderJson['scrval1'],
+            'SCRVAL2':iRecorderJson['scrval2'],
+            'SCRVAL3':iRecorderJson['scrval3'],
+            'SCRVAL4':iRecorderJson['scrval4'],
+            'SCRVAL5':iRecorderJson['scrval5'],
+            'SCRVAL6':iRecorderJson['scrval6'],
+            'SCRVAL7':iRecorderJson['scrval7'],
+            'SCRVAL8':iRecorderJson['scrval8'],
+            'SCRVAL9':iRecorderJson['scrval9'],
+            'SCRVAL10':iRecorderJson['scrval10'],
+            'SCRVAL11':iRecorderJson['scrval11'],
+            'SCRVAL12':iRecorderJson['scrval12'],
+            'SCRVAL13':iRecorderJson['scrval13'],
+            'SCRVAL14':iRecorderJson['scrval14'],
+            'SCRVAL15':iRecorderJson['scrval15']
         }

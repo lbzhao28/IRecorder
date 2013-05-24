@@ -43,15 +43,15 @@ class iRecorderList:
 
             globalDefine.globaliRecorderListErrorlog = "No Error"
             #获取queryString
-            params  = web.input(filename=None)
+            params  = web.input()
 
             logicObj = iRecorderListLogicObj()
-            if params["filename"] is None :
-                #各个查询字段精确查询
-                iRecorderList = logicObj.getiRecorderListByParams(params);
-            else:
+            if "filename" in params.keys() and params["filename"] is not None:
                 #根据文件名精确查询
                 iRecorderList = logicObj.getiRecorderListByFileName(params["filename"]);
+            else:
+                #各个查询字段精确查询
+                iRecorderList = logicObj.getiRecorderListByParams(params);
 
             if iRecorderList is None:
                 return {'message': None}
@@ -81,17 +81,17 @@ class iRecordeScore:
 
             globalDefine.globaliRecordeScorerErrorlog = "No Error"
             #获取queryString
-            params  = web.input(filename=None)
+            params  = web.input()
 
             logicObj = iRecorderScoreLogicObj()
-            if params["filename"] is not None :
+            if "filename" in params.keys() and params["filename"] is not None:
                 #根据文件名精确查询
                 iRecorderScore = logicObj.getiRecorderScoreByFileName(params["filename"]);
 
             if iRecorderScore is None:
-                pass
+                return {'message': None}
             else:
-                return iRecorderScore
+                return {'message': iRecorderScore}
         except:
             logger.error("iRecorderScore GET exception, see the traceback.log")
             #异常写入日志文件.
