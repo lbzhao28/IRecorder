@@ -22,17 +22,38 @@ class SearchReccem():
 class ReccemSelect:
     def GET(self, op):
         if(op == '0'):
-            dic = [{"Dnis": "1101", "TsrName": "60001", "StrTime": "2012-10-12 12:23:04", "CountTime": "329",
-                    "Status": "111", "Score": "", "Zhu": "021-52808080", "Bei": ""},
-                    {"Dnis": "1102", "TsrName": "60002", "StrTime": "2012-10-12 12:56:04", "CountTime": "128",
-                     "Status": "222", "Score": "", "Zhu": "", "Bei": "13501916492"},
-                    {"Dnis": "1103", "TsrName": "60004", "StrTime": "2012-10-12 13:06:04", "CountTime": "223",
-                     "Status": "333", "Score": "", "Zhu": "", "Bei": "18017511892"},
-                    {"Dnis": "1104", "TsrName": "60003", "StrTime": "2012-10-12 15:20:04", "CountTime": "112",
-                     "Status": "444", "Score": "", "Zhu": "021-52808080", "Bei": ""}
+            dic = [{"hostName": "1111", "fileName": "aaaa", "channelNO": "1111", "startTime": "111", "channelDN": "111",
+                    "telDNIS": "11", "callID": "222",
+                    "spendTime": "222", "available": "1", "agentID": "11", "filePath": "11", "callType": "11",
+                    "telNO": "11", "endTime": "11", "total": "11"},
+                    {"hostName": "1111", "fileName": "aaaa", "channelNO": "1111", "startTime": "111", "channelDN": "111"
+                    , "telDNIS": "11", "callID": "222",
+                     "spendTime": "222", "available": "1", "agentID": "11", "filePath": "11", "callType": "11",
+                     "telNO": "11", "endTime": "11", "total": "11"},
+                    {"hostName": "1111", "fileName": "aaaa", "channelNO": "1111", "startTime": "111", "channelDN": "111"
+                    , "telDNIS": "11", "callID": "222",
+                     "spendTime": "222", "available": "1", "agentID": "11", "filePath": "11", "callType": "11",
+                     "telNO": "11", "endTime": "11", "total": "11"},
             ]
-            print json.dumps(dic)
-            return  json.dumps(dic)
-        if(op == '1'):
-            dic = "1";
             print dic
+            return render.ReccemSearch(outdic=dic);
+        if(op == '1'):
+            cemList = web.input();
+            time1 = cemList["StrTime"];
+            time2 = cemList["EndTime"];
+            print time1 + time2
+            dic = [{"hostName": "AAA", "fileName": "aaaa", "channelNO": "1111", "startTime": "111", "channelDN": "111",
+                    "telDNIS": "11", "callID": "222",
+                    "spendTime": "222", "available": "1", "agentID": "11", "filePath": "11", "callType": "11",
+                    "telNO": "11", "endTime": "11", "total": "11"},
+                    {"hostName": "ZZZ", "fileName": "aaaa", "channelNO": "1111", "startTime": "111", "channelDN": "111",
+                     "telDNIS": "11", "callID": "222",
+                     "spendTime": "222", "available": "1", "agentID": "11", "filePath": "11", "callType": "11",
+                     "telNO": "11", "endTime": "11", "total": "11"},
+                    {"hostName": "XXX", "fileName": "aaaa", "channelNO": "1111", "startTime": "111", "channelDN": "111",
+                     "telDNIS": "11", "callID": "222",
+                     "spendTime": "222", "available": "1", "agentID": "11", "filePath": "11", "callType": "11",
+                     "telNO": "11", "endTime": "11", "total": "11"},
+            ]
+            print dic
+            return render.ReccemSearch(outdic=dic);
