@@ -5,20 +5,21 @@ import os
 sys.path.append(os.getcwd()+'\\ModuleObj')
 from ModuleObj.iRecorderListModuleObj import iRecorderListModuleObj
 from logHelper import getLogger
-"""
 
-"""
 class iRecorderListLogicObj:
+    """
+
+    """
     def getiRecorderListByFileName(self,filename):
         logger = getLogger()
         logger.debug("start iRecorderListLogicObj.getiRecorderListByFileName")
         moduleObj = iRecorderListModuleObj()
         iRecorderDicList = moduleObj.getiRecorderListByFileName(filename)
-        if iRecorderDicList == None:
+        if iRecorderDicList is None:
             return None;
         iRecorderList = [];
         for iRecorderDic in iRecorderDicList:
-            iRecorder = self.__iRecorderDic2Json(iRecorderDic)
+            iRecorder = self.__iRecorderDB2JSON(iRecorderDic)
             iRecorderList.append(iRecorder)
         return  iRecorderList
 
@@ -27,11 +28,11 @@ class iRecorderListLogicObj:
         logger.debug("start iRecorderListLogicObj.getiRecorderListByParams")
         moduleObj = iRecorderListModuleObj()
         iRecorderDicList = moduleObj.getiRecorderListByFileName(params)
-        if iRecorderDicList == None:
+        if iRecorderDicList is None:
             return None;
         iRecorderList = [];
         for iRecorderDic in iRecorderDicList:
-            iRecorder = self.__iRecorderDic2Json(iRecorderDic)
+            iRecorder = self.__iRecorderDB2JSON(iRecorderDic)
             iRecorderList.append(iRecorder)
         return  iRecorderList
 

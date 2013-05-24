@@ -24,10 +24,11 @@ urls = (
     "/irecorderservice/irecorderquestion","iRecorderQuestion",
     )
 app = web.application(urls,globals())
-"""
 
-"""
 class iRecorderList:
+    """
+
+    """
     @mimerender(
         default = 'json',
         html = render_html,
@@ -45,17 +46,17 @@ class iRecorderList:
             params  = web.input(filename=None)
 
             logicObj = iRecorderListLogicObj()
-            if params["filename"] == None :
+            if params["filename"] is None :
                 #各个查询字段精确查询
                 iRecorderList = logicObj.getiRecorderListByParams(params);
             else:
                 #根据文件名精确查询
                 iRecorderList = logicObj.getiRecorderListByFileName(params["filename"]);
 
-            if iRecorderList == None:
-                pass
+            if iRecorderList is None:
+                return {'message': None}
             else:
-                return iRecorderList
+                return {'message': iRecorderList}
         except:
             logger.error("iRecorderList GET exception, see the traceback.log")
             #异常写入日志文件.
@@ -83,11 +84,11 @@ class iRecordeScore:
             params  = web.input(filename=None)
 
             logicObj = iRecorderScoreLogicObj()
-            if params["filename"] != None :
+            if params["filename"] is not None :
                 #根据文件名精确查询
                 iRecorderScore = logicObj.getiRecorderScoreByFileName(params["filename"]);
 
-            if iRecorderScore == None:
+            if iRecorderScore is None:
                 pass
             else:
                 return iRecorderScore
