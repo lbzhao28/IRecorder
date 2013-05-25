@@ -13,7 +13,7 @@ class iRecorderScoreLogicObj:
     def getiRecorderScoreByFileName(self,filename):
         logger = getLogger()
         logger.debug("start iRecordeScoreLogicObj.getiRecordeScoreByFileName")
-        moduleObj = iRecordeScoreLogicModuleObj()
+        moduleObj = iRecorderScoreModuleObj()
         iRecorderScoreDicList = moduleObj.getiRecordeScoreByFileName(filename)
         if iRecorderScoreDicList is None:
             return None;
@@ -26,9 +26,20 @@ class iRecorderScoreLogicObj:
     def postiRecorderScoreByJson(self,scoreJson):
         logger = getLogger()
         logger.debug("start iRecordeScoreLogicObj.postiRecorderScoreByJson")
-        moduleObj = iRecordeScoreLogicModuleObj()
+        moduleObj = iRecorderScoreModuleObj()
         scoreDic = self.__iRecorderScoreJson2Dic(scoreJson)
         filename = moduleObj.postiRecorderScoreByJson(scoreDic)
+        if filename is None or len(filename) <= 0:
+            return None
+        iRecorderScoreList = self.getiRecorderScoreByFileName(filename)
+        return iRecorderScoreList
+
+    def putiRecorderScoreByJson(self,scoreJson):
+        logger = getLogger()
+        logger.debug("start iRecordeScoreLogicObj.putiRecorderScoreByJson")
+        moduleObj = iRecorderScoreModuleObj()
+        scoreDic = self.__iRecorderScoreJson2Dic(scoreJson)
+        filename = moduleObj.putiRecorderScoreByJson(scoreDic)
         if filename is None or len(filename) <= 0:
             return None
         iRecorderScoreList = self.getiRecorderScoreByFileName(filename)
@@ -61,6 +72,49 @@ class iRecorderScoreLogicObj:
         }
 
     def __iRecorderScoreJson2Dic(self,iRecorderJson):
+        if 'raters' not in iRecorderJson.keys():
+            iRecorderJson['raters'] = ""
+        if 'total' not in iRecorderJson.keys():
+            iRecorderJson['total'] = ""
+        if 'reterTime' not in iRecorderJson.keys():
+            iRecorderJson['reterTime'] = ""
+        if 'remark' not in iRecorderJson.keys():
+            iRecorderJson['remark'] = ""
+        if 'scrvals' not in iRecorderJson.keys():
+            iRecorderJson['scrvals'] = ""
+        if 'scrval0' not in iRecorderJson.keys():
+            iRecorderJson['scrval0'] = ""
+        if 'scrval1' not in iRecorderJson.keys():
+            iRecorderJson['scrval1'] = ""
+        if 'scrval2' not in iRecorderJson.keys():
+            iRecorderJson['scrval2'] = ""
+        if 'scrval3' not in iRecorderJson.keys():
+            iRecorderJson['scrval3'] = ""
+        if 'scrval4' not in iRecorderJson.keys():
+            iRecorderJson['scrval4'] = ""
+        if 'scrval5' not in iRecorderJson.keys():
+            iRecorderJson['scrval5'] = ""
+        if 'scrval6' not in iRecorderJson.keys():
+            iRecorderJson['scrval6'] = ""
+        if 'scrval7' not in iRecorderJson.keys():
+            iRecorderJson['scrval7'] = ""
+        if 'scrval8' not in iRecorderJson.keys():
+            iRecorderJson['scrval8'] = ""
+        if 'scrval9' not in iRecorderJson.keys():
+            iRecorderJson['scrval9'] = ""
+        if 'scrval10' not in iRecorderJson.keys():
+            iRecorderJson['scrval10'] = ""
+        if 'scrval11' not in iRecorderJson.keys():
+            iRecorderJson['scrval11'] = ""
+        if 'scrval12' not in iRecorderJson.keys():
+            iRecorderJson['scrval12'] = ""
+        if 'scrval13' not in iRecorderJson.keys():
+            iRecorderJson['scrval13'] = ""
+        if 'scrval14' not in iRecorderJson.keys():
+            iRecorderJson['scrval14'] = ""
+        if 'scrval15' not in iRecorderJson.keys():
+            iRecorderJson['scrval15'] = ""
+
         return {
             'RECKEY':iRecorderJson['fileName'],
             'RATERS':iRecorderJson['raters'],
