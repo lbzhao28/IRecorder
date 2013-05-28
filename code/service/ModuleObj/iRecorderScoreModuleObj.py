@@ -39,10 +39,11 @@ class iRecorderScoreModuleObj:
             " FROM [TRQ_SCORE]"\
             " WHERE [TRQ_SCORE].[RECKEY] = %s"
             cur.execute(sqlstr,filename)
-            result = []
-            for row in cur:
-                result.append(row)
-            return result
+            row = cur.fetchone()
+            if row:
+                return row
+            else:
+                return None
         except :
             logger.error("exception occur, see the traceback.log")
             #异常写入日志文件.
@@ -114,7 +115,7 @@ class iRecorderScoreModuleObj:
             cur.execute(sqlstr)
             conn.commit()
 
-            sqlstr = "SELECT * FROM"\
+            sqlstr = "SELECT *"\
                      " FROM [TRQ_SCORE]"\
                      " WHERE [TRQ_SCORE].[RECKEY] = %s"
             cur.execute(sqlstr,scoreDic['RECKEY'])
@@ -125,6 +126,7 @@ class iRecorderScoreModuleObj:
                 return None
         except :
             logger.error("exception occur, see the traceback.log")
+
             #异常写入日志文件.
             f = open('Logs/traceback.txt','a')
             traceback.print_exc()
@@ -145,7 +147,7 @@ class iRecorderScoreModuleObj:
             cur = conn.cursor()
             sqlstr = "UPDATE [TRQ_SCORE]"\
                      "SET"\
-                     ",[RATERS] = '"+scoreDic['RATERS']+"'"\
+                     "[RATERS] = '"+scoreDic['RATERS']+"'"\
                      ",[TOTAL] = '"+scoreDic['TOTAL']+"'"\
                      ",[UPDT] =  CONVERT(varchar(32), GETDATE(), 20)"\
                      ",[REMARK] = '"+scoreDic['REMARK']+"'"\

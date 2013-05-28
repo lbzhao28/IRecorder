@@ -12,16 +12,14 @@ class iRecorderScoreLogicObj:
     """
     def getiRecorderScoreByFileName(self,filename):
         logger = getLogger()
-        logger.debug("start iRecordeScoreLogicObj.getiRecordeScoreByFileName")
+        logger.debug("start iRecordeScoreLogicObj.getiRecorderScoreByFileName")
         moduleObj = iRecorderScoreModuleObj()
-        iRecorderScoreDicList = moduleObj.getiRecordeScoreByFileName(filename)
-        if iRecorderScoreDicList is None:
+        iRecorderScoreDic = moduleObj.getiRecorderScoreByFileName(filename)
+        if iRecorderScoreDic is None:
             return None;
-        iRecorderScoreList = [];
-        for iRecorderScoreDic in iRecorderScoreDicList:
-            iRecorderScore = self.__iRecorderScoreDic2Json(iRecorderScoreDic)
-            iRecorderScoreList.append(iRecorderScore)
-        return  iRecorderScoreList
+
+        iRecorderScore = self.__iRecorderScoreDic2Json(iRecorderScoreDic)
+        return  iRecorderScore
 
     def postiRecorderScoreByJson(self,scoreJson):
         logger = getLogger()
@@ -31,8 +29,8 @@ class iRecorderScoreLogicObj:
         filename = moduleObj.postiRecorderScoreByJson(scoreDic)
         if filename is None or len(filename) <= 0:
             return None
-        iRecorderScoreList = self.getiRecorderScoreByFileName(filename)
-        return iRecorderScoreList
+        iRecorderScore = self.getiRecorderScoreByFileName(filename)
+        return iRecorderScore
 
     def putiRecorderScoreByJson(self,scoreJson):
         logger = getLogger()
@@ -42,8 +40,8 @@ class iRecorderScoreLogicObj:
         filename = moduleObj.putiRecorderScoreByJson(scoreDic)
         if filename is None or len(filename) <= 0:
             return None
-        iRecorderScoreList = self.getiRecorderScoreByFileName(filename)
-        return iRecorderScoreList
+        iRecorderScore = self.getiRecorderScoreByFileName(filename)
+        return iRecorderScore
 
     def __iRecorderScoreDic2Json(self,iRecorderDic):
         return {
