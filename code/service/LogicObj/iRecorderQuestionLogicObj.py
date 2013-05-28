@@ -20,7 +20,7 @@ class iRecorderQuestionLogicObj:
         iRecorderQuestionList = [];
         for iRecorderQuestionDic in iRecorderQuestionDicList:
             iRecorderQuestion = self.__iRecorderQuestionDic2Json(iRecorderQuestionDic)
-            iRecorderQuestion["questionCount"] = moduleObj.getQuestionCount(iRecorderQuestion["ITEMID"])
+            iRecorderQuestion["questionCount"] = moduleObj.getQuestionCount(iRecorderQuestionDic["ITEMID"])
             iRecorderQuestionList.append(iRecorderQuestion)
         return  iRecorderQuestionList
 
