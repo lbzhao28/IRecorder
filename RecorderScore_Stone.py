@@ -11,10 +11,11 @@ from configData import getConfig
 from logHelper import getLogger
 import RacorderClient
 
-import re
-import base64
 
+
+import base64
 import json
+import configData
 
 import urlparse
 import OrderDomainHandler
