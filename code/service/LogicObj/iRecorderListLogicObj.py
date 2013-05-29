@@ -41,7 +41,7 @@ class iRecorderListLogicObj:
             'hostName':iRecorderDic['HOSTNAME'],
             'fileName':iRecorderDic['FILENAME'],
             'channelNO':iRecorderDic['CHANNELNO'],
-            'startTime':iRecorderDic['STARTTIME'],
+            'startTime':iRecorderDic['STARTTIME'].strftime('%Y-%m-%d %H:%M:%S'),
             'spendTime':iRecorderDic['SPENDTIME'],
             'available':iRecorderDic['AVAILABLE'],
             'agentID':iRecorderDic['AGENTID'],
@@ -51,6 +51,6 @@ class iRecorderListLogicObj:
             'channelDN':iRecorderDic['CHANNELDN'],
             'telDNIS':iRecorderDic['TELDNIS'],
             'callID':iRecorderDic['CALLID'],
-            'endTime':iRecorderDic['ENDTIME'],
-            'total':iRecorderDic['TOTAL']
+            'endTime':iRecorderDic['ENDTIME'].strftime('%Y-%m-%d %H:%M:%S'),
+            'total':str(iRecorderDic['TOTAL'])
         }

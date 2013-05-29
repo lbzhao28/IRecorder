@@ -47,7 +47,7 @@ class iRecorderScoreLogicObj:
         return {
             'fileName':iRecorderDic['RECKEY'],
             'raters':iRecorderDic['RATERS'],
-            'total':iRecorderDic['TOTAL'],
+            'total':str(iRecorderDic['TOTAL']),
             'reterTime':iRecorderDic['UPDT'],
             'remark':iRecorderDic['REMARK'],
             'scrvals':iRecorderDic['SCRVALS'],
@@ -117,7 +117,7 @@ class iRecorderScoreLogicObj:
             'RECKEY':iRecorderJson['fileName'],
             'RATERS':iRecorderJson['raters'],
             'TOTAL':iRecorderJson['total'],
-            'UPDT':iRecorderJson['reterTime'],
+            'UPDT':iRecorderJson['reterTime'].strftime('%Y-%m-%d %H:%M:%S'),
             'REMARK':iRecorderJson['remark'],
             'SCRVALS':iRecorderJson['scrvals'],
             'SCRVAL0':iRecorderJson['scrval0'],

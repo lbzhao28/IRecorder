@@ -15,7 +15,7 @@ from LogicObj.iRecorderQuestionLogicObj import iRecorderQuestionLogicObj
 mimerender = mimerender.WebPyMimeRender()
 
 render_xml = lambda message: '<message>%s</message>'%message
-render_json = lambda**args: json.dumps(args)
+render_json = lambda **args: json.dumps(args)
 render_html = lambda message: '<html><body>%s</body></html>'%message
 render_txt = lambda message: message
 
@@ -55,7 +55,7 @@ class iRecorderList:
             if iRecorderList is None:
                 return {'message': None}
             else:
-                return {'message': iRecorderList}
+                return {'message':iRecorderList}
         except:
             logger.error("iRecorderList GET exception, see the traceback.log")
             #异常写入日志文件.
@@ -113,7 +113,7 @@ class iRecorderScore:
             if iRecorderScore is None:
                 return {'message': None}
             else:
-                return iRecorderScore
+                return {'message':iRecorderScore}
         except:
             logger.error("iRecorderScore POST exception, see the traceback.log")
             #异常写入日志文件.
