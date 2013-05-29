@@ -54,7 +54,64 @@ def getOrderInfoOrder(inOrderid):
         if localOrderInfo is not None:
             localOrderInfo = flatOrderInfoOrder(localOrderInfo)
 
+            print localOrderInfo
         return localOrderInfo
+    except pycurl.error, error:
+        logger.error("exception occur, see the traceback.log")
+
+        #异常写入日志文件.
+        f = open('traceback.txt','a')
+        traceback.print_exc()
+        traceback.print_exc(file = f)
+        f.flush()
+        f.close()
+
+        errno, errstr = error
+        print 'An error occurred: ', errstr
+    else:
+        pass
+    finally:
+        pass
+
+def GetRacorderQuestionUrl(fid):
+    """get the order info from REST """
+    try:
+        logger = getLogger()
+        logger.debug("start GET RacorderQuestion Info according fid id.")
+
+        if fid is None:
+            return None
+
+        buf = cStringIO.StringIO() #define in function.
+        c = pycurl.Curl()
+        localURL = getConfig('RESTService','irecorderQuestionUrl','str')+fid
+        localURL = str(localURL)
+        c.setopt(pycurl.URL,localURL)
+        c.setopt(c.WRITEFUNCTION,buf.write)
+        c.setopt(c.VERBOSE, True)
+        c.setopt(pycurl.USERPWD,getConfig('allowedUser1','UserName','str')+':'+getConfig('allowedUser1','Password','str'))
+        c.perform()
+
+        http_code = c.getinfo(pycurl.HTTP_CODE)
+        #judge get success.
+        if http_code != 200:
+            return None
+
+        #get the data from json.
+        if (len(buf.getvalue())>0):
+            s = buf.getvalue()
+            localRacorderQuestion = json.loads(buf.getvalue())
+        else:
+            localRacorderQuestion=  None
+        buf.close()
+        c.close()
+
+        logger.debug("get localOrderInfo success.")
+
+        #we need change the data structure, so the html show simple.
+        if localRacorderQuestion is not None:
+            #localRacorderQuestion = flatOrderInfoOrder(localRacorderQuestion)
+             return localRacorderQuestion
     except pycurl.error, error:
         logger.error("exception occur, see the traceback.log")
 

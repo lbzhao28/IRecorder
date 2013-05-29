@@ -5,6 +5,17 @@ from configobj import ConfigObj
 import  RacorderClient
 import os
 
+from web.contrib.template import render_mako
+
+# input_encoding and output_encoding is important for unicode
+# template file. Reference:
+# http://www.makotemplates.org/docs/documentation.html#unicode
+render = render_mako(
+    directories = ['templates'],
+    input_encoding = 'utf-8',
+    output_encoding = 'utf-8',
+)
+
 def getConfigPage():
     """get the page config file"""
 
@@ -102,14 +113,23 @@ def getRecorderConfigPage():
 
 # 创建录音打分的页面
 def RecorderConfigPage():
-    tRacorderQuestions = RacorderClient.GetRacorderQuestion();
+    #tRacorderQuestions = RacorderClient.GetRacorderQuestion();
+    tRacorderQuestionsMesage = RacorderClient.GetRacorderQuestionUrl("CEM");
+
+    print tRacorderQuestionsMesage;
+    tRacorderQuestions = tRacorderQuestionsMesage["message"];
+
+    print len(tRacorderQuestions)
+
+    print tRacorderQuestions;
+
+
+
     if tRacorderQuestions is None or len(tRacorderQuestions)==0 :
         return render.error(error = 'no filename')
     else:
     #return a config list
         configPage = ConfigObj()
-
-
 
         SBaseName = 'Q' # 序号
 
@@ -167,7 +187,20 @@ def RecorderConfigPage():
 
 
             configPage[Sname]['class']['radio'] = {}
-            subitems = item["subitems"];   #问题答案子类
+
+
+            questionCount = item["questionCount"];   #问题答案子类
+            print questionCount;
+            subitems = [];
+            j = 0 ;
+            for i in range(questionCount):
+
+                print i;
+                subitem = {"subitemname":i,"subitemvalue":i }
+                #j = j+1
+                subitems.append(subitem)
+            print subitems
+
             radioBaseName = 'radio'
             j = 0
             for itemj in subitems:
@@ -196,7 +229,7 @@ def RecorderConfigPage():
 
             itemPerc = item["itemPerc"] #百分比
             configPage[Sname]['percent'] = {}
-            configPage[Sname]['percent']['controlText'] = itemPerc +"%"
+            configPage[Sname]['percent']['controlText'] = str(itemPerc) +"%"
             configPage[Sname]['percent']['controlType'] = 'labelName'
             configPage[Sname]['percent']['controlCss'] = 'label label-normal'
             configPage[Sname]['percent']['controlName'] = 'lblPERCENTName'+str(i)
