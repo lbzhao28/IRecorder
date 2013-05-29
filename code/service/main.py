@@ -170,7 +170,7 @@ class iRecorderQuestion:
             logicObj = iRecorderQuestionLogicObj()
             if "fid" in params.keys() and params["fid"] is not None:
                 #根据文件名精确查询
-                iRecorderQuestionList = logicObj.getiRecorderListByFileFid(params["fid"]);
+                iRecorderQuestionList = logicObj.getiRecorderQuestionByFileFid(params["fid"]);
 
             if iRecorderQuestionList is None:
                 return {'message': None}

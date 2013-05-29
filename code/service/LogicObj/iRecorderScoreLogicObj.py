@@ -117,7 +117,7 @@ class iRecorderScoreLogicObj:
             'RECKEY':iRecorderJson['fileName'],
             'RATERS':iRecorderJson['raters'],
             'TOTAL':iRecorderJson['total'],
-            'UPDT':iRecorderJson['reterTime'].strftime('%Y-%m-%d %H:%M:%S'),
+            'UPDT':iRecorderJson['reterTime'],
             'REMARK':iRecorderJson['remark'],
             'SCRVALS':iRecorderJson['scrvals'],
             'SCRVAL0':iRecorderJson['scrval0'],
