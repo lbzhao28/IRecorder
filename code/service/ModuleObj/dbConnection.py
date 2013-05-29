@@ -15,5 +15,5 @@ def dbMSSqlConnect():
     return db
 
 def msSqlConnect():
-    db = pymssql.connect(host=getConfig('dbMSSql','dbhost','str'),user=getConfig('dbMSSql','dbuser','str'),password=getConfig('dbMSSql','dbpwd','str'),database=getConfig('dbMSSql','db','str'),charset = "utf8", as_dict=True)
+    db = pymssql.connect(host=getConfig('dbMSSql','dbhost','str'),user=getConfig('dbMSSql','dbuser','str'),password=getConfig('dbMSSql','dbpwd','str'),database=getConfig('dbMSSql','db','str'), as_dict=True)
     return db
