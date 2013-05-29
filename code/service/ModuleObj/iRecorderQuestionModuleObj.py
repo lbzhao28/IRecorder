@@ -19,7 +19,8 @@ class iRecorderQuestionModuleObj:
                      ",[ITEMPERC]"\
                      ",[HASREMARK]"\
                      " FROM [TRQ_SCRIPT]"\
-                     " WHERE [TRQ_SCRIPT].[FID] = %s"
+                     " WHERE [TRQ_SCRIPT].[FID] = %s" \
+                     " ORDER BY [ITEMDESC]"
             cur.execute(sqlstr,fid)
             result = []
             for row in cur:
