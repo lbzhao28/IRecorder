@@ -49,7 +49,7 @@ class iRecorderScoreLogicObj:
             'raters':iRecorderDic['RATERS'],
             'total':str(iRecorderDic['TOTAL']),
             'reterTime':iRecorderDic['UPDT'],
-            'remark':iRecorderDic['REMARK'],
+            'remark':unicode(iRecorderDic['REMARK'],"cp936"),
             'scrvals':iRecorderDic['SCRVALS'],
             'scrval0':iRecorderDic['SCRVAL0'],
             'scrval1':iRecorderDic['SCRVAL1'],
