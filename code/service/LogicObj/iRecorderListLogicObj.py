@@ -27,7 +27,7 @@ class iRecorderListLogicObj:
         logger = getLogger()
         logger.debug("start iRecorderListLogicObj.getiRecorderListByParams")
         moduleObj = iRecorderListModuleObj()
-        iRecorderDicList = moduleObj.getiRecorderListByFileName(params)
+        iRecorderDicList = moduleObj.getiRecorderListByParams(params)
         if iRecorderDicList is None:
             return None;
         iRecorderList = [];

@@ -10,6 +10,7 @@ from logHelper import getLogger
 
 from LogicObj.iRecorderListLogicObj import iRecorderListLogicObj
 from LogicObj.iRecorderScoreLogicObj import iRecorderScoreLogicObj
+from LogicObj.iRecorderQuestionLogicObj import iRecorderQuestionLogicObj
 
 mimerender = mimerender.WebPyMimeRender()
 
@@ -40,18 +41,16 @@ class iRecorderList:
         try:
             logger = getLogger()
             logger.debug("start iRecorderList GET response")
-
-            globalDefine.globaliRecorderListErrorlog = "No Error"
             #获取queryString
-            params  = web.input(filename=None)
+            params  = web.input()
 
             logicObj = iRecorderListLogicObj()
-            if params["filename"] is None :
-                #各个查询字段精确查询
-                iRecorderList = logicObj.getiRecorderListByParams(params);
-            else:
+            if "filename" in params.keys() and params["filename"] is not None:
                 #根据文件名精确查询
                 iRecorderList = logicObj.getiRecorderListByFileName(params["filename"]);
+            else:
+                #各个查询字段精确查询
+                iRecorderList = logicObj.getiRecorderListByParams(params);
 
             if iRecorderList is None:
                 return {'message': None}
@@ -66,7 +65,7 @@ class iRecorderList:
             f.flush()
             f.close()
 
-class iRecordeScore:
+class iRecorderScore:
     @mimerender(
         default = 'json',
         html = render_html,
@@ -78,20 +77,18 @@ class iRecordeScore:
         try:
             logger = getLogger()
             logger.debug("start iRecordeScore GET response")
-
-            globalDefine.globaliRecordeScorerErrorlog = "No Error"
             #获取queryString
-            params  = web.input(filename=None)
+            params  = web.input()
 
             logicObj = iRecorderScoreLogicObj()
-            if params["filename"] is not None :
+            if "filename" in params.keys() and params["filename"] is not None:
                 #根据文件名精确查询
-                iRecorderScore = logicObj.getiRecorderScoreByFileName(params["filename"]);
+                iRecorderScore = logicObj.getiRecorderScoreByFileName(params["filename"])
 
             if iRecorderScore is None:
-                pass
+                return {'message': None}
             else:
-                return iRecorderScore
+                return {'message': iRecorderScore}
         except:
             logger.error("iRecorderScore GET exception, see the traceback.log")
             #异常写入日志文件.
@@ -104,15 +101,19 @@ class iRecordeScore:
     def POST(self):
         try:
             logger = getLogger()
-            logger.debug("start iRecordeScore POST response")
-
-            globalDefine.globaliRecordeScorerErrorlog = "No Error"
+            logger.debug("start iRecorderScore POST response")
 
             webData = web.data()
-            iRecordeScoreJson = json.loads(webData)
+            iRecorderScoreJson = json.loads(webData)
 
             logicObj = iRecorderScoreLogicObj()
 
+            iRecorderScore = logicObj.postiRecorderScoreByJson(iRecorderScoreJson)
+
+            if iRecorderScore is None:
+                return {'message': None}
+            else:
+                return iRecorderScore
         except:
             logger.error("iRecorderScore POST exception, see the traceback.log")
             #异常写入日志文件.
@@ -122,6 +123,67 @@ class iRecordeScore:
             f.flush()
             f.close()
 
+    def PUT(self):
+        try:
+            logger = getLogger()
+            logger.debug("start iRecorderScore PUT response")
+
+            webData = web.data()
+            iRecorderScoreJson = json.loads(webData)
+
+            logicObj = iRecorderScoreLogicObj()
+
+            iRecorderScore = logicObj.putiRecorderScoreByJson(iRecorderScoreJson)
+
+            if iRecorderScore is None:
+                return {'message': None}
+            else:
+                return {'message': iRecorderScore}
+        except:
+            logger.error("iRecorderScore PUT exception, see the traceback.log")
+            #异常写入日志文件.
+            f = open('Logs/traceback.txt','a')
+            traceback.print_exc()
+            traceback.print_exc(file = f)
+            f.flush()
+            f.close()
+
+class iRecorderQuestion:
+    """
+
+    """
+    @mimerender(
+        default = 'json',
+        html = render_html,
+        xml  = render_xml,
+        json = render_json,
+        txt  = render_txt
+    )
+    def GET(self):
+        try:
+            logger = getLogger()
+            logger.debug("start iRecorderQuestion GET response")
+
+            #获取queryString
+            params  = web.input()
+
+            logicObj = iRecorderQuestionLogicObj()
+            if "fid" in params.keys() and params["fid"] is not None:
+                #根据文件名精确查询
+                iRecorderQuestionList = logicObj.getiRecorderListByFileFid(params["fid"]);
+
+            if iRecorderQuestionList is None:
+                return {'message': None}
+            else:
+                return {'message': iRecorderQuestionList}
+        except:
+            logger.error("iRecorderQuestion GET exception, see the traceback.log")
+            #异常写入日志文件.
+            f = open('Logs/traceback.txt','a')
+            traceback.print_exc()
+            traceback.print_exc(file = f)
+            f.flush()
+            f.close()
 
 if __name__ == "__main__":
     app.run()
