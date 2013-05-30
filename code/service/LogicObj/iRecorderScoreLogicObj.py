@@ -8,68 +8,113 @@ from logHelper import getLogger
 
 class iRecorderScoreLogicObj:
     """
-
+    录音打分系统-打分资源逻辑业务处理类
+    author:J.Wong
     """
     def getiRecorderScoreByFileName(self,filename):
+        """
+        通过filename查找到录音打分资源
+        author: J.Wong
+        args: fid,string 录音文件名
+        return: iRecorderList,list 对应的录音资源list
+        """
         logger = getLogger()
         logger.debug("start iRecordeScoreLogicObj.getiRecorderScoreByFileName")
         moduleObj = iRecorderScoreModuleObj()
         iRecorderScoreDic = moduleObj.getiRecorderScoreByFileName(filename)
         if iRecorderScoreDic is None:
-            return None;
+            return None
+        if isinstance(iRecorderScoreDic, basestring):
+            return  iRecorderScoreDic
 
         iRecorderScore = self.__iRecorderScoreDic2Json(iRecorderScoreDic)
         return  iRecorderScore
 
     def postiRecorderScoreByJson(self,scoreJson):
+        """
+        通过JSON新增一条录音打分信息
+        author: J.Wong
+        args: scoreJson,dict 封装新录音打分信息的JSON，格式参见doc目录下“座席录音质检资源接口说明文档.xlsx”
+        return: iRecorderScore,dict 插入成功时返回该数据查询结果的JSON
+        """
         logger = getLogger()
         logger.debug("start iRecordeScoreLogicObj.postiRecorderScoreByJson")
         moduleObj = iRecorderScoreModuleObj()
         scoreDic = self.__iRecorderScoreJson2Dic(scoreJson)
-        filename = moduleObj.postiRecorderScoreByJson(scoreDic)
+        if  'fileName' in scoreJson.keys():
+            filename = moduleObj.postiRecorderScoreByJson(scoreDic)
+        else:
+            return 'Must set the value of fileName.'
         if filename is None or len(filename) <= 0:
-            return None
-        iRecorderScore = self.getiRecorderScoreByFileName(filename)
+            return 'Post iRecorderScore failed.'
+        if filename.find('wav'):
+            iRecorderScore = self.getiRecorderScoreByFileName(filename)
+        else:
+            return filename
         return iRecorderScore
 
     def putiRecorderScoreByJson(self,scoreJson):
+        """
+        通过JSON更新一条录音打分信息
+        author: J.Wong
+        args: scoreJson,dict 封装新录音打分信息的JSON，格式参见doc目录下“座席录音质检资源接口说明文档.xlsx”
+        return: iRecorderScore,dict 更新成功时返回该数据查询结果的JSON
+        """
         logger = getLogger()
         logger.debug("start iRecordeScoreLogicObj.putiRecorderScoreByJson")
         moduleObj = iRecorderScoreModuleObj()
         scoreDic = self.__iRecorderScoreJson2Dic(scoreJson)
-        filename = moduleObj.putiRecorderScoreByJson(scoreDic)
+        if  'fileName' in scoreJson.keys():
+            filename = moduleObj.putiRecorderScoreByJson(scoreDic)
+        else:
+            return 'Must set the value of fileName.'
         if filename is None or len(filename) <= 0:
-            return None
-        iRecorderScore = self.getiRecorderScoreByFileName(filename)
+            return 'Put iRecorderScore failed.'
+        if filename.find('wav'):
+            iRecorderScore = self.getiRecorderScoreByFileName(filename)
+        else:
+            return filename
         return iRecorderScore
 
-    def __iRecorderScoreDic2Json(self,iRecorderDic):
+    def __iRecorderScoreDic2Json(self,iRecorderScoreDic):
+        """
+        将数据库dict映射为JSON格式的dict，并转换部分字段为string以及中文转码
+        author: J.Wong
+        args: iRecorderScoreDic,dict 查询数据库后获得的单条数据的dict
+        return: JSON,dict 对应资源说明文档之JSON格式的dict
+        """
         return {
-            'fileName':iRecorderDic['RECKEY'],
-            'raters':iRecorderDic['RATERS'],
-            'total':str(iRecorderDic['TOTAL']),
-            'reterTime':iRecorderDic['UPDT'],
-            'remark':unicode(iRecorderDic['REMARK'],"cp936"),
-            'scrvals':iRecorderDic['SCRVALS'],
-            'scrval0':iRecorderDic['SCRVAL0'],
-            'scrval1':iRecorderDic['SCRVAL1'],
-            'scrval2':iRecorderDic['SCRVAL2'],
-            'scrval3':iRecorderDic['SCRVAL3'],
-            'scrval4':iRecorderDic['SCRVAL4'],
-            'scrval5':iRecorderDic['SCRVAL5'],
-            'scrval6':iRecorderDic['SCRVAL6'],
-            'scrval7':iRecorderDic['SCRVAL7'],
-            'scrval8':iRecorderDic['SCRVAL8'],
-            'scrval9':iRecorderDic['SCRVAL9'],
-            'scrval10':iRecorderDic['SCRVAL10'],
-            'scrval11':iRecorderDic['SCRVAL11'],
-            'scrval12':iRecorderDic['SCRVAL12'],
-            'scrval13':iRecorderDic['SCRVAL13'],
-            'scrval14':iRecorderDic['SCRVAL14'],
-            'scrval15':iRecorderDic['SCRVAL15']
+            'fileName':iRecorderScoreDic['RECKEY'],
+            'raters':iRecorderScoreDic['RATERS'],
+            'total':str(iRecorderScoreDic['TOTAL']),
+            'reterTime':iRecorderScoreDic['UPDT'],
+            'remark':unicode(iRecorderScoreDic['REMARK'],"cp936"),
+            'scrvals':iRecorderScoreDic['SCRVALS'],
+            'scrval0':iRecorderScoreDic['SCRVAL0'],
+            'scrval1':iRecorderScoreDic['SCRVAL1'],
+            'scrval2':iRecorderScoreDic['SCRVAL2'],
+            'scrval3':iRecorderScoreDic['SCRVAL3'],
+            'scrval4':iRecorderScoreDic['SCRVAL4'],
+            'scrval5':iRecorderScoreDic['SCRVAL5'],
+            'scrval6':iRecorderScoreDic['SCRVAL6'],
+            'scrval7':iRecorderScoreDic['SCRVAL7'],
+            'scrval8':iRecorderScoreDic['SCRVAL8'],
+            'scrval9':iRecorderScoreDic['SCRVAL9'],
+            'scrval10':iRecorderScoreDic['SCRVAL10'],
+            'scrval11':iRecorderScoreDic['SCRVAL11'],
+            'scrval12':iRecorderScoreDic['SCRVAL12'],
+            'scrval13':iRecorderScoreDic['SCRVAL13'],
+            'scrval14':iRecorderScoreDic['SCRVAL14'],
+            'scrval15':iRecorderScoreDic['SCRVAL15']
         }
 
     def __iRecorderScoreJson2Dic(self,iRecorderJson):
+        """
+        将数据库dict映射为JSON格式的dict，并自动补足没有传递的key
+        author: J.Wong
+        args: iRecorderJson,dict 对应资源说明文档之JSON格式的dict
+        return: JSON,dict 对应数据库命名的dict
+        """
         if 'raters' not in iRecorderJson.keys():
             iRecorderJson['raters'] = ""
         if 'total' not in iRecorderJson.keys():
@@ -117,7 +162,7 @@ class iRecorderScoreLogicObj:
             'RECKEY':iRecorderJson['fileName'],
             'RATERS':iRecorderJson['raters'],
             'TOTAL':iRecorderJson['total'],
-            'UPDT':iRecorderJson['reterTime'].strftime('%Y-%m-%d %H:%M:%S'),
+            'UPDT':iRecorderJson['reterTime'],
             'REMARK':iRecorderJson['remark'],
             'SCRVALS':iRecorderJson['scrvals'],
             'SCRVAL0':iRecorderJson['scrval0'],

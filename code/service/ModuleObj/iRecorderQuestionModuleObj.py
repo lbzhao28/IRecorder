@@ -5,9 +5,16 @@ from dbConnection import msSqlConnect
 from logHelper import getLogger
 class iRecorderQuestionModuleObj:
     """
-
+    录音打分系统-录音问卷问题资源数据访问处理类
+    author:J.Wong
     """
     def getiRecorderQuestionByFid(self,fid):
+        """
+        通过fid查找到录音问题资源
+        author: J.Wong
+        args: fid,string 问卷ID
+        return: iRecorderList,list 对应的录音资源list
+        """
         try:
             logger = getLogger()
             logger.debug("start iRecorderQuestionModuleObj.getiRecorderQuestionByFid")
@@ -19,28 +26,35 @@ class iRecorderQuestionModuleObj:
                      ",[ITEMPERC]"\
                      ",[HASREMARK]"\
                      " FROM [TRQ_SCRIPT]"\
-                     " WHERE [TRQ_SCRIPT].[FID] = %s"\
+                     " WHERE [TRQ_SCRIPT].[FID] = %s" \
                      " ORDER BY [ITEMDESC]"
             cur.execute(sqlstr,fid)
             result = []
             for row in cur:
                 result.append(row)
             return result
-        except :
+        except Exception,ex:
             logger.error("exception occur, see the traceback.log")
+            logger.error("sql:"+sqlstr+"\n fid:"+fid)
             #异常写入日志文件.
             f = open('Logs/traceback.txt','a')
             traceback.print_exc()
             traceback.print_exc(file = f)
             f.flush()
             f.close()
-            return None
+            return ex.message
         else:
-            return None
+            pass
         finally:
             conn.close()
 
     def getQuestionCount(self,itemID):
+        """
+        通过itemID查找到录音问题的答案数量
+        author: J.Wong
+        args: itemID,string 问题ID
+        return: itemCount,int 答案数量
+        """
         try:
             logger = getLogger()
             logger.debug("start iRecorderQuestionModuleObj.getQuestionCount")
@@ -54,16 +68,17 @@ class iRecorderQuestionModuleObj:
             for row in cur:
                 result.append(row)
             return len(result)
-        except :
+        except Exception,ex:
             logger.error("exception occur, see the traceback.log")
+            logger.error("sql:"+sqlstr+"\n itemID:"+itemID)
             #异常写入日志文件.
             f = open('Logs/traceback.txt','a')
             traceback.print_exc()
             traceback.print_exc(file = f)
             f.flush()
             f.close()
-            return None
+            return 0
         else:
-            return None
+            pass
         finally:
             conn.close()

@@ -15,5 +15,8 @@ def dbMSSqlConnect():
     return db
 
 def msSqlConnect():
+    """
+    获取pymssql的数据库连接
+    """
     db = pymssql.connect(host=getConfig('dbMSSql','dbhost','str'),user=getConfig('dbMSSql','dbuser','str'),password=getConfig('dbMSSql','dbpwd','str'),database=getConfig('dbMSSql','db','str'), as_dict=True)
     return db

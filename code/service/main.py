@@ -28,7 +28,8 @@ app = web.application(urls,globals())
 
 class iRecorderList:
     """
-
+    录音打分系统-录音列表
+    author:J.Wong
     """
     @mimerender(
         default = 'json',
@@ -38,6 +39,11 @@ class iRecorderList:
         txt  = render_txt
     )
     def GET(self):
+        """
+        Get iRecorderList资源
+        author: J.Wong
+        return: JSON
+        """
         try:
             logger = getLogger()
             logger.debug("start iRecorderList GET response")
@@ -52,10 +58,7 @@ class iRecorderList:
                 #各个查询字段精确查询
                 iRecorderList = logicObj.getiRecorderListByParams(params);
 
-            if iRecorderList is None:
-                return {'message': None}
-            else:
-                return {'message':iRecorderList}
+            return {'message':iRecorderList}
         except:
             logger.error("iRecorderList GET exception, see the traceback.log")
             #异常写入日志文件.
@@ -66,6 +69,10 @@ class iRecorderList:
             f.close()
 
 class iRecorderScore:
+    """
+    录音打分系统-打分
+    author:J.Wong
+    """
     @mimerender(
         default = 'json',
         html = render_html,
@@ -74,6 +81,11 @@ class iRecorderScore:
         txt  = render_txt
     )
     def GET(self):
+        """
+        Get iRecorderScore资源
+        author: J.Wong
+        return: JSON
+        """
         try:
             logger = getLogger()
             logger.debug("start iRecordeScore GET response")
@@ -84,11 +96,8 @@ class iRecorderScore:
             if "filename" in params.keys() and params["filename"] is not None:
                 #根据文件名精确查询
                 iRecorderScore = logicObj.getiRecorderScoreByFileName(params["filename"])
-
-            if iRecorderScore is None:
-                return {'message': None}
-            else:
                 return {'message': iRecorderScore}
+            return  {'message': 'Must set the value of filename.'}
         except:
             logger.error("iRecorderScore GET exception, see the traceback.log")
             #异常写入日志文件.
@@ -99,6 +108,11 @@ class iRecorderScore:
             f.close()
 
     def POST(self):
+        """
+        POST iRecorderScore资源
+        author: J.Wong
+        return: JSON
+        """
         try:
             logger = getLogger()
             logger.debug("start iRecorderScore POST response")
@@ -110,10 +124,7 @@ class iRecorderScore:
 
             iRecorderScore = logicObj.postiRecorderScoreByJson(iRecorderScoreJson)
 
-            if iRecorderScore is None:
-                return {'message': None}
-            else:
-                return {'message':iRecorderScore}
+            return {'message':iRecorderScore}
         except:
             logger.error("iRecorderScore POST exception, see the traceback.log")
             #异常写入日志文件.
@@ -124,6 +135,11 @@ class iRecorderScore:
             f.close()
 
     def PUT(self):
+        """
+        PUT iRecorderScore资源
+        author: J.Wong
+        return: JSON
+        """
         try:
             logger = getLogger()
             logger.debug("start iRecorderScore PUT response")
@@ -135,10 +151,7 @@ class iRecorderScore:
 
             iRecorderScore = logicObj.putiRecorderScoreByJson(iRecorderScoreJson)
 
-            if iRecorderScore is None:
-                return {'message': None}
-            else:
-                return {'message': iRecorderScore}
+            return {'message': iRecorderScore}
         except:
             logger.error("iRecorderScore PUT exception, see the traceback.log")
             #异常写入日志文件.
@@ -150,7 +163,8 @@ class iRecorderScore:
 
 class iRecorderQuestion:
     """
-
+    录音打分系统-问卷
+    author:J.Wong
     """
     @mimerender(
         default = 'json',
@@ -160,6 +174,11 @@ class iRecorderQuestion:
         txt  = render_txt
     )
     def GET(self):
+        """
+        Get iRecorderQuestion资源
+        author: J.Wong
+        return: JSON
+        """
         try:
             logger = getLogger()
             logger.debug("start iRecorderQuestion GET response")
@@ -170,12 +189,10 @@ class iRecorderQuestion:
             logicObj = iRecorderQuestionLogicObj()
             if "fid" in params.keys() and params["fid"] is not None:
                 #根据文件名精确查询
-                iRecorderQuestionList = logicObj.getiRecorderListByFileFid(params["fid"]);
-
-            if iRecorderQuestionList is None:
-                return {'message': None}
-            else:
+                iRecorderQuestionList = logicObj.getiRecorderQuestionByFileFid(params["fid"]);
                 return {'message': iRecorderQuestionList}
+
+            return  {'message': 'Must set the value of fid.'}
         except:
             logger.error("iRecorderQuestion GET exception, see the traceback.log")
             #异常写入日志文件.
