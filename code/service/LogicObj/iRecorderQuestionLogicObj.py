@@ -15,7 +15,7 @@ class iRecorderQuestionLogicObj:
         """
         通过fid查找到录音问题资源
         author: J.Wong
-        args: fid,string 录音文件名
+        args: fid,string 问卷ID
         return: iRecorderList,list 对应的录音资源list
         """
         logger = getLogger()
@@ -23,8 +23,10 @@ class iRecorderQuestionLogicObj:
         moduleObj = iRecorderQuestionModuleObj()
         iRecorderQuestionDicList = moduleObj.getiRecorderQuestionByFid(fid)
         if iRecorderQuestionDicList is None:
-            return None;
-        iRecorderQuestionList = [];
+            return None
+        if isinstance(iRecorderQuestionDicList, basestring):
+            return  iRecorderQuestionDicList
+        iRecorderQuestionList = []
         for iRecorderQuestionDic in iRecorderQuestionDicList:
             iRecorderQuestion = self.__iRecorderQuestionDic2Json(iRecorderQuestionDic)
             iRecorderQuestion["questionCount"] = moduleObj.getQuestionCount(iRecorderQuestionDic["ITEMID"])
@@ -32,6 +34,12 @@ class iRecorderQuestionLogicObj:
         return  iRecorderQuestionList
 
     def __iRecorderQuestionDic2Json(self,iRecorderQuestionDic):
+        """
+        将数据库dict映射为JSON格式的dict，并转换部分字段为string以及中文转码
+        author: J.Wong
+        args: iRecorderQuestionDic,dict 查询数据库后获得的单条数据的dict
+        return: JSON,dict 对应资源说明文档之JSON格式的dict
+        """
         return {
             'fid':iRecorderQuestionDic['FID'],
             'itemID':iRecorderQuestionDic['ITEMID'],

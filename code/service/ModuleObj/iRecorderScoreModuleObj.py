@@ -6,7 +6,8 @@ from logHelper import getLogger
 
 class iRecorderScoreModuleObj:
     """
-
+    录音打分系统-打分资源数据访问处理类
+    author:J.Wong
     """
     def getiRecorderScoreByFileName(self,filename):
         try:
@@ -43,18 +44,19 @@ class iRecorderScoreModuleObj:
             if row:
                 return row
             else:
-                return None
-        except :
+                return 'No data.'
+        except Exception,ex:
             logger.error("exception occur, see the traceback.log")
+            logger.error("sql:"+sqlstr+"\n filename:"+filename)
             #异常写入日志文件.
             f = open('Logs/traceback.txt','a')
             traceback.print_exc()
             traceback.print_exc(file = f)
             f.flush()
             f.close()
-            return None
+            return ex.message
         else:
-            return None
+            pass
         finally:
             conn.close()
 
@@ -123,19 +125,19 @@ class iRecorderScoreModuleObj:
             if row:
                 return scoreDic['RECKEY']
             else:
-                return None
-        except :
+                return 'No data.'
+        except Exception,ex:
             logger.error("exception occur, see the traceback.log")
-
+            logger.error("sql:"+sqlstr)
             #异常写入日志文件.
             f = open('Logs/traceback.txt','a')
             traceback.print_exc()
             traceback.print_exc(file = f)
             f.flush()
             f.close()
-            return None
+            return ex.message
         else:
-            return None
+            pass
         finally:
             conn.close()
 
@@ -172,16 +174,17 @@ class iRecorderScoreModuleObj:
             cur.execute(sqlstr)
             conn.commit()
             return scoreDic['RECKEY']
-        except :
+        except Exception,ex:
             logger.error("exception occur, see the traceback.log")
+            logger.error("sql:"+sqlstr)
             #异常写入日志文件.
             f = open('Logs/traceback.txt','a')
             traceback.print_exc()
             traceback.print_exc(file = f)
             f.flush()
             f.close()
-            return None
+            return ex.message
         else:
-            return None
+            pass
         finally:
             conn.close()

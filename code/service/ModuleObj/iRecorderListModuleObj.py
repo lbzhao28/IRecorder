@@ -5,9 +5,16 @@ from dbConnection import msSqlConnect
 from logHelper import getLogger
 class iRecorderListModuleObj:
     """
-
+    录音打分系统-录音资源数据访问处理类
+    author:J.Wong
     """
     def getiRecorderListByFileName(self,filename):
+        """
+        通过录音文件名查找到录音资源
+        author: J.Wong
+        args: filename,string 录音文件名
+        return: iRecorderList,list 对应的录音资源list
+        """
         try:
             logger = getLogger()
             logger.debug("start iRecorderListModuleObj.getiRecorderListByFileName")
@@ -36,22 +43,32 @@ class iRecorderListModuleObj:
             result = []
             for row in cur:
                 result.append(row)
-            return result
-        except :
+            if len(result):
+                return result
+            else:
+                return 'No data.'
+        except Exception,ex:
             logger.error("exception occur, see the traceback.log")
+            logger.error("sql:"+sqlstr+"\n filename:"+filename)
             #异常写入日志文件.
             f = open('Logs/traceback.txt','a')
             traceback.print_exc()
             traceback.print_exc(file = f)
             f.flush()
             f.close()
-            return None
+            return ex.message
         else:
-            return None
+           pass
         finally:
             conn.close()
 
     def getiRecorderListByParams(self,params):
+        """
+        通过其他查询条件查找到录音资源
+        author: J.Wong
+        args: params,string 查询录音的querystring，格式参见doc目录下“座席录音资源接口说明文档.xlsx”
+        return: iRecorderList,list 对应的录音资源list
+        """
         try:
             logger = getLogger()
             logger.debug("start iRecorderListModuleObj.getiRecorderListByParams")
@@ -116,16 +133,17 @@ class iRecorderListModuleObj:
             for row in cur:
                 result.append(row)
             return result
-        except :
+        except Exception,ex:
             logger.error("exception occur, see the traceback.log")
+            logger.error("sql:"+sqlstr+"\n params:"+params)
             #异常写入日志文件.
             f = open('Logs/traceback.txt','a')
             traceback.print_exc()
             traceback.print_exc(file = f)
             f.flush()
             f.close()
-            return None
+            return ex.message
         else:
-            return None
+            pass
         finally:
             conn.close()

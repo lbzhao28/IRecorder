@@ -23,8 +23,10 @@ class iRecorderListLogicObj:
         moduleObj = iRecorderListModuleObj()
         iRecorderDicList = moduleObj.getiRecorderListByFileName(filename)
         if iRecorderDicList is None:
-            return None;
-        iRecorderList = [];
+            return None
+        if isinstance(iRecorderDicList, basestring):
+            return  iRecorderDicList
+        iRecorderList = []
         for iRecorderDic in iRecorderDicList:
             iRecorder = self.__iRecorderDB2JSON(iRecorderDic)
             iRecorderList.append(iRecorder)
@@ -34,7 +36,7 @@ class iRecorderListLogicObj:
         """
         通过其他查询条件查找到录音资源
         author: J.Wong
-        args: params,string 查询录音的qureystring，格式参见doc目录下“座席录音资源接口说明文档.xlsx”
+        args: params,string 查询录音的querystring，格式参见doc目录下“座席录音资源接口说明文档.xlsx”
         return: iRecorderList,list 对应的录音资源list
         """
         logger = getLogger()
@@ -42,8 +44,10 @@ class iRecorderListLogicObj:
         moduleObj = iRecorderListModuleObj()
         iRecorderDicList = moduleObj.getiRecorderListByParams(params)
         if iRecorderDicList is None:
-            return None;
-        iRecorderList = [];
+            return None
+        if isinstance(iRecorderDicList, basestring):
+            return  iRecorderDicList
+        iRecorderList = []
         for iRecorderDic in iRecorderDicList:
             iRecorder = self.__iRecorderDB2JSON(iRecorderDic)
             iRecorderList.append(iRecorder)
