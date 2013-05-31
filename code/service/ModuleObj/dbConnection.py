@@ -1,4 +1,5 @@
 __author__ = 'JohannWong'
+#coding=UTF-8
 import web
 import pymssql
 from configData import getConfig

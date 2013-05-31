@@ -43,7 +43,7 @@ class iRecorderListModuleObj:
             result = []
             for row in cur:
                 result.append(row)
-            logger.info("sql:"+sqlstr+"\n filename:"+filename)
+            logger.info("sql:"+str(sqlstr)+"\n filename:"+str(filename))
             if len(result):
                 return result
             else:
@@ -133,7 +133,7 @@ class iRecorderListModuleObj:
             result = []
             for row in cur:
                 result.append(row)
-            logger.info("sql:"+sqlstr+"\n params:"+params)
+            logger.info("sql:"+str(sqlstr)+"\n params:"+str(params))
             return result
         except Exception,ex:
             logger.error("exception occur, see the traceback.log")

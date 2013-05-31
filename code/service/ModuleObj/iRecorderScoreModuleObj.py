@@ -41,7 +41,7 @@ class iRecorderScoreModuleObj:
             " WHERE [TRQ_SCORE].[RECKEY] = %s"
             cur.execute(sqlstr,filename)
             row = cur.fetchone()
-            logger.info("sql:"+sqlstr+"\n filename:"+filename)
+            logger.info("sql:"+str(sqlstr)+"\n filename:"+str(filename))
             if row:
                 return row
             else:
@@ -117,7 +117,7 @@ class iRecorderScoreModuleObj:
                      ")"
             cur.execute(sqlstr)
             conn.commit()
-            logger.info("sql:"+sqlstr)
+            logger.info("sql:"+str(sqlstr))
 
             sqlstr = "SELECT *"\
                      " FROM [TRQ_SCORE]"\
@@ -176,7 +176,7 @@ class iRecorderScoreModuleObj:
                      "WHERE [RECKEY] = '"+scoreDic['RECKEY']+"'"
             cur.execute(sqlstr)
             conn.commit()
-            logger.info("sql:"+sqlstr)
+            logger.info("sql:"+str(sqlstr))
             return scoreDic['RECKEY']
         except Exception,ex:
             logger.error("exception occur, see the traceback.log")
