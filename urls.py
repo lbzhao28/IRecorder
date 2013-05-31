@@ -2,7 +2,11 @@ __author__ = 'zhuangkun'
 import web
 
 urls = (
-    '/Login', 'Login.Login',
+    '/Login/(.*)', 'Login.LoginInfo',
+    '/RecSearch/(.*)', 'RecSearch.RecSelect',
+    '/RecSearch', 'RecSearch.SearchRec',
+
+    '/ReccemSearch', 'ReccemClient.GetRaccemSearchUrl',
     '/ReccemSearch/(.*)', 'ReccemSearch.ReccemSelect',
     '/ReccemSearch', 'ReccemSearch.SearchReccem'
     )
