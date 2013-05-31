@@ -1,0 +1,198 @@
+<html>
+<link rel="Stylesheet" type="text/css" href="../static/css/jqgrid/jquery-ui-1.8.16.custom.css"/>
+<link rel="Stylesheet" type="text/css" href="../static/css/jqgrid/ui.jqgrid.css"/>
+<link href="../static/css/bootstrap.css" rel="stylesheet">
+<script type="text/javascript" src="../static/js/jquery-1.8.3.js"></script>
+<script type="text/javascript" src="../static/js/EsayUI/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="../static/js/My97DatePicker/WdatePicker.js"></script>
+<head>
+    <title>录音查询</title>
+    <meta charset="utf-8">
+</head>
+<script type="text/javascript">
+    jQuery(document).ready(function () {
+        jQuery("#btnSearch").click(function () {
+            //默认只查询第1页
+            submitSearch('1', '15');
+        });
+    })
+    function submitSearch(pageno, pagesize) {
+        startdate = jQuery("#idStartDT").val();
+        enddate = jQuery("#idEndDT").val();
+        calltype = document.getElementById("type").value;
+        agentid = jQuery("#agentid").val();
+        telno = jQuery("#telno").val();
+        available = document.getElementById("status").value;
+        totalmin = jQuery("#totalmin").val();
+        totalmax = jQuery("#totalmax").val();
+        channeldn = jQuery("#channeldn").val();
+        teldnis = jQuery("#teldnis").val();
+        if ((startdate == '') & (enddate == '') & (calltype == '') & (agentid == '') & (telno == '') & (available == '') & (totalmin == '') & (totalmax == '') & (channeldn == '') & (teldnis == '')) {
+            alert("请至少选择一个条件");
+            return
+        }
+        SearchRecorder(startdate, enddate, calltype, agentid, telno, available, totalmin, totalmax, channeldn, teldnis, pageno, pagesize);
+        //SearchRecorder(startdate,enddate,agentid,pageIndex);
+    }
+    function SearchRecorder(instartdate, inenddate, incalltype, inagentid, intelno, inavailable, intotalmin, intotalmax, inchanneldn, inteldnis, inpageno, inpagesize) {
+        //actionUrl ="http://localhost:8080/RecSearch/Search?startdate="+instartdate+'&enddate='+enddate+'&agentid='+inagentid+"&PAGEINDEX="+inpageindex;
+        actionUrl = "http://localhost:8080/RecSearch/Search?startdate=" + instartdate + '&enddate=' + enddate + "&calltype=" + incalltype +
+                "&agentid=" + inagentid + "&telno=" + intelno + "&available=" + inavailable + "&totalmin=" + intotalmin + "&totalmax=" + intotalmax +
+                "&channeldn=" + inchanneldn + "&teldnis=" + inteldnis + "&pageno=" + inpageno + '&pagesize=' + inpagesize;
+        alert(actionUrl);
+        window.location.href = actionUrl;
+    }
+    function showBoFang(hostName) {
+        alert(hostName);
+        var url = "http://localhost/Racorder/10.4.48.29_20130502091255416_24_3205_37049_13918130810.wav";
+        var objPlayer = document.all("MediaPlayerWav");
+        if (objPlayer != null) {
+            objPlayer.URL = url;
+            alert(objPlayer.URL);
+        }
+        window.status = url;
+    }
+</script>
+
+
+<body>
+<form id="form1" runat="server">
+    <div width="60%">
+        <table>
+            <tr>
+                <td>日期时间：</td>
+                <td colspan="2">
+                    <input id="idStartDT" type="text" class="Wdate input-small search-query"
+                           onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})" style="width: 206"/>
+                </td>
+                <td>--</td>
+                <td>
+                    <input id="idEndDT" type="text" class="Wdate input-small search-query"
+                           onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})" style="width: 206"/>
+                </td>
+                <td>类型：</td>
+                <td><select id="type">
+                    <option value=""></option>
+                    <option value="IN">IN</option>
+                    <option value="OUT">OUT</option>
+                </select></td>
+            </tr>
+            <tr>
+                <td>坐席工号：</td>
+                <td colspan="2">
+                    <input align="" runat="server" id="agentid"/>
+                </td>
+                <td>分机：</td>
+                <td>
+                    <input align="" runat="server" id="telno" value=""/>
+                </td>
+                <td>状态：</td>
+                <td><select id="status">
+                    <option value=""></option>
+                    <option value="1">1->完成</option>
+                    <option value="3">3->重点</option>
+                </select></td>
+                <td>
+                    <button runat="server" id="btnSearch">&nbsp;查 询&nbsp;</button>
+                </td>
+            </tr>
+            <tr>
+                <td>&nbsp;&nbsp;得分从:</td>
+                <td>
+                    <input runat="server" id="totalmin" style="width: 80;"/>
+                </td>
+                <td>至&nbsp;
+                    <input runat="server" id="totalmax" style="width: 40;"/>
+                </td>
+                <td>主叫：</td>
+                <td>
+                    <input runat="server" id="channeldn"/>
+                </td>
+                <td>被叫：</td>
+                <td colspan="2">
+                    <input runat="server" id="teldnis">
+                </td>
+            </tr>
+        </table>
+    </div>
+</form>
+<form id="formOrderList">
+    <fieldset>
+        <div>
+            <table class="table table-hover table-condensed">
+                % if outdic is not None:
+                <tr>
+                    <th>播放</th>
+                    <th style="width: 80">文件名</th>
+                    <th style="width: 80">主机名</th>
+                    <th>通道号</th>
+                    <th>分机</th>
+                    <th>开始时间</th>
+                    <th>结束时间</th>
+                    <th>通话时长</th>
+                    <th>坐席ID</th>
+                    <th>主叫</th>
+                    <th>被叫</th>
+                    <th>呼叫类型</th>
+                    <th>得分</th>
+                    <th>呼叫ID</th>
+                    <th>产品</th>
+                    <th>信息类型</th>
+                    <th>订单号</th>
+                    <th>状态</th>
+                    <th>备注</th>
+                    <th>标签</th>
+
+                </tr>
+                % for item in outdic:
+                <tr>
+                    <th>
+                        <button type="button" class="btn" onclick="showBoFang(${item['agentID']})">播放</button>
+                    </th>
+                    <th>${item["hostName"]}</th>
+                    <th>${item["fileName"]}</th>
+                    <th>${item["channelNO"]}</th>
+                    <th>${item["telNO"]}</th>
+                    <th>${item["startTime"]}</th>
+                    <th>${item["endTime"]}</th>
+                    <th>${item["spendTime"]}</th>
+                    <th>${item["agentID"]}</th>
+                    <th>${item["channelDN"]}</th>
+                    <th>${item["telDNIS"]}</th>
+                    <th>${item["callType"]}</th>
+                    <th>${item["total"]}</th>
+                    <th>${item["callID"]}</th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th>${item["available"]}</th>
+                    <th></th>
+                    <th></th>
+
+                </tr>
+                % endfor
+                % endif
+
+            </table>
+        </div>
+    </fieldset>
+</form>
+<form runat="server" id="form3">
+    <div>
+        <object id="MediaPlayerWav" classid="CLSID:6BF52A52-394A-11d3-B153-00C04F79FAA6" width="450"
+                height="45"
+                codebase="http://activex.microsoft.com/activex/controls/mplayer/en/nsmp2inf.cab#Version=5,1,52,701standby=Loading Microsoft? Windows Media? Player components..."
+                type="application/x-oleobject">
+            <param name="URL" value="">
+            <param name="UIMode" value="full">
+            <param name="AutoStart" value="1">
+            <param name="Enabled" value="1">
+            <param name="EnableContextMenu" value="0">
+            <param name="windowlessVideo" value="0">
+            <param name='Volume' value='100'>
+        </object>
+    </div>
+</form>
+
+</body>
+</html>
