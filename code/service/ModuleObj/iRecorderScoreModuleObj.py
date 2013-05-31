@@ -41,13 +41,14 @@ class iRecorderScoreModuleObj:
             " WHERE [TRQ_SCORE].[RECKEY] = %s"
             cur.execute(sqlstr,filename)
             row = cur.fetchone()
+            logger.info("sql:"+sqlstr+"\n filename:"+filename)
             if row:
                 return row
             else:
                 return 'No data.'
         except Exception,ex:
             logger.error("exception occur, see the traceback.log")
-            logger.error("sql:"+sqlstr+"\n filename:"+filename)
+
             #异常写入日志文件.
             f = open('Logs/traceback.txt','a')
             traceback.print_exc()
@@ -116,19 +117,21 @@ class iRecorderScoreModuleObj:
                      ")"
             cur.execute(sqlstr)
             conn.commit()
+            logger.info("sql:"+sqlstr)
 
             sqlstr = "SELECT *"\
                      " FROM [TRQ_SCORE]"\
                      " WHERE [TRQ_SCORE].[RECKEY] = %s"
             cur.execute(sqlstr,scoreDic['RECKEY'])
             row = cur.fetchone()
+            logger.info("sql:"+sqlstr)
             if row:
                 return scoreDic['RECKEY']
             else:
                 return 'No data.'
         except Exception,ex:
             logger.error("exception occur, see the traceback.log")
-            logger.error("sql:"+sqlstr)
+
             #异常写入日志文件.
             f = open('Logs/traceback.txt','a')
             traceback.print_exc()
@@ -173,10 +176,11 @@ class iRecorderScoreModuleObj:
                      "WHERE [RECKEY] = '"+scoreDic['RECKEY']+"'"
             cur.execute(sqlstr)
             conn.commit()
+            logger.info("sql:"+sqlstr)
             return scoreDic['RECKEY']
         except Exception,ex:
             logger.error("exception occur, see the traceback.log")
-            logger.error("sql:"+sqlstr)
+
             #异常写入日志文件.
             f = open('Logs/traceback.txt','a')
             traceback.print_exc()

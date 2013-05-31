@@ -32,10 +32,11 @@ class iRecorderQuestionModuleObj:
             result = []
             for row in cur:
                 result.append(row)
+            logger.info("sql:"+sqlstr+"\n fid:"+fid)
             return result
         except Exception,ex:
             logger.error("exception occur, see the traceback.log")
-            logger.error("sql:"+sqlstr+"\n fid:"+fid)
+
             #异常写入日志文件.
             f = open('Logs/traceback.txt','a')
             traceback.print_exc()
@@ -67,10 +68,11 @@ class iRecorderQuestionModuleObj:
             result = []
             for row in cur:
                 result.append(row)
+            logger.info("sql:"+sqlstr+"\n itemID:"+itemID)
             return len(result)
         except Exception,ex:
             logger.error("exception occur, see the traceback.log")
-            logger.error("sql:"+sqlstr+"\n itemID:"+itemID)
+
             #异常写入日志文件.
             f = open('Logs/traceback.txt','a')
             traceback.print_exc()

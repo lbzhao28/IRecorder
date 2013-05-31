@@ -43,13 +43,14 @@ class iRecorderListModuleObj:
             result = []
             for row in cur:
                 result.append(row)
+            logger.info("sql:"+sqlstr+"\n filename:"+filename)
             if len(result):
                 return result
             else:
                 return 'No data.'
         except Exception,ex:
             logger.error("exception occur, see the traceback.log")
-            logger.error("sql:"+sqlstr+"\n filename:"+filename)
+
             #异常写入日志文件.
             f = open('Logs/traceback.txt','a')
             traceback.print_exc()
@@ -132,10 +133,11 @@ class iRecorderListModuleObj:
             result = []
             for row in cur:
                 result.append(row)
+            logger.info("sql:"+sqlstr+"\n params:"+params)
             return result
         except Exception,ex:
             logger.error("exception occur, see the traceback.log")
-            logger.error("sql:"+sqlstr+"\n params:"+params)
+
             #异常写入日志文件.
             f = open('Logs/traceback.txt','a')
             traceback.print_exc()
