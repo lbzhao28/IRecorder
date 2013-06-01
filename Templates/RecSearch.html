@@ -13,9 +13,60 @@
     jQuery(document).ready(function () {
         jQuery("#btnSearch").click(function () {
             //默认只查询第1页
-            submitSearch('1', '15');
+            submitSearch('1', '10');
         });
     })
+    function showFastPrev() {
+        submitSearch('1');
+    }
+
+    function showFastNext(pageCount) {
+        submitSearch(pageCount);
+    }
+
+    function showCurrent(pageIndex, pageCount) {
+        //alert(pageIndex);
+        var intPageIndex = parseInt(pageIndex);
+        var intPageCount = parseInt(pageCount);
+
+        if (intPageIndex < 1) {
+            intPageIndex = 1;
+        }
+
+        if (intPageIndex > intPageCount) {
+            intPageIndex = intPageCount;
+        }
+
+        var localPageIndex = String(intPageIndex);
+        submitSearch(localPageIndex);
+    }
+
+
+    function showPrev(pageIndex) {
+        //alert(pageIndex);
+        var intPageIndex = parseInt(pageIndex);
+        intPageIndex = intPageIndex - 1;
+
+        if (intPageIndex < 1) {
+            intPageIndex = 1;
+        }
+
+        var localPageIndex = String(intPageIndex);
+        submitSearch(localPageIndex);
+    }
+
+    function showNext(pageIndex, pageCount) {
+        var intPageIndex = parseInt(pageIndex);
+        var intPageCount = parseInt(pageCount);
+        intPageIndex = intPageIndex + 1;
+
+        if (intPageIndex > intPageCount) {
+            intPageIndex = intPageCount;
+        }
+        var localPageIndex = String(intPageIndex);
+        submitSearch(localPageIndex);
+    }
+
     function submitSearch(pageno, pagesize) {
         startdate = jQuery("#idStartDT").val();
         enddate = jQuery("#idEndDT").val();
@@ -53,8 +104,6 @@
         window.status = url;
     }
 </script>
-
-
 <body>
 <form id="form1" runat="server">
     <div width="60%">
@@ -118,8 +167,7 @@
 </form>
 <form id="formOrderList">
     <fieldset>
-
-        <div style="width:60%">
+        <div style="width:60%; height:420px; overflow:scroll;">
             <table class="table table-hover table-condensed">
                 % if outdic is not None:
                 <tr>
@@ -176,13 +224,17 @@
             </table>
         </div>
 
+
     </fieldset>
 </form>
+
+
 <form runat="server" id="form3">
     <div>
         <object id="MediaPlayerWav" classid="CLSID:6BF52A52-394A-11d3-B153-00C04F79FAA6" width="450"
                 height="45"
-                codebase="http://activex.microsoft.com/activex/controls/mplayer/en/nsmp2inf.cab#Version=5,1,52,701standby=Loading Microsoft? Windows Media? Player components..."
+                codebase="http://activex.microsoft.com/activex/controls/mplayer/en/nsmp2inf.cab#Version=5,1,52,701standby=Loading Microsoft? Windows Media? Player
+components..."
                 type="application/x-oleobject">
             <param name="URL" value="">
             <param name="UIMode" value="full">

@@ -30,16 +30,16 @@ def GetRaccemSearchUrl(instartdate, inenddate, incalltype, inagentid, intelno, i
         if inagentid is None:
             return None
         if inagentid != '':
-            localURL = localURL + '&agentID=' + inagentid
+            localURL = localURL + '&agentid=' + inagentid
 
         if incalltype is None:
             return None
         if incalltype != '':
-            localURL += '&callType=' + incalltype
+            localURL += '&calltype=' + incalltype
         if intelno is None:
             return None
         if intelno != '':
-            localURL += '&telNO=' + intelno
+            localURL += '&telno=' + intelno
         if inavailablein is None:
             return None
         if inavailablein != '':
@@ -55,11 +55,11 @@ def GetRaccemSearchUrl(instartdate, inenddate, incalltype, inagentid, intelno, i
         if inchanneldn is None:
             return None
         if inchanneldn != '':
-            localURL = localURL + '&channelDN=' + inchanneldn
+            localURL = localURL + '&channeldn=' + inchanneldn
         if inteldnis is None:
             return None
         if inteldnis != '':
-            localURL = localURL + '&telDNIS=' + inteldnis
+            localURL = localURL + '&teldnis=' + inteldnis
         if inpageno is None:
             return None
         if inpageno != '':
