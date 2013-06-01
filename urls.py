@@ -2,7 +2,8 @@ __author__ = 'zhuangkun'
 import web
 
 urls = (
-    '/Login/(.*)', 'Login.LoginInfo',
+    '/', 'login.Login',
+    '/login', 'login.Login',
     '/RecSearch/(.*)', 'RecSearch.RecSelect',
     '/RecSearch', 'RecSearch.SearchRec',
 
