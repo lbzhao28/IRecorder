@@ -187,23 +187,13 @@ def GetRacorderQuestionByfilename(filename):
     finally:
         pass
 
-#录音问题Post
-def postRacorderQuestionContact(storageData):
+#录音问题保存
+def RacorderQuestionContact(storageData,retPost):
     try:
         logger = getLogger()
         logger.debug("start POST Order Info according contact id.")
 
         jsonData = storageData;
-        #print storageData
-        #dictData = json.loads(storageData)
-        #jsonData =  json.dumps(dictData)
-
-
-
-        #jsonData =  eval(jsonData)
-        #jsonData =  json.dumps(jsonData)
-
-
 
         print  jsonData;
         #print jsonData
@@ -215,7 +205,7 @@ def postRacorderQuestionContact(storageData):
         c.setopt(pycurl.URL,localURL)
         c.setopt(pycurl.HTTPHEADER,['Content-Type: application/json','Content-Length: '+str(len(jsonData))])
         c.setopt(c.VERBOSE, True)
-        c.setopt(pycurl.CUSTOMREQUEST,"POST")
+        c.setopt(pycurl.CUSTOMREQUEST,retPost)
         c.setopt(pycurl.POSTFIELDS,jsonData)
         c.setopt(c.WRITEFUNCTION,buf.write)
         c.setopt(pycurl.USERPWD,getConfig('allowedUser1','UserName','str')+':'+getConfig('allowedUser1','Password','str'))
@@ -254,14 +244,20 @@ def postRacorderQuestionContact(storageData):
         pass
 # 进行保存的动作
 class RacorderSave:
-    def POST(self,filename):
+    def POST(self,retPost):
 
-        #传入参数
-        data = web.data();
-        #retStr 返回值
-        retStr= postRacorderQuestionContact(data);
-        print retStr;
-        return retStr;
+        if retPost is not None and str(retPost).strip() !="":
+            strPost = str(retPost)
+            #传入参数
+            data = web.data();
+            #retStr 返回值
+            retStr= RacorderQuestionContact(data,strPost);
+            print retStr;
+            return retStr;
+        else:
+            return None;
+
+
 
     def GET(self,filename):
         pass

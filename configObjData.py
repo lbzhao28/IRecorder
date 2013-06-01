@@ -66,9 +66,18 @@ def RecorderConfigPage(filename):
     #从Session 中取得filename 名字
     localtRacorderQuestion = {};
 
+    #session_tRacorderQuestion 问题用session缓存起来
+    web.ctx.session.session_tRacorderQuestion = None;
+
     if filename is not None or filename.strip != '':
         #单条录音的文件的问题额答案
         tRacorderQuestion = RacorderClient.GetRacorderQuestionByfilename(filename);
+        print tRacorderQuestion
+
+
+        web.ctx.session.session_tRacorderQuestion =  tRacorderQuestion # 将tRacorderQuestion用Sesssion 保存起来
+
+
         if tRacorderQuestion is not None and len(tRacorderQuestion)>0 and tRacorderQuestion["message"] is not None:
             localtRacorderQuestion = tRacorderQuestion["message"];
 
@@ -80,20 +89,15 @@ def RecorderConfigPage(filename):
     print localtRacorderQuestion;
     configPage = ConfigObj()
 
-    web.ctx.session.session_QuestionNote = ""; #首先清空Session
 
     if localtRacorderQuestion.keys() > 0 and len(localtRacorderQuestion)>0:
         Recordertotal = localtRacorderQuestion["total"];
         strRecorderscrvals = localtRacorderQuestion["scrvals"];
         Recorderscrvals =  strRecorderscrvals.replace("@","'");
         RecorderscrvalsEval = eval(Recorderscrvals);
-        QuestionNote =localtRacorderQuestion["remark"]
+
 
         web.ctx.session.session_QuestionNote =  QuestionNote # 将Note 用Sesssion 保存起来
-
-
-
-
 
     # 获取问卷信息
     tRacorderQuestionsMesage = RacorderClient.GetRacorderQuestionUrl("CEM");

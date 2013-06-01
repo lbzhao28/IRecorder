@@ -396,7 +396,7 @@ var raters = _page.userid;
 var d = new Date();
 var sttm = d.getYear() + '-' + (d.getMonth()+1) + '-' + d.getDate() + ' ' + d.getHours() + ':' + d.getMinutes() + ':' + d.getSeconds();
 var reterTime = sttm;
-var remark = "123";
+var remark = $("#txtQuestionNote").val();
 var scrvals = _page.GetRacorderAnwser();
 
 
@@ -421,10 +421,22 @@ var  strJson = _page.GetRacorderScoreJsonStr();
 strJson =  strJson.replace("[","\"[");
 strJson =  strJson.replace("]","]\"");
 
-var filename = "1231125";
+
+var retPost = "";
+var flag = $("#RacorderIsAdd").val();
+
+if(flag == "add")
+{
+retPost = "POST";
+}
+else
+{
+retPost = "PUT";
+}
+
 var result = false;
 $.ajax({
-url:"/Saverqscoscr/"+filename,
+url:"/Saverqscoscr/"+retPost,
 type:"POST",
 cache:false,
 data:strJson,
@@ -433,8 +445,9 @@ success:function(data){
 if(data!=null)
 {
 
+alert("保存成功")
 result = true;
-alert(data);
+
 }
 else
 {
@@ -443,8 +456,6 @@ result = false;
 }
 });
 return result;
-
-
 }
 }
 var  Racorderobj = new Racorderobj();
@@ -530,6 +541,7 @@ Racorderobj.init();
         <div>
           　  <button class="btn" data-dismiss="modal"  aria-hidden="true">取消</button>
            　 <button class="btn btn-primary" id="btnConfirm" >确认</button>
+            <input id="RacorderIsAdd" type="hidden" value="${flag}">
         </div>
     </div>
 

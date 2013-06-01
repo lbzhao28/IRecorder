@@ -31,6 +31,7 @@ urls = (
         '/etl_metadata/(.*)','etl_metadata',
         '/Saverqscoscr/(.*)','RacorderClient.RacorderSave',
         '/home', 'home.home',
+
         )
 
 app = web.application(urls,globals(),autoreload=True)
@@ -74,9 +75,18 @@ class rqscoscr():
                     return render.error(error = 'no filename')
                 else:
 
-                    configPage = getRecorderConfigPage(filename)
-                    QuestionNote = web.ctx.session.session_QuestionNote;
-                    return render.rqsco_stoneview(outfilename =filename,configPage = configPage,QuestionNote = QuestionNote);
+                    configPage = getRecorderConfigPage(filename)    # 创建页面控件 configPage
+
+                    tRacorderQuestion = web.ctx.session.session_tRacorderQuestion; #取得缓存里面录音的质检结果 如果没有质检过则为 None
+
+                    flag = "add";         # falg 用于在前台判断质检结果 是否新增
+                    QuestionNote = "";
+                    print tRacorderQuestion
+                    if tRacorderQuestion is not None and len(tRacorderQuestion)>0 and tRacorderQuestion["message"] is not None:
+                        localtRacorderQuestion = tRacorderQuestion["message"];
+                        flag = "edit";
+                        QuestionNote = localtRacorderQuestion["remark"];
+                    return render.rqsco_stone(outfilename =filename,configPage = configPage,QuestionNote = QuestionNote,flag = flag);
 
             except :
                 logger.error("exception occur, see the traceback.log")

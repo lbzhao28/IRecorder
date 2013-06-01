@@ -350,8 +350,6 @@ localScoreInfo = None
                        return StrJson;
                    }
 
-
-
                    //组织录音质检，打分信息的 json 字符串
                    this.GetRacorderScoreJsonStr = function()
                    {
@@ -362,10 +360,9 @@ localScoreInfo = None
                        var d = new Date();
                        var sttm = d.getYear() + '-' + (d.getMonth()+1) + '-' + d.getDate() + ' ' + d.getHours() + ':' + d.getMinutes() + ':' + d.getSeconds();
                        var reterTime = sttm;
-                       var remark = "123";
+                       var remark = $("#txtQuestionNote").val();
+                       alert(remark);
                        var scrvals = _page.GetRacorderAnwser();
-
-
                        scrvals = scrvals.replace(/'/gm,"@");
 
                        var RacorderSaveJson = "{'fileName':'"+fileName+"','";
@@ -387,10 +384,22 @@ localScoreInfo = None
                         strJson =  strJson.replace("[","\"[");
                         strJson =  strJson.replace("]","]\"");
 
-                        var filename = "1231125";
+
+                        var retPost = "";
+                        var flag = $("#RacorderIsAdd").val();
+
+                        if(flag == "add")
+                        {
+                            retPost = "POST";
+                        }
+                        else
+                        {
+                            retPost = "PUT";
+                        }
+
                         var result = false;
                         $.ajax({
-                            url:"/Saverqscoscr/"+filename,
+                            url:"/Saverqscoscr/"+retPost,
                             type:"POST",
                             cache:false,
                             data:strJson,
@@ -398,12 +407,13 @@ localScoreInfo = None
                             success:function(data){
                                 if(data!=null)
                                 {
-
+                                    alert("保存成功")
                                     result = true;
-                                    alert(data);
+
                                 }
                                 else
                                 {
+                                    alert("保存失败")
                                     result = false;
                                 }
                             }
@@ -447,40 +457,33 @@ localScoreInfo = None
 
 <form id="formScore">
 
-    <div class="bs-docs-div-compress">
+    <div class="bs-docs-div-compress" style="width: 42%">
             <label class="label label-info label-large">录音打分模板</label>
 
-        <table class="myFullTable" cellpadding="0" cellspacing="0" border="0">
+        <table >
             <tr>
-                <td height="25" align="center" class="myColorBar02" style="border-bottom:0px solid Lime">
-                    <input name="labhidscriptvalue" type="hidden" id="labhidscriptvalue" />
-                    <input name="labhidscriptpers" type="hidden" id="labhidscriptpers" value="SCRDMX01#10|SCRDMX02#5|SCRDMX03#10|SCRDMX04#10|SCRDMX05#10|SCRDMX06#10|SCRDMX07#10|" />
-                    <input name="labscriptnm" type="hidden" id="labscriptnm" value="IB 电话质量评估标准" />
-                </td>
-                <td id="labrecfilename" height="25" align="center" class="myColorBar02" style="border-bottom:0px solid Lime; cursor:hand;">${outfilename}</td>
-                <td id="labscorenum" align="center" class="myColorBar02" style="width:80px;">0</td>
+                <td id="labrecfilename" height="25" align="left" colspan="2">文件名：${outfilename} </td>
+                <td align="left" class="myColorBar02" > 总得分：<span id="labscorenum">0</span></td>
+
             </tr>
 
-
-     <tr>
-
-            <tr  height="25" align="center" class="myColorBar02" style="border-bottom:0px solid Lime">
-                <td>
-                    建议得分:<span id="labscoreJj">0</span>
-                    开场白得分:<span id="labscoreKcb">0</span>
+            <tr  height="25" align="left" class="label label-normal" >
+                <td  align="left" >
+                   建议得分:<span id="labscoreJj">0</span>
+                   开场白得分:<span id="labscoreKcb">0</span>
 
                 </td>
-                <td>
+                <td align="left" >
                     提问得分:<span id="labscoreTw">0</span>
                     沟通技巧得分：<span id="labscoreGTJQ">0</span>
 
-                </td>
-                <td>结束得分:<span id="labscoreJS">0</span>
+                </td >
+                <td  align="left" >结束得分:<span id="labscoreJS">0</span>
 
                 </td>
             </tr>
 
-     </tr>
+
 
 
 
@@ -510,7 +513,7 @@ localScoreInfo = None
                               <label class="label label-normal">总备注</label>
                           </td>
                            <td algin="left" colspan="2">
-                               <input name=txtnote id=txtnote height="100"  type = text value="${QuestionNote}"  placeholder="备注"/>
+                               <input name=txtnote id=txtQuestionNote height="100"  type = text value="${QuestionNote}"  placeholder="备注"/>
                            </td>
                        </tr>
                 </table>
@@ -520,6 +523,8 @@ localScoreInfo = None
         <div>
           　  <button class="btn" data-dismiss="modal"  aria-hidden="true">取消</button>
            　 <button class="btn btn-primary" id="btnConfirm" >确认</button>
+
+              <input id="RacorderIsAdd" type="hidden" value="${flag}">
         </div>
     </div>
 
