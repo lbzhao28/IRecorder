@@ -40,6 +40,7 @@ class iRecorderListModuleObj:
             " ON [T_RECORDER].[FILENAME] = [TRQ_SCORE].[RECKEY]"\
             " WHERE [T_RECORDER].[FILENAME] = %s"
             cur.execute(sqlstr,filename)
+            logger.info("sql:"+str(sqlstr)+"\n filename:"+str(filename))
             result = []
             for row in cur:
                 result.append(row)
@@ -49,7 +50,7 @@ class iRecorderListModuleObj:
                 return 'No data.'
         except Exception,ex:
             logger.error("exception occur, see the traceback.log")
-            logger.error("sql:"+sqlstr+"\n filename:"+filename)
+            logger.error("sql:"+str(sqlstr)+"\n filename:"+str(filename))
             #异常写入日志文件.
             f = open('Logs/traceback.txt','a')
             traceback.print_exc()
@@ -129,13 +130,14 @@ class iRecorderListModuleObj:
                       " WHERE ROWNUMBER BETWEEN "+str(startIndex)+\
                       " AND "+str(endIndex)
             cur.execute(sqlstr)
+            logger.info("sql:"+str(sqlstr)+"\n params:"+str(params))
             result = []
             for row in cur:
                 result.append(row)
             return result
         except Exception,ex:
             logger.error("exception occur, see the traceback.log")
-            logger.error("sql:"+sqlstr+"\n params:"+params)
+            logger.error("sql:"+str(sqlstr)+"\n params:"+str(params))
             #异常写入日志文件.
             f = open('Logs/traceback.txt','a')
             traceback.print_exc()
