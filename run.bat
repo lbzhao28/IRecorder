@@ -1,1 +1,1 @@
-C:\Python27\python order.py 8088
+C:\Python27\python RecorderScore_Stone.py 8080

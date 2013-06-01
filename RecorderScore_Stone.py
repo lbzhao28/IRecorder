@@ -19,12 +19,19 @@ import configData
 
 import urlparse
 import OrderDomainHandler
+import configData
+from configData import getConfig
+import configObjData
+from configObjData import getRecorderConfigPage
 
 web.config.debug = False
 
 urls = (
         '/rqscoscr/(.*)','rqscoscr',
-        '/Saverqscoscr/(.*)','RacorderClient.RacorderSave'
+        '/etl_metadata/(.*)','etl_metadata',
+        '/Saverqscoscr/(.*)','RacorderClient.RacorderSave',
+        '/home', 'home.home',
+
         )
 
 app = web.application(urls,globals(),autoreload=True)
@@ -50,41 +57,36 @@ render = render_mako(
         output_encoding = 'utf-8',
         )
 
+# 问题页面
 class rqscoscr():
         def POST(self,filename):
             pass
 
         def GET(self,filename):
             try:
+
                 logger = getLogger()
                 logger.debug("start rqscoscr Page GET response")
 
                 globalDefine.globalOrderInfoErrorlog = "No Error"
 
-                #import  db
-                #userdb = db.database(dbn = "mssql", db = 'RaRecorder_CEM', user ='sa' ,pw ='sa.rayda',host='192.168.1.186',charset="utf8")
-
-                #str_query="select * from T_USER";
-                #returnjson=[]
-                #dic_result=userdb.query(str_query);
-                #print dic_result;
-
-
-
-#TODO: open the auth in future.also need purview.
-                #            authreq = checkUserAuth(web)
-                #
-                #            if authreq:
-                #                web.header('WWW-Authenticate','Basic realm="Auth example"')
-                #                web.ctx.status = '401 Unauthorized'
-                #                logger.debug("no right HTTP_AUTHORIZATION")
-                #                return render.error(error = web.ctx.status)
-
                 #TODO: when None happen?
-                if filename is None:
+                if filename is None or filename.strip() == '':
                     return render.error(error = 'no filename')
                 else:
-                    return render.rqsco_stone(outdicrqscoscr=getTestData())
+
+                    configPage = getRecorderConfigPage(filename)    # 创建页面控件 configPage
+
+                    tRacorderQuestion = web.ctx.session.session_tRacorderQuestion; #取得缓存里面录音的质检结果 如果没有质检过则为 None
+
+                    flag = "add";         # falg 用于在前台判断质检结果 是否新增
+                    QuestionNote = "";
+                    print tRacorderQuestion
+                    if tRacorderQuestion is not None and len(tRacorderQuestion)>0 and tRacorderQuestion["message"] is not None:
+                        localtRacorderQuestion = tRacorderQuestion["message"];
+                        flag = "edit";
+                        QuestionNote = localtRacorderQuestion["remark"];
+                    return render.rqsco_stone(outfilename =filename,configPage = configPage,QuestionNote = QuestionNote,flag = flag);
 
             except :
                 logger.error("exception occur, see the traceback.log")
@@ -98,52 +100,6 @@ class rqscoscr():
                 pass
             finally:
                 pass
-
-
-def getTestData():
-    subitem = [{"subitemname":"1","subitemvalue":"1"},{"subitemname":"2","subitemvalue":"2"},{"subitemname":"3","subitemvalue":"3"}]
-    dicrqscoscr = []
-    recordequestion = {"itemID":"1","itemDesc":"开场白(真诚问候，专业身份与多美滋的关系 15%)","itemPerc":"10","subitems":subitem}
-
-    dicrqscoscr.append(recordequestion)
-
-    recordequestion = {"itemID":"2","itemDesc":"建议（评估结果 40%）","itemPerc":"10","subitems":subitem}
-    dicrqscoscr.append(recordequestion)
-
-    recordequestion = {"itemID":"3","itemDesc":"开场白,(表达同理心,对妈妈/孕妇的关心 自然真诚 15%)","itemPerc":"10","subitems":subitem}
-
-    dicrqscoscr.append(recordequestion)
-    recordequestion = {"itemID":"4","itemDesc":"开场白,(告之目的和利益，明确告知致电的目的或利益 2，并确认生日，预产期15%)","itemPerc":"10","subitems":subitem}
-    dicrqscoscr.append(recordequestion)
-
-    recordequestion = {"itemID":"5","itemDesc":"开场白(真诚问候，专业身份与多美滋的关系 15%)","itemPerc":"10","subitems":subitem}
-    dicrqscoscr.append(recordequestion)
-
-    recordequestion = {"itemID":"6","itemDesc":"建议（评估结果 40%）","itemPerc":"10","subitems":subitem}
-    dicrqscoscr.append(recordequestion)
-
-    recordequestion = {"itemID":"7","itemDesc":"开场白,(表达同理心,对妈妈/孕妇的关心 自然真诚 15%)","itemPerc":"10","subitems":subitem}
-
-    dicrqscoscr.append(recordequestion)
-    recordequestion = {"itemID":"8","itemDesc":"开场白,(告之目的和利益，明确告知致电的目的或利益 2，并确认生日，预产期15%)","itemPerc":"10","subitems":subitem}
-    dicrqscoscr.append(recordequestion)
-
-    recordequestion = {"itemID":"9","itemDesc":"开场白(真诚问候，专业身份与多美滋的关系 15%)","itemPerc":"10","subitems":subitem}
-
-    dicrqscoscr.append(recordequestion)
-
-    recordequestion = {"itemID":"10","itemDesc":"建议（评估结果 40%）","itemPerc":"10","subitems":subitem}
-    dicrqscoscr.append(recordequestion)
-
-    recordequestion = {"itemID":"11","itemDesc":"开场白,(表达同理心,对妈妈/孕妇的关心 自然真诚 15%)","itemPerc":"10","subitems":subitem}
-
-    dicrqscoscr.append(recordequestion)
-    recordequestion = {"itemID":"12","itemDesc":"开场白,(告之目的和利益，明确告知致电的目的或利益 2，并确认生日，预产期15%)","itemPerc":"10","subitems":subitem}
-    dicrqscoscr.append(recordequestion)
-
-    dicrqscoscrS = json.dumps(dicrqscoscr)
-
-    return dicrqscoscrS
 
 def checkUserAuth(inWeb):
     logger = getLogger()

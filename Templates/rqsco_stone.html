@@ -19,7 +19,8 @@ from staticDbModule import getDictStatic
 import configData
 from configData import getConfig
 
-configPage = getRecorderConfigPage()
+
+#configPage = getRecorderConfigPage()
 
 localURL = getConfig('SERVERINFO','serverIP','str')
 
@@ -32,10 +33,6 @@ import copy
 %>
 <%
 localScoreInfo = None
-
-#localScoreInfo = OrderClient.getOrderInfoOrder(orderid)
-#localScoreInfo = outdicrqscoscr
-
 %>
 <script type="text/javascript" src="../static/js/jquery-1.8.3.js"></script>
 <script type="text/javascript" src="../static/js/EsayUI/jquery.easyui.min.js"></script>
@@ -61,8 +58,14 @@ localScoreInfo = None
                        }
 
 
+
                // 总分 object
                var objctscorenum =$("#labscorenum");
+               var labscoreJj =$("#labscoreJj");
+               var labscoreKcb =$("#labscoreKcb");
+               var labscoreTw =$("#labscoreTw");
+               var labscoreGTJQ =$("#labscoreGTJQ");
+               var labscoreJS =$("#labscoreJS");
 
                var radioDictName = "";
                // 点击每一个radio按钮事件
@@ -70,6 +73,7 @@ localScoreInfo = None
                {
                    //radio 值
                    var radioValue =  $(object).val();
+                   $(object).checked = true;
                    // 百分比的字段
                    var percent = $(object).parent().parent().parent().next("tr").find("td:last").text();
                    // 得分的字段 text
@@ -80,27 +84,97 @@ localScoreInfo = None
                    score.val(QanswerScore);
 
                    // 需要重新计算 总分数
-                  var tatalScore =0;
+                  var tatalScore = 0;     // 定义总分数
+                  var tatalscoreJj = 0;     // 建议得分
+                  var tatalscoreKcb = 0    //开场白得分
+                  var tatalscoreTw = 0     //提问得分
+                  var tatalscoreGTJQ = 0   // 沟通技巧得分
+                  var tatalscoreJS = 0    // 结束得分
                    $("#ComRacorder tr").each(function(i){
                                if($(this).find("td").find("input[type='text'][name='txtSCORE']").length > 0)
                                {
                                    var ScroreAnswer =  $(this).find("td").find("input[type='text'][name='txtSCORE']");
                                    var ScoreAnswerScoreStr = ScroreAnswer[0].value;
-                                   if(ScoreAnswerScoreStr!="0")
+
+
+                                   var  ScoreAnswerScore= 0
+
+                                   if(ScoreAnswerScoreStr.length <= 0)
                                    {
+                                       ScoreAnswerScoreStr = 0;
+                                   }
+                                   else
+                                   {
+                                       ScoreAnswerScore = parseFloat(ScoreAnswerScoreStr);
+                                   }
+
                                        var ScoreAnswerScore = parseFloat(ScoreAnswerScoreStr);
+
+                                       var hasRemark =  $(ScroreAnswer).parent().prev("td").find("label").attr("name");
+
+                                       if(hasRemark == "hasRemark1")
+                                       {
+                                           tatalscoreJj = tatalscoreJj.add(ScoreAnswerScore)
+                                       }
+                                       else if(hasRemark == "hasRemark2")
+                                       {
+                                           tatalscoreKcb = tatalscoreKcb.add(ScoreAnswerScore)
+                                       }
+
+                                       else if(hasRemark == "hasRemark3")
+                                       {
+                                           tatalscoreTw = tatalscoreTw.add(ScoreAnswerScore)
+                                       }
+                                       else if(hasRemark == "hasRemark4")
+                                       {
+                                           tatalscoreGTJQ = tatalscoreGTJQ.add(ScoreAnswerScore)
+                                       }
+                                       else if(hasRemark == "hasRemark5")
+                                       {
+                                           tatalscoreJS = tatalscoreJS.add(ScoreAnswerScore)
+                                       }
 
                                        if(ScoreAnswerScore!=0)
                                        {
+                                           var hasRemark =  $(ScroreAnswer).parent().prev("td").find("label").attr("name");
+                                           if(hasRemark == "hasRemark1")
+                                           {
+                                               tatalscoreJj = tatalscoreJj.add(ScoreAnswerScore)
+                                           }
+                                           else if(hasRemark == "hasRemark2")
+                                           {
+                                               tatalscoreKcb = tatalscoreKcb.add(ScoreAnswerScore)
+                                           }
 
+                                           else if(hasRemark == "hasRemark3")
+                                           {
+                                               tatalscoreTw = tatalscoreTw.add(ScoreAnswerScore)
+                                           }
+                                           else if(hasRemark == "hasRemark4")
+                                           {
+                                               tatalscoreGTJQ = tatalscoreGTJQ.add(ScoreAnswerScore)
+                                           }
+                                           else if(hasRemark == "hasRemark5")
+                                           {
+                                               tatalscoreJS = tatalscoreJS.add(ScoreAnswerScore)
+                                           }
                                            tatalScore = tatalScore.add(ScoreAnswerScore)
+                                       }
 
                                        }
+
                                    }
-                               }
-                           }
                    );
+
                    objctscorenum.text(tatalScore);
+                   labscoreJj.text(tatalscoreJj);
+                   labscoreKcb.text( tatalscoreKcb);
+                   labscoreTw.text( tatalscoreTw);
+                   labscoreGTJQ.text( tatalscoreGTJQ);
+                   labscoreJS.text( tatalscoreJS);
+
+
+
                }
 
 
@@ -112,36 +186,109 @@ localScoreInfo = None
                    // 初始化事件
                    this.init = function()
                    {
-                       _page.tatalScore = _page.getRacorderScore();
-                       objctscorenum.text( _page.tatalScore);
+                       _page.getRacorderScore();
                    }
+
 
 
                    this.getRacorderScore = function()
                    {
-                       var tatalScore = 0;
-
+                       // 需要重新计算 总分数
+                       var tatalScore = 0;     // 定义总分数
+                       var tatalscoreJj = 0;     // 建议得分
+                       var tatalscoreKcb = 0    //开场白得分
+                       var tatalscoreTw = 0     //提问得分
+                       var tatalscoreGTJQ = 0   // 沟通技巧得分
+                       var tatalscoreJS = 0    // 结束得分
                        $("#ComRacorder tr").each(function(i){
                                    if($(this).find("td").find("input[type='text'][name='txtSCORE']").length > 0)
                                    {
-                                       var ScroreAnswer =  $(this).find("td").find("input[type='text'][name ='txtSCORE']").val();
-                                       tatalScore = tatalScore+ parseFloat(ScroreAnswer);
+                                       var ScroreAnswer =  $(this).find("td").find("input[type='text'][name='txtSCORE']");
+                                       var ScoreAnswerScoreStr = ScroreAnswer[0].value;
+
+                                       var  ScoreAnswerScore= 0
+
+                                       if(ScoreAnswerScoreStr.length <= 0)
+                                       {
+                                           ScoreAnswerScoreStr = 0;
+                                       }
+                                       else
+                                       {
+                                           ScoreAnswerScore = parseFloat(ScoreAnswerScoreStr);
+                                       }
+
+
+                                           var hasRemark =  $(ScroreAnswer).parent().prev("td").find("label").attr("name");
+                                           if(hasRemark == "hasRemark1")
+                                           {
+                                               tatalscoreJj = tatalscoreJj.add(ScoreAnswerScore)
                                    }
+                                           else if(hasRemark == "hasRemark2")
+                                           {
+                                               tatalscoreKcb = tatalscoreKcb.add(ScoreAnswerScore)
                                }
+
+                                           else if(hasRemark == "hasRemark3")
+                                           {
+                                               tatalscoreTw = tatalscoreTw.add(ScoreAnswerScore)
+                                           }
+                                           else if(hasRemark == "hasRemark4")
+                                           {
+                                               tatalscoreGTJQ = tatalscoreGTJQ.add(ScoreAnswerScore)
+                                           }
+                                           else if(hasRemark == "hasRemark5")
+                                           {
+                                               tatalscoreJS = tatalscoreJS.add(ScoreAnswerScore)
+                                           }
+
+                                           if(ScoreAnswerScore!=0)
+                                           {
+                                               var hasRemark =  $(ScroreAnswer).parent().prev("td").find("label").attr("name");
+                                               if(hasRemark == "hasRemark1")
+                                               {
+                                                   tatalscoreJj = tatalscoreJj.add(ScoreAnswerScore)
+                                               }
+                                               else if(hasRemark == "hasRemark2")
+                                               {
+                                                   tatalscoreKcb = tatalscoreKcb.add(ScoreAnswerScore)
+                                               }
+
+                                               else if(hasRemark == "hasRemark3")
+                                               {
+                                                   tatalscoreTw = tatalscoreTw.add(ScoreAnswerScore)
+                                               }
+                                               else if(hasRemark == "hasRemark4")
+                                               {
+                                                   tatalscoreGTJQ = tatalscoreGTJQ.add(ScoreAnswerScore)
+                                               }
+                                               else if(hasRemark == "hasRemark5")
+                                               {
+                                                   tatalscoreJS = tatalscoreJS.add(ScoreAnswerScore)
+                                               }
+                                               tatalScore = tatalScore.add(ScoreAnswerScore)
+                                           }
+
+
+                                       }
+                                   }
                        );
-                       return tatalScore;
+
+                       objctscorenum.text(tatalScore);
+                       labscoreJj.text(tatalscoreJj);
+                       labscoreKcb.text( tatalscoreKcb);
+                       labscoreTw.text( tatalscoreTw);
+                       labscoreGTJQ.text( tatalscoreGTJQ);
+                       labscoreJS.text( tatalscoreJS);
+
                    }
-
-
-
 
                    // 点击确认按钮的时候出发保存事件
                    $("#btnConfirm").click (function(){
-                       _page.forConfirm();
+                       //_page.forConfirm();
+                       _page.forConfirm()
+
+
                    });
-
-
-
 
 
 
@@ -151,26 +298,48 @@ localScoreInfo = None
                        var StrJson = "[";
                        var j = 0; //定义j 用于取得 序列号
                        $("#ComRacorder tr").each(function(i){
-                                   if($(this).find("td").find("input[type='radio'][checked]").length > 0)
+                                   if($(this).find("td").find("input[type='radio']").length > 0)
                                    {
                                        j++;
                                        var lblSEQUENCEID = "#lblSEQUENCEID"+j
                                        var mvalue=$(lblSEQUENCEID).text();// 可以记录问题的编号
+                                       var raydio = null;
+                                       var raydios = $(this).find("td").find("input[type='radio']");
+                                       $(raydios).each(function(ra)
+                                               {
+                                                   var raydiolocal = raydios[ra];
+                                                  if(raydiolocal.checked)
+                                                  {
+                                                      raydio = raydiolocal;
+                                                  }
+                                               }
+                                       );
 
-                                       var subitemAnswer =  $(this).find("td").find("input[type='radio'][checked]").val();
-                                       StrJson +="{'questionID':'"+ mvalue+"','subitemAnswer':'"+subitemAnswer+"','";
-                                   }
-                                   if($(this).find("td").find("input[type='text'][name='txtSCORE']").length > 0)
-                                   {
-                                       var ScroreAnswer =  $(this).find("td").find("input[type='text'][name ='txtSCORE']").val()
-                                       StrJson +="score"+"':'"+ScroreAnswer+"','"
+                                       if($(raydio).length > 0 )
+                                       {
+                                           var subitemAnswer = $(raydio).val();
+
+                                           var questionobject = $(raydio).parent().parent().parent().prev("tr").find("td:last").find("label");
+
+                                           var questionostr = questionobject[0].id;
+
+                                           var Questionindex = questionostr.indexOf("ID_");
+                                           var questionId =  questionostr.substring(Questionindex,questionostr.length);
+
+                                           StrJson +="{'questionID':'"+ questionId+"','subitemAnswer':'"+subitemAnswer+"','";
+
+                                           var ScroreAnswerobject = $(raydio).parent().parent().parent().next("tr").next("tr").find("td:last").find("input");
+
+                                           StrJson +="score"+"':'"+ScroreAnswerobject.val()+"','"
+                                           var tMemoAnswerobject = $(raydio).parent().parent().parent().next("tr").next("tr").next("tr").find("td:last").find("input");
+                                           StrJson +="note"+"':'"+tMemoAnswerobject.val()+"'},"
+
+                                       }
+
+
 
                                    }
-                                   if($(this).find("td").find("input[type='text'][name='txtMemo']").length > 0)
-                                   {
-                                       var tMemoAnswer =  $(this).find("td").find("input[type='text'][name ='txtMemo']").val();
-                                       StrJson +="note"+"':'"+tMemoAnswer+"'},"
-                                   }
+
                                }
                        );
                        if(StrJson.length>2)
@@ -180,8 +349,6 @@ localScoreInfo = None
                        StrJson +="]"
                        return StrJson;
                    }
-
-
 
                    //组织录音质检，打分信息的 json 字符串
                    this.GetRacorderScoreJsonStr = function()
@@ -193,55 +360,65 @@ localScoreInfo = None
                        var d = new Date();
                        var sttm = d.getYear() + '-' + (d.getMonth()+1) + '-' + d.getDate() + ' ' + d.getHours() + ':' + d.getMinutes() + ':' + d.getSeconds();
                        var reterTime = sttm;
-                       var remark = "备注值";
+                       var remark = $("#txtQuestionNote").val();
+                       alert(remark);
                        var scrvals = _page.GetRacorderAnwser();
-
-
-                       //    RacorderSaveJson = {"fileName":"","raters":"","total":"","reterTime":"","remark":"","scrvals":""};
-                       //    RacorderSaveJson["scrvals"]=[{"question":"","score":"","note":""}]
+                       scrvals = scrvals.replace(/'/gm,"@");
 
                        var RacorderSaveJson = "{'fileName':'"+fileName+"','";
                             RacorderSaveJson += "raters':'"+raters+"','";
                             RacorderSaveJson += "total':'"+total+"','";
                             RacorderSaveJson += "reterTime':'"+reterTime+"','";
                             RacorderSaveJson += "remark':'"+remark+"','";
-                            RacorderSaveJson += "scrvals':"+scrvals+"}";
 
 
+                            RacorderSaveJson += "scrvals':";
+                            RacorderSaveJson = RacorderSaveJson.replace(/'/gm,"\"");
+                            RacorderSaveJson=RacorderSaveJson +scrvals+"}";
                        return RacorderSaveJson;
                    }
                    //保存录音事件
                    this.forConfirm = function()
                     {
+                        var  strJson = _page.GetRacorderScoreJsonStr();
+                        strJson =  strJson.replace("[","\"[");
+                        strJson =  strJson.replace("]","]\"");
 
-                        var filename = "ssssssssss"
 
-                       var  strJson = _page.GetRacorderScoreJsonStr();
+                        var retPost = "";
+                        var flag = $("#RacorderIsAdd").val();
 
-                        strJson = strJson.replace(/'/gm,"\"");
-                        alert("datajson:"+strJson)
-                        var datajson = jQuery.parseJSON(strJson)
+                        if(flag == "add")
+                        {
+                            retPost = "POST";
+                        }
+                        else
+                        {
+                            retPost = "PUT";
+                        }
 
-                        var result = true;
+                        var result = false;
                         $.ajax({
-                            url:"/Saverqscoscr/"+filename,
+                            url:"/Saverqscoscr/"+retPost,
                             type:"POST",
                             cache:false,
-                            data:datajson,
+                            data:strJson,
                             datatype:"json",
                             success:function(data){
                                 if(data!=null)
                                 {
-                                   alert("保存成功了")
-                                   result = true;
+                                    alert("保存成功")
+                                    result = true;
+
                                 }
                                 else
                                 {
-                                    alert("保存失败了")
+                                    alert("保存失败")
                                     result = false;
                                 }
                             }
-                        })
+                        });
+                        return result;
 
 
                     }
@@ -278,44 +455,76 @@ localScoreInfo = None
 
 <body>
 
-<form id="formScore" method="POST">
+<form id="formScore">
 
-    <div class="bs-docs-div-compress">
+    <div class="bs-docs-div-compress" style="width: 42%">
             <label class="label label-info label-large">录音打分模板</label>
 
-        <table class="myFullTable" cellpadding="0" cellspacing="0" border="0">
+        <table >
             <tr>
-                <td height="25" align="center" class="myColorBar02" style="border-bottom:0px solid Lime">
-                    <input name="labhidscriptvalue" type="hidden" id="labhidscriptvalue" />
-                    <input name="labhidscriptpers" type="hidden" id="labhidscriptpers" value="SCRDMX01#10|SCRDMX02#5|SCRDMX03#10|SCRDMX04#10|SCRDMX05#10|SCRDMX06#10|SCRDMX07#10|" />
-                    <input name="labscriptnm" type="hidden" id="labscriptnm" value="IB 电话质量评估标准" />
-                </td>
-                <td id="labrecfilename" height="25" align="center" class="myColorBar02" style="border-bottom:0px solid Lime; cursor:hand;">10.4.48.29_20130502091648838_14_3195_37047.wav</td>
-                <td id="labscorenum" align="center" class="myColorBar02" style="width:80px;">0</td>
+                <td id="labrecfilename" height="25" align="left" colspan="2">文件名：${outfilename} </td>
+                <td align="left" class="myColorBar02" > 总得分：<span id="labscorenum">0</span></td>
 
             </tr>
-            <tr><td colspan="3" valign="top" style="border-top:solid 1 Lime;"><div style="overflow:auto; width:100%; height:100%;">
-                <table class="myFullTable" cellpadding="0" cellspacing="0" border="0"><tr>
-                    <td id="jspnltdobj" valign="top">
-            <div>
-                    <%
-                        configPageRecorderScore = configPage
-                        configUsing =copy.deepcopy(configPageRecorderScore)
 
-                        #print("configPageRecorderScore length:")
-                        #print len(configPageRecorderScore)
-                    %>
-                    <%namespace name="comp" file="components.html" />
-                    ${comp.layoutControlList(configItem=configUsing)}
-            </div>
-                    </td>
-                </tr>
-                </table></div></td>
+            <tr  height="25" align="left" class="label label-normal" >
+                <td  align="left" >
+                   建议得分:<span id="labscoreJj">0</span>
+                   开场白得分:<span id="labscoreKcb">0</span>
+
+                </td>
+                <td align="left" >
+                    提问得分:<span id="labscoreTw">0</span>
+                    沟通技巧得分：<span id="labscoreGTJQ">0</span>
+
+                </td >
+                <td  align="left" >结束得分:<span id="labscoreJS">0</span>
+
+                </td>
+            </tr>
+
+
+
+
+
+
+
+            <tr>
+                <td colspan="3" valign="top" style="border-top:solid 1 Lime;">
+                    <div style="overflow:auto; width:100%; height:100%;">
+                   <table class="myFullTable" cellpadding="0" cellspacing="0" border="0">
+                    <tr>
+                        <td id="jspnltdobj" valign="top" colspan="3">
+                         <div>
+                        <%
+                            configPageRecorderScore = configPage
+                            configUsing =copy.deepcopy(configPageRecorderScore)
+
+                            #print("configPageRecorderScore length:")
+                            #print len(configPageRecorderScore)
+                        %>
+                        <%namespace name="comp" file="components.html" />
+                        ${comp.layoutControlList(configItem=configUsing)}
+                </div>
+                        </td>
+                    </tr>
+                       <tr>
+                          <td width=45>
+                              <label class="label label-normal">总备注</label>
+                          </td>
+                           <td algin="left" colspan="2">
+                               <input name=txtnote id=txtQuestionNote height="100"  type = text value="${QuestionNote}"  placeholder="备注"/>
+                           </td>
+                       </tr>
+                </table>
+                    </div></td>
             </tr>
         </table>
-        <div class="modal-footer">
+        <div>
           　  <button class="btn" data-dismiss="modal"  aria-hidden="true">取消</button>
            　 <button class="btn btn-primary" id="btnConfirm" >确认</button>
+
+              <input id="RacorderIsAdd" type="hidden" value="${flag}">
         </div>
     </div>
 

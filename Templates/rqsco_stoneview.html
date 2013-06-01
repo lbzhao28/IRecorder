@@ -1,0 +1,555 @@
+<%inherit file="base.html" />
+
+<%doc>
+    ##using Mako to create html file.
+</%doc>
+
+<%!
+import OrderClient
+import json
+
+import configObjData
+from configObjData import getRecorderConfigPage
+
+import staticDbModule
+from staticDbModule import getDictStatic
+
+import configData
+from configData import getConfig
+
+
+#configPage = getRecorderConfigPage()
+
+localURL = getConfig('SERVERINFO','serverIP','str')
+
+import sys
+reload(sys)
+#convert the show code.
+sys.setdefaultencoding('utf8')
+
+import copy
+%>
+<%
+localScoreInfo = None
+%>
+<%def name="styleSheetIncludes()">
+<script type="text/javascript" src="../static/js/jquery-1.8.3.js"></script>
+<script type="text/javascript" src="../static/js/EsayUI/jquery.easyui.min.js"></script>
+</%def>
+
+
+
+<%def name="title()">
+录音打分
+</%def>
+    <script src="http://${localURL}/static/js/jquery.js"></script>
+    <script src="http://${localURL}/static/js/bootstrap.js"></script>
+    <script src="http://${localURL}/static/js/My97DatePicker/WdatePicker.js"></script>
+    <script src="http://${localURL}/static/js/util.js"></script>
+    <script src="http://${localURL}/static/js/localAddressList.js"></script>
+    <script type="text/javascript">
+        jQuery(document).ready(function(){
+            var selectText = function(dropdown, selectedValue) {
+                var options = $(dropdown).find("option");
+                var matches = $.grep(options,
+                        function(n) { return $(n).text() == selectedValue; });
+                $(matches).attr("selected", "selected");
+            };
+        });
+    </script>
+
+
+<%def name="styleSheet()">
+
+</%def>
+
+<%def name="javascriptIncludes()">
+
+
+<link href="http://${localURL}/static/css/bootstrap.css" rel="stylesheet" media="screen">
+<link href="http://${localURL}/static/css/docs.css" rel="stylesheet" media="screen">
+</%def>
+
+<%def name="javascript()">
+
+jQuery(document).ready(function (){
+
+
+//加法函数，用来得到精确的加法结果
+//说明：javascript的加法结果会有误差，在两个浮点数相加的时候会比较明显。这个函数返回较为精确的加法结果。
+//调用：accAdd(arg1,arg2)
+//返回值：arg1加上arg2的精确结果
+function accAdd(arg1,arg2){
+var r1,r2,m;
+try{r1=arg1.toString().split(".")[1].length}catch(e){r1=0}
+try{r2=arg2.toString().split(".")[1].length}catch(e){r2=0}
+m=Math.pow(10,Math.max(r1,r2))
+return (arg1*m+arg2*m)/m
+}
+//给Number类型增加一个add方法，调用起来更加方便。
+Number.prototype.add = function (arg){
+return accAdd(arg,this);
+}
+
+
+
+// 总分 object
+var objctscorenum =$("#labscorenum");
+var labscoreJj =$("#labscoreJj");
+var labscoreKcb =$("#labscoreKcb");
+var labscoreTw =$("#labscoreTw");
+var labscoreGTJQ =$("#labscoreGTJQ");
+var labscoreJS =$("#labscoreJS");
+
+var radioDictName = "";
+// 点击每一个radio按钮事件
+this.radioclick = function(object)
+{
+//radio 值
+var radioValue =  $(object).val();
+$(object).checked = true;
+// 百分比的字段
+var percent = $(object).parent().parent().parent().next("tr").find("td:last").text();
+// 得分的字段 text
+var score = $(object).parent().parent().parent().next("tr").next("tr").find("td").find("input[type='text'][name ='txtSCORE']");
+
+//将每一题的radio 选择后得分 显示到得分字段
+var QanswerScore =  parseFloat (radioValue) * parseFloat(percent)/100;
+score.val(QanswerScore);
+
+// 需要重新计算 总分数
+var tatalScore = 0;     // 定义总分数
+var tatalscoreJj = 0;     // 建议得分
+var tatalscoreKcb = 0    //开场白得分
+var tatalscoreTw = 0     //提问得分
+var tatalscoreGTJQ = 0   // 沟通技巧得分
+var tatalscoreJS = 0    // 结束得分
+$("#ComRacorder tr").each(function(i){
+if($(this).find("td").find("input[type='text'][name='txtSCORE']").length > 0)
+{
+var ScroreAnswer =  $(this).find("td").find("input[type='text'][name='txtSCORE']");
+var ScoreAnswerScoreStr = ScroreAnswer[0].value;
+
+
+var  ScoreAnswerScore= 0
+
+if(ScoreAnswerScoreStr.length <= 0)
+{
+ScoreAnswerScoreStr = 0;
+}
+else
+{
+ScoreAnswerScore = parseFloat(ScoreAnswerScoreStr);
+}
+
+var ScoreAnswerScore = parseFloat(ScoreAnswerScoreStr);
+
+var hasRemark =  $(ScroreAnswer).parent().prev("td").find("label").attr("name");
+
+if(hasRemark == "hasRemark1")
+{
+tatalscoreJj = tatalscoreJj.add(ScoreAnswerScore)
+}
+else if(hasRemark == "hasRemark2")
+{
+tatalscoreKcb = tatalscoreKcb.add(ScoreAnswerScore)
+}
+
+else if(hasRemark == "hasRemark3")
+{
+tatalscoreTw = tatalscoreTw.add(ScoreAnswerScore)
+}
+else if(hasRemark == "hasRemark4")
+{
+tatalscoreGTJQ = tatalscoreGTJQ.add(ScoreAnswerScore)
+}
+else if(hasRemark == "hasRemark5")
+{
+tatalscoreJS = tatalscoreJS.add(ScoreAnswerScore)
+}
+
+if(ScoreAnswerScore!=0)
+{
+var hasRemark =  $(ScroreAnswer).parent().prev("td").find("label").attr("name");
+if(hasRemark == "hasRemark1")
+{
+tatalscoreJj = tatalscoreJj.add(ScoreAnswerScore)
+}
+else if(hasRemark == "hasRemark2")
+{
+tatalscoreKcb = tatalscoreKcb.add(ScoreAnswerScore)
+}
+
+else if(hasRemark == "hasRemark3")
+{
+tatalscoreTw = tatalscoreTw.add(ScoreAnswerScore)
+}
+else if(hasRemark == "hasRemark4")
+{
+tatalscoreGTJQ = tatalscoreGTJQ.add(ScoreAnswerScore)
+}
+else if(hasRemark == "hasRemark5")
+{
+tatalscoreJS = tatalscoreJS.add(ScoreAnswerScore)
+}
+tatalScore = tatalScore.add(ScoreAnswerScore)
+}
+
+}
+
+}
+);
+
+objctscorenum.text(tatalScore);
+labscoreJj.text(tatalscoreJj);
+labscoreKcb.text( tatalscoreKcb);
+labscoreTw.text( tatalscoreTw);
+labscoreGTJQ.text( tatalscoreGTJQ);
+labscoreJS.text( tatalscoreJS);
+
+
+
+}
+
+
+var Racorderobj = function()
+{
+var _page = this;
+_page.userid = "sa";
+_page.tatalScore = 0.0;
+// 初始化事件
+this.init = function()
+{
+_page.getRacorderScore();
+}
+
+
+
+this.getRacorderScore = function()
+{
+// 需要重新计算 总分数
+var tatalScore = 0;     // 定义总分数
+var tatalscoreJj = 0;     // 建议得分
+var tatalscoreKcb = 0    //开场白得分
+var tatalscoreTw = 0     //提问得分
+var tatalscoreGTJQ = 0   // 沟通技巧得分
+var tatalscoreJS = 0    // 结束得分
+$("#ComRacorder tr").each(function(i){
+if($(this).find("td").find("input[type='text'][name='txtSCORE']").length > 0)
+{
+var ScroreAnswer =  $(this).find("td").find("input[type='text'][name='txtSCORE']");
+var ScoreAnswerScoreStr = ScroreAnswer[0].value;
+
+var  ScoreAnswerScore= 0
+
+if(ScoreAnswerScoreStr.length <= 0)
+{
+ScoreAnswerScoreStr = 0;
+}
+else
+{
+ScoreAnswerScore = parseFloat(ScoreAnswerScoreStr);
+}
+
+
+var hasRemark =  $(ScroreAnswer).parent().prev("td").find("label").attr("name");
+if(hasRemark == "hasRemark1")
+{
+tatalscoreJj = tatalscoreJj.add(ScoreAnswerScore)
+}
+else if(hasRemark == "hasRemark2")
+{
+tatalscoreKcb = tatalscoreKcb.add(ScoreAnswerScore)
+}
+
+else if(hasRemark == "hasRemark3")
+{
+tatalscoreTw = tatalscoreTw.add(ScoreAnswerScore)
+}
+else if(hasRemark == "hasRemark4")
+{
+tatalscoreGTJQ = tatalscoreGTJQ.add(ScoreAnswerScore)
+}
+else if(hasRemark == "hasRemark5")
+{
+tatalscoreJS = tatalscoreJS.add(ScoreAnswerScore)
+}
+
+if(ScoreAnswerScore!=0)
+{
+var hasRemark =  $(ScroreAnswer).parent().prev("td").find("label").attr("name");
+if(hasRemark == "hasRemark1")
+{
+tatalscoreJj = tatalscoreJj.add(ScoreAnswerScore)
+}
+else if(hasRemark == "hasRemark2")
+{
+tatalscoreKcb = tatalscoreKcb.add(ScoreAnswerScore)
+}
+
+else if(hasRemark == "hasRemark3")
+{
+tatalscoreTw = tatalscoreTw.add(ScoreAnswerScore)
+}
+else if(hasRemark == "hasRemark4")
+{
+tatalscoreGTJQ = tatalscoreGTJQ.add(ScoreAnswerScore)
+}
+else if(hasRemark == "hasRemark5")
+{
+tatalscoreJS = tatalscoreJS.add(ScoreAnswerScore)
+}
+tatalScore = tatalScore.add(ScoreAnswerScore)
+}
+
+
+}
+}
+);
+
+objctscorenum.text(tatalScore);
+labscoreJj.text(tatalscoreJj);
+labscoreKcb.text( tatalscoreKcb);
+labscoreTw.text( tatalscoreTw);
+labscoreGTJQ.text( tatalscoreGTJQ);
+labscoreJS.text( tatalscoreJS);
+
+}
+
+// 点击确认按钮的时候出发保存事件
+$("#btnConfirm").click (function(){
+//_page.forConfirm();
+_page.forConfirm()
+
+
+});
+
+
+
+// 获取问题的答案信息
+this.GetRacorderAnwser = function()
+{
+var StrJson = "[";
+var j = 0; //定义j 用于取得 序列号
+$("#ComRacorder tr").each(function(i){
+if($(this).find("td").find("input[type='radio']").length > 0)
+{
+j++;
+var lblSEQUENCEID = "#lblSEQUENCEID"+j
+var mvalue=$(lblSEQUENCEID).text();// 可以记录问题的编号
+var raydio = null;
+var raydios = $(this).find("td").find("input[type='radio']");
+$(raydios).each(function(ra)
+{
+var raydiolocal = raydios[ra];
+if(raydiolocal.checked)
+{
+raydio = raydiolocal;
+}
+}
+);
+
+if($(raydio).length > 0 )
+{
+var subitemAnswer = $(raydio).val();
+
+var questionobject = $(raydio).parent().parent().parent().prev("tr").find("td:last").find("label");
+
+var questionostr = questionobject[0].id;
+
+var Questionindex = questionostr.indexOf("ID_");
+var questionId =  questionostr.substring(Questionindex,questionostr.length);
+
+StrJson +="{'questionID':'"+ questionId+"','subitemAnswer':'"+subitemAnswer+"','";
+
+var ScroreAnswerobject = $(raydio).parent().parent().parent().next("tr").next("tr").find("td:last").find("input");
+
+StrJson +="score"+"':'"+ScroreAnswerobject.val()+"','"
+var tMemoAnswerobject = $(raydio).parent().parent().parent().next("tr").next("tr").next("tr").find("td:last").find("input");
+StrJson +="note"+"':'"+tMemoAnswerobject.val()+"'},"
+
+}
+
+
+
+}
+
+}
+);
+if(StrJson.length>2)
+{
+StrJson= StrJson.substring(0,StrJson.length-1);
+}
+StrJson +="]"
+return StrJson;
+}
+
+
+
+//组织录音质检，打分信息的 json 字符串
+this.GetRacorderScoreJsonStr = function()
+{
+
+var fileName =  $("#labrecfilename").text();
+var total =$("#labscorenum").text();
+var raters = _page.userid;
+var d = new Date();
+var sttm = d.getYear() + '-' + (d.getMonth()+1) + '-' + d.getDate() + ' ' + d.getHours() + ':' + d.getMinutes() + ':' + d.getSeconds();
+var reterTime = sttm;
+var remark = $("#txtQuestionNote").val();
+var scrvals = _page.GetRacorderAnwser();
+
+
+scrvals = scrvals.replace(/'/gm,"@");
+
+var RacorderSaveJson = "{'fileName':'"+fileName+"','";
+RacorderSaveJson += "raters':'"+raters+"','";
+RacorderSaveJson += "total':'"+total+"','";
+RacorderSaveJson += "reterTime':'"+reterTime+"','";
+RacorderSaveJson += "remark':'"+remark+"','";
+
+
+RacorderSaveJson += "scrvals':";
+RacorderSaveJson = RacorderSaveJson.replace(/'/gm,"\"");
+RacorderSaveJson=RacorderSaveJson +scrvals+"}";
+return RacorderSaveJson;
+}
+//保存录音事件
+this.forConfirm = function()
+{
+var  strJson = _page.GetRacorderScoreJsonStr();
+strJson =  strJson.replace("[","\"[");
+strJson =  strJson.replace("]","]\"");
+
+
+var retPost = "";
+var flag = $("#RacorderIsAdd").val();
+
+if(flag == "add")
+{
+retPost = "POST";
+}
+else
+{
+retPost = "PUT";
+}
+
+var result = false;
+$.ajax({
+url:"/Saverqscoscr/"+retPost,
+type:"POST",
+cache:false,
+data:strJson,
+datatype:"json",
+success:function(data){
+if(data!=null)
+{
+
+alert("保存成功")
+result = true;
+
+}
+else
+{
+result = false;
+}
+}
+});
+return result;
+}
+}
+var  Racorderobj = new Racorderobj();
+Racorderobj.init();
+});
+
+</%def>
+
+<%def name="documentReady()">
+
+</%def>
+
+<%def name="body()">
+
+
+
+    <div class="bs-docs-div-compress">
+            <label class="label label-info label-large">录音打分模板</label>
+
+        <table class="myFullTable" cellpadding="0" cellspacing="0" border="0">
+            <tr>
+                <td height="25" align="center" class="myColorBar02" style="border-bottom:0px solid Lime">
+                    <input name="labhidscriptvalue" type="hidden" id="labhidscriptvalue" />
+                    <input name="labhidscriptpers" type="hidden" id="labhidscriptpers" value="SCRDMX01#10|SCRDMX02#5|SCRDMX03#10|SCRDMX04#10|SCRDMX05#10|SCRDMX06#10|SCRDMX07#10|" />
+                    <input name="labscriptnm" type="hidden" id="labscriptnm" value="IB 电话质量评估标准" />
+                </td>
+                <td id="labrecfilename" height="25" align="center" class="myColorBar02" style="border-bottom:0px solid Lime; cursor:hand;">${outfilename}</td>
+                <td id="labscorenum" align="center" class="myColorBar02" style="width:80px;">0</td>
+            </tr>
+
+
+     <tr>
+
+            <tr  height="25" align="center" class="myColorBar02" style="border-bottom:0px solid Lime">
+                <td>
+                    建议得分:<span id="labscoreJj">0</span>
+                    开场白得分:<span id="labscoreKcb">0</span>
+
+                </td>
+                <td>
+                    提问得分:<span id="labscoreTw">0</span>
+                    沟通技巧得分：<span id="labscoreGTJQ">0</span>
+
+                </td>
+                <td>结束得分:<span id="labscoreJS">0</span>
+
+                </td>
+            </tr>
+
+     </tr>
+
+            <tr>
+                <td colspan="3" valign="top" style="border-top:solid 1 Lime;">
+                    <div style="overflow:auto; width:100%; height:100%;">
+                   <table class="myFullTable" cellpadding="0" cellspacing="0" border="0">
+                    <tr>
+                        <td id="jspnltdobj" valign="top" colspan="3">
+                         <div>
+                        <%
+                            configPageRecorderScore = configPage
+                            configUsing =copy.deepcopy(configPageRecorderScore)
+
+                            #print("configPageRecorderScore length:")
+                            #print len(configPageRecorderScore)
+                        %>
+                        <%namespace name="comp" file="components.html" />
+                        ${comp.layoutControlList(configItem=configUsing)}
+                </div>
+                        </td>
+                    </tr>
+                       <tr>
+                          <td width=45>
+                              <label class="label label-normal">总备注</label>
+                          </td>
+                           <td algin="left" colspan="2">
+                               <input name=txtnote id=txtnote height="100"  type = text value="${QuestionNote}"  placeholder="备注"/>
+                           </td>
+                       </tr>
+                </table>
+                    </div></td>
+            </tr>
+        </table>
+        <div>
+          　  <button class="btn" data-dismiss="modal"  aria-hidden="true">取消</button>
+           　 <button class="btn btn-primary" id="btnConfirm" >确认</button>
+            <input id="RacorderIsAdd" type="hidden" value="${flag}">
+        </div>
+    </div>
+
+</body>
+</html>
+</%def>
+
+<%def name="bottom()">
+
+</%def>
+
