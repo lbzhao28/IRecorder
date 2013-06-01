@@ -230,7 +230,7 @@ class login:
     )
     def GET(self):
         """
-        Get iRecorderQuestion资源
+        Get login资源
         author: J.Wong
         return: JSON
         """
