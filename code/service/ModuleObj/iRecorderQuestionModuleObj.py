@@ -29,13 +29,15 @@ class iRecorderQuestionModuleObj:
                      " WHERE [TRQ_SCRIPT].[FID] = %s" \
                      " ORDER BY [ITEMDESC]"
             cur.execute(sqlstr,fid)
+            logger.info("sql:"+str(sqlstr)+"\n fid:"+str(fid))
             result = []
             for row in cur:
                 result.append(row)
+
             return result
         except Exception,ex:
             logger.error("exception occur, see the traceback.log")
-            logger.error("sql:"+sqlstr+"\n fid:"+fid)
+            logger.error("sql:"+str(sqlstr)+"\n fid:"+str(fid))
             #异常写入日志文件.
             f = open('Logs/traceback.txt','a')
             traceback.print_exc()
@@ -64,13 +66,15 @@ class iRecorderQuestionModuleObj:
                      " FROM [TRQ_SCRSUB]"\
                      " WHERE [TRQ_SCRSUB].[ITEMID] = %s"
             cur.execute(sqlstr,itemID)
+            logger.info("sql:"+str(sqlstr)+"\n itemID:"+str(itemID))
             result = []
             for row in cur:
                 result.append(row)
+
             return len(result)
         except Exception,ex:
             logger.error("exception occur, see the traceback.log")
-            logger.error("sql:"+sqlstr+"\n itemID:"+itemID)
+            logger.effof("sql:"+str(sqlstr)+"\n itemID:"+str(itemID))
             #异常写入日志文件.
             f = open('Logs/traceback.txt','a')
             traceback.print_exc()

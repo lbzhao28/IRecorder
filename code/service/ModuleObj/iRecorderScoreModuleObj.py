@@ -1,7 +1,7 @@
 __author__ = 'JohannWong'
 #coding=UTF-8
 import traceback
-from dbConnection import msSqlConnect
+from dbConnection import msSqlConnect,msSqlConnectutf
 from logHelper import getLogger
 
 class iRecorderScoreModuleObj:
@@ -13,7 +13,7 @@ class iRecorderScoreModuleObj:
         try:
             logger = getLogger()
             logger.debug("start iRecorderScoreModuleObj.getiRecorderScoreByFileName")
-            conn = msSqlConnect()
+            conn = msSqlConnectutf()
             cur = conn.cursor()
             sqlstr = "SELECT [RECKEY]"\
             ",[RATERS]"\
@@ -41,13 +41,14 @@ class iRecorderScoreModuleObj:
             " WHERE [TRQ_SCORE].[RECKEY] = %s"
             cur.execute(sqlstr,filename)
             row = cur.fetchone()
+            logger.info("sql:"+str(sqlstr)+"\n filename:"+str(filename))
             if row:
                 return row
             else:
                 return 'No data.'
         except Exception,ex:
             logger.error("exception occur, see the traceback.log")
-            logger.error("sql:"+sqlstr+"\n filename:"+filename)
+            logger.error("sql:"+str(sqlstr)+"\n filename:"+str(filename))
             #异常写入日志文件.
             f = open('Logs/traceback.txt','a')
             traceback.print_exc()
@@ -64,7 +65,7 @@ class iRecorderScoreModuleObj:
         try:
             logger = getLogger()
             logger.debug("start iRecorderScoreModuleObj.postiRecorderScoreByJson")
-            conn = msSqlConnect()
+            conn = msSqlConnectutf()
             cur = conn.cursor()
             sqlstr = "INSERT INTO [TRQ_SCORE]"\
                      "([RECKEY]"\
@@ -116,19 +117,21 @@ class iRecorderScoreModuleObj:
                      ")"
             cur.execute(sqlstr)
             conn.commit()
+            logger.info("sql:"+str(sqlstr))
 
             sqlstr = "SELECT *"\
                      " FROM [TRQ_SCORE]"\
                      " WHERE [TRQ_SCORE].[RECKEY] = %s"
             cur.execute(sqlstr,scoreDic['RECKEY'])
             row = cur.fetchone()
+            logger.info("sql:"+str(sqlstr))
             if row:
                 return scoreDic['RECKEY']
             else:
                 return 'No data.'
         except Exception,ex:
             logger.error("exception occur, see the traceback.log")
-            logger.error("sql:"+sqlstr)
+            logger.error("sql:"+str(sqlstr))
             #异常写入日志文件.
             f = open('Logs/traceback.txt','a')
             traceback.print_exc()
@@ -145,7 +148,7 @@ class iRecorderScoreModuleObj:
         try:
             logger = getLogger()
             logger.debug("start iRecorderScoreModuleObj.putiRecorderScoreByJson")
-            conn = msSqlConnect()
+            conn = msSqlConnectutf()
             cur = conn.cursor()
             sqlstr = "UPDATE [TRQ_SCORE]"\
                      "SET"\
@@ -173,10 +176,11 @@ class iRecorderScoreModuleObj:
                      "WHERE [RECKEY] = '"+scoreDic['RECKEY']+"'"
             cur.execute(sqlstr)
             conn.commit()
+            logger.info("sql:"+str(sqlstr))
             return scoreDic['RECKEY']
         except Exception,ex:
             logger.error("exception occur, see the traceback.log")
-            logger.error("sql:"+sqlstr)
+            logger.error("sql:"+str(sqlstr))
             #异常写入日志文件.
             f = open('Logs/traceback.txt','a')
             traceback.print_exc()

@@ -1,4 +1,5 @@
 __author__ = 'JohannWong'
+#coding=UTF-8
 import web
 import pymssql
 from configData import getConfig
@@ -19,4 +20,11 @@ def msSqlConnect():
     获取pymssql的数据库连接
     """
     db = pymssql.connect(host=getConfig('dbMSSql','dbhost','str'),user=getConfig('dbMSSql','dbuser','str'),password=getConfig('dbMSSql','dbpwd','str'),database=getConfig('dbMSSql','db','str'), as_dict=True)
+    return db
+
+def msSqlConnectutf():
+    """
+    获取pymssql的数据库连接
+    """
+    db = pymssql.connect(host=getConfig('dbMSSql','dbhost','str'),user=getConfig('dbMSSql','dbuser','str'),password=getConfig('dbMSSql','dbpwd','str'),database=getConfig('dbMSSql','db','str'), as_dict=True,charset='utf8')
     return db
