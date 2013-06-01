@@ -10,6 +10,7 @@ from logHelper import getLogger
 from LogicObj.iRecorderListLogicObj import iRecorderListLogicObj
 from LogicObj.iRecorderScoreLogicObj import iRecorderScoreLogicObj
 from LogicObj.iRecorderQuestionLogicObj import iRecorderQuestionLogicObj
+from ModuleObj.dbConnection import msSqlConnect
 
 mimerender = mimerender.WebPyMimeRender()
 
@@ -22,6 +23,7 @@ urls = (
     "/irecorderservice/irecorderlist","iRecorderList",
     "/irecorderservice/irecorderscore","iRecorderScore",
     "/irecorderservice/irecorderquestion","iRecorderQuestion",
+    "/irecorderservice/login","login",
     )
 app = web.application(urls,globals())
 
@@ -214,6 +216,62 @@ class iRecorderQuestion:
             traceback.print_exc(file = f)
             f.flush()
             f.close()
+
+class login:
+    """
+    录音打分系统-登录
+    """
+    @mimerender(
+        default = 'json',
+        html = render_html,
+        xml  = render_xml,
+        json = render_json,
+        txt  = render_txt
+    )
+    def GET(self):
+        """
+        Get iRecorderQuestion资源
+        author: J.Wong
+        return: JSON
+        """
+        try:
+            logger = getLogger()
+            logger.debug("start login GET response")
+
+            #获取queryString
+            params  = web.input()
+
+            if "id" not in params.keys() or "pwd" not in params.keys() or params["id"] is None or params["pwd"] is None:
+                return  {'message':False,'error': 'Must set the value of id and pwd.'}
+            conn = msSqlConnect()
+            cur = conn.cursor()
+            sqlstr = "SELECT [LOGINID]"\
+                    ",[PASSWORD]"\
+                    ",[FID]"\
+                    " FROM [T_USER]"\
+                    " LEFT JOIN [TRQ_USRFRM]"\
+                    " ON [T_USER].[LOGINID] = [TRQ_USRFRM].[USRID]"\
+                    " WHERE [FID] = 'CEM'"\
+                    " AND [LOGINID] = '"+str(params["id"])+"'"\
+                    " AND [PASSWORD] = '"+str(params["pwd"])+"'"
+            cur.execute(sqlstr)
+            row = cur.fetchone()
+            logger.info("sql:"+str(sqlstr))
+            if row:
+                return {'message':True,'error': ''}
+            else:
+                return {'message':False,'error': 'No data match.'}
+        except:
+            logger.error("iRecorderQuestion GET exception, see the traceback.log")
+            logger.error("sql:"+str(sqlstr))
+            #异常写入日志文件.
+            f = open('Logs/traceback.txt','a')
+            traceback.print_exc()
+            traceback.print_exc(file = f)
+            f.flush()
+            f.close()
+        finally:
+            conn.close()
 
 if __name__ == "__main__":
     app.run()
