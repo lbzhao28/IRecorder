@@ -6,9 +6,9 @@ urls = (
     '/RecSearch/(.*)', 'RecSearch.RecSelect',
     '/RecSearch', 'RecSearch.SearchRec',
 
-    '/ReccemSearch', 'ReccemClient.GetRaccemSearchUrl',
-    '/ReccemSearch/(.*)', 'ReccemSearch.ReccemSelect',
-    '/ReccemSearch', 'ReccemSearch.SearchReccem'
+    '/rqscoscr/(.*)','RecorderScore_Stone.rqscoscr',
+    '/Saverqscoscr/(.*)','RacorderClient.RacorderSave',
+
     )
 app = web.application(urls, locals())
 
