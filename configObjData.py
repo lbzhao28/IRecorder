@@ -3,6 +3,8 @@ __author__ = 'stone'
 
 from configobj import ConfigObj
 import  RacorderClient
+import  web;
+import  json;
 import os
 
 from web.contrib.template import render_mako
@@ -54,91 +56,79 @@ def getConfigPage():
     #print configPage.as_bool("hasPolicyHolder_Usr")
     return configPage
 
-def getRecorderConfigPage():
-    """get the recorder page config file"""
-
-    #just return json.
-    #configPage = ConfigObj('recorderPagesConf.conf')
-
-    #return a config list
-    #configPage = ConfigObj()
-    configPage = RecorderConfigPage();
-#
-#    #
-#    configPage['hasShowScore'] = 'yes'
-#    #
-#    configPage['recorderScore'] = {}
-#    configPage['recorderScore']['rowNumber'] = '1'
-#    configPage['recorderScore']['itemCount'] = '4'
-#
-#    qBaseName = 'Q'
-#    for i in range(4):
-#        qName = qBaseName + str(i)
-#        configPage['recorderScore'][qName] = {}
-#        configPage['recorderScore'][qName]['titleText'] = '开场白(真诚问候，专业身份与多美滋的关系 15%)' + str(i)
-#        configPage['recorderScore'][qName]['titleType'] = 'label'
-#        configPage['recorderScore'][qName]['titleCss'] = 'label label-normal'
-#        configPage['recorderScore'][qName]['dataType'] = 'input'
-#        configPage['recorderScore'][qName]['dataShowType'] = 'radio'
-#        configPage['recorderScore'][qName]['dataName'] = 'POLICYHOLDER_USR_SEX'+str(i)
-#        configPage['recorderScore'][qName]['mustHave'] = 'no'
-#
-#        configPage['recorderScore'][qName]['radio'] = {}
-#
-#        radioBaseName = 'radio'
-#        for j in range(i+1):
-#            sectionRadio = {
-#                'titleType': 'label',
-#                'titleCss': 'radio inline',
-#                'inDataType': 'label',
-#                'inDataCss': 'label',
-#                'inDataText': str(j),
-#                'inDataValue': str(j),
-#                'inDataID': 'PolicyInformation_txtSexMan'+str(j),
-#            }
-#            radioName = radioBaseName + str(j)
-#            configPage['recorderScore'][qName]['radio'][radioName] = sectionRadio
-#
-#            #another write.
-#            #configPage['recorderScore'][qName]['radio']['radio1'] = {}
-#            #configPage['recorderScore'][qName]['radio']['radio1']['titleType'] = 'label'
-#            #configPage['recorderScore'][qName]['radio']['radio1']['titleCss'] = 'radio inline'
-#            #configPage['recorderScore'][qName]['radio']['radio1']['inDataType'] = 'label'
-#            #configPage['recorderScore'][qName]['radio']['radio1']['inDataCss'] = 'label'
-#            #configPage['recorderScore'][qName]['radio']['radio1']['inDataText'] = '1'
-#            #configPage['recorderScore'][qName]['radio']['radio1']['inDataValue'] = '0'
-#            #configPage['recorderScore'][qName]['radio']['radio1']['inDataID'] = 'PolicyInformation_txtSexMan'
-
+def getRecorderConfigPage(filename):
+    configPage = RecorderConfigPage(filename);
     return configPage
 
 # 创建录音打分的页面
-def RecorderConfigPage():
-    #tRacorderQuestions = RacorderClient.GetRacorderQuestion();
+def RecorderConfigPage(filename):
+
+    #从Session 中取得filename 名字
+    localtRacorderQuestion = {};
+
+    if filename is not None or filename.strip != '':
+        #单条录音的文件的问题额答案
+        tRacorderQuestion = RacorderClient.GetRacorderQuestionByfilename(filename);
+        if tRacorderQuestion is not None and len(tRacorderQuestion)>0 and tRacorderQuestion["message"] is not None:
+            localtRacorderQuestion = tRacorderQuestion["message"];
+
+
+    Recordertotal = 0;   #总分数
+    RecorderscrvalsEval = [];  # 问题答案的json
+    QuestionNote ="";          # 备注字段
+
+    print localtRacorderQuestion;
+    configPage = ConfigObj()
+
+    web.ctx.session.session_QuestionNote = ""; #首先清空Session
+
+    if localtRacorderQuestion.keys() > 0 and len(localtRacorderQuestion)>0:
+        Recordertotal = localtRacorderQuestion["total"];
+        strRecorderscrvals = localtRacorderQuestion["scrvals"];
+        Recorderscrvals =  strRecorderscrvals.replace("@","'");
+        RecorderscrvalsEval = eval(Recorderscrvals);
+        QuestionNote =localtRacorderQuestion["remark"]
+
+        web.ctx.session.session_QuestionNote =  QuestionNote # 将Note 用Sesssion 保存起来
+
+
+
+
+
+    # 获取问卷信息
     tRacorderQuestionsMesage = RacorderClient.GetRacorderQuestionUrl("CEM");
-
-    print tRacorderQuestionsMesage;
-    tRacorderQuestions = tRacorderQuestionsMesage["message"];
-
-    print len(tRacorderQuestions)
-
-    print tRacorderQuestions;
-
-
-
-    if tRacorderQuestions is None or len(tRacorderQuestions)==0 :
-        return render.error(error = 'no filename')
+    if tRacorderQuestionsMesage is None or len(tRacorderQuestionsMesage)==0 :
+        return render.error(error = '连接数据库失败')
     else:
-    #return a config list
-        configPage = ConfigObj()
+        tRacorderQuestions = tRacorderQuestionsMesage["message"];
+        #return a config list
+
 
         SBaseName = 'Q' # 序号
 
         i = 0
-        for item in tRacorderQuestions:
+        for item in tRacorderQuestions:     # 把问题的项绑定到config 中
+            itemRadioAnswer = "";           # 单个radio 的答案值
+            txtSCORE = "";                  # 单个备注
+            txtNote = "";                   # 总备注
             itemDesc = item["itemDesc"];   # 问题描述
             itemPerc = item["itemPerc"];   # 问题百分比
-            itemID = item["itemID"];
-            txtSCORE =(float(itemPerc) * 2)/100;
+            itemID = item["itemID"];        # 问题编号
+            hasRemark = item["hasRemark"];  #问题类型
+
+            RecorderQuestionAnswer = {};
+            for localitem in  RecorderscrvalsEval:  # localitem 单个问题的答案
+                if localitem['questionID'] == str(itemID):
+                    RecorderQuestionAnswer = localitem
+                    break;
+
+            if RecorderQuestionAnswer is not None and len(RecorderQuestionAnswer)>0:
+                itemRadioAnswer = RecorderQuestionAnswer["subitemAnswer"];
+                txtSCORE = RecorderQuestionAnswer["score"];
+                txtNote = RecorderQuestionAnswer["note"];
+
+
+            # i 用于控制前台的 jquery 中获得的ID
             i=i+1
 
             Sname = SBaseName + str(i)
@@ -179,28 +169,21 @@ def RecorderConfigPage():
             configPage[Sname]["class"]['controlType'] = 'input'
             configPage[Sname]["class"]['controlShowType'] = 'radio'
             configPage[Sname]["class"]['controlName'] = 'radioCLASS'+str(i)
-            configPage[Sname]['class']["hasRealDataValue"] = '2'
+
+            if itemRadioAnswer is not None and itemRadioAnswer.strip()!='':
+                configPage[Sname]['class']["hasRealDataValue"] = int(itemRadioAnswer)
+            else:
+                configPage[Sname]['class']["hasRealDataValue"] = ""
             configPage[Sname]['class']["onClick"] = 'radioclick(this)'
 
-
-
-
-
             configPage[Sname]['class']['radio'] = {}
-
-
             questionCount = item["questionCount"];   #问题答案子类
-            print questionCount;
+
             subitems = [];
-            j = 0 ;
-            for i in range(questionCount):
 
-                print i;
-                subitem = {"subitemname":i,"subitemvalue":i }
-                #j = j+1
+            for jj in range(questionCount):
+                subitem = {"subitemname":jj,"subitemvalue":jj }
                 subitems.append(subitem)
-            print subitems
-
             radioBaseName = 'radio'
             j = 0
             for itemj in subitems:
@@ -239,9 +222,17 @@ def RecorderConfigPage():
 
             configPage[Sname]['defen'] = {}
             configPage[Sname]['defen']['controlText'] = "得分"
-            configPage[Sname]['defen']['controlType'] = 'label'
+            configPage[Sname]['defen']['controlType'] = 'labelName'
             configPage[Sname]['defen']['controlCss'] = 'label label-normal'
-            configPage[Sname]['defen']['controlName'] = 'lblDEFEN'+str(i)
+            configPage[Sname]['defen']['controlID'] = 'defen'+str(i)
+            if not hasRemark is None:
+                configPage[Sname]['defen']['controlName'] = 'hasRemark'+str(hasRemark)
+            else:
+                configPage[Sname]['defen']['controlName'] = 'hasRemark'
+
+
+
+
             configPage[Sname]['defen']['mustHave'] = 'no'
 
             configPage[Sname]['score'] = {}
@@ -250,7 +241,6 @@ def RecorderConfigPage():
             configPage[Sname]['score']['controlShowType'] = 'text'
             configPage[Sname]['score']['controlName'] = 'txtSCORE'
             configPage[Sname]['score']['controlID'] = 'idSCORE'+str(i)
-            configPage[Sname]['score']['placeholder'] = '得分'
             configPage[Sname]['score']['hasRealDataValue'] = txtSCORE
 
             configPage[Sname]['memo'] = {}
@@ -266,17 +256,14 @@ def RecorderConfigPage():
             configPage[Sname]['memoText']['controlShowType'] = 'text'
             configPage[Sname]['memoText']['controlName'] = 'txtMemo'
             configPage[Sname]['memoText']['controlID'] = 'idMemo'+str(i)
-            configPage[Sname]['memoText']['hasRealDataValue'] = ''
-            configPage[Sname]['memoText']['placeholder'] = '备注'
+            configPage[Sname]['memoText']['hasRealDataValue'] = txtNote;
+            configPage[Sname]['memoText']['placeholder'] = '备注'               # 如果有这个属性则可以进行编辑
 
 
-        print configPage
+
+
 
     return configPage
-
-
-
-
 
 def getConfigFile(inFileName):
     """get the Static config file"""
