@@ -28,11 +28,11 @@ web.config.debug = False
 
 urls = (
         '/rqscoscr/(.*)','rqscoscr',
-        '/etl_metadata/(.*)','etl_metadata',
         '/Saverqscoscr/(.*)','RacorderClient.RacorderSave',
-        '/home', 'home.home',
-
-        )
+        '/login', 'login.Login',
+        '/RecSearch/(.*)', 'RecSearch.RecSelect',
+        '/frmRecScore/', 'frmRecScore'
+    )
 
 app = web.application(urls,globals(),autoreload=True)
 session = web.session.Session(app,web.session.DiskStore('sessions'),
@@ -100,6 +100,27 @@ class rqscoscr():
                 pass
             finally:
                 pass
+
+class frmRecScore():
+    def POST(self,filename):
+        pass
+
+    def GET(self):
+        try:
+            return render.frcRecScore();
+        except :
+            logger.error("exception occur, see the traceback.log")
+            #异常写入日志文件.
+            f = open('traceback.txt','a')
+            traceback.print_exc()
+            traceback.print_exc(file = f)
+            f.flush()
+            f.close()
+        else:
+            pass
+        finally:
+            pass
+
 
 def checkUserAuth(inWeb):
     logger = getLogger()

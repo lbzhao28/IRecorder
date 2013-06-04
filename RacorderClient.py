@@ -107,7 +107,7 @@ def GetRacorderQuestionUrl(fid):
         buf.close()
         c.close()
 
-        logger.debug("get localOrderInfo success.")
+        logger.debug("get GetRacorderQuestionUrl success.")
 
         #we need change the data structure, so the html show simple.
         if localRacorderQuestion is not None:
@@ -164,7 +164,7 @@ def GetRacorderQuestionByfilename(filename):
         buf.close()
         c.close()
 
-        logger.debug("get localOrderInfo success.")
+        logger.debug("get GetRacorderQuestionUrl success.")
 
         #we need change the data structure, so the html show simple.
         if localRacorderQuestion is not None:
@@ -223,7 +223,7 @@ def RacorderQuestionContact(storageData,retPost):
         buf.close()
         c.close()
 
-        logger.debug("post OrderInfo success.")
+        logger.debug("RacorderQuestionContact success.")
         return retStr
 
     except pycurl.error, error:
