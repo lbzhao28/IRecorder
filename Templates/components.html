@@ -72,7 +72,7 @@
                             %if "placeholder" in item:
                                 <${item["controlType"]} name=${item["controlName"]} id=${item["controlID"]} type = ${item["controlShowType"]} class="${item["controlCss"]}" value="${realDataValue}" placeholder="${item["placeholder"]}"/>
                             %else:
-                                <${item["controlType"]} name=${item["controlName"]} id=${item["controlID"]} type = ${item["controlShowType"]} class="${item["controlCss"]}" value="${realDataValue}"/>
+                                <${item["controlType"]} name=${item["controlName"]} id=${item["controlID"]} readonly=true type = ${item["controlShowType"]} class="${item["controlCss"]}" value="${realDataValue}"/>
                             %endif
                         %elif item["controlShowType"] == 'textDate':
                             <${item["controlType"]} name=${item["controlName"]} id=${item["controlID"]} type = ${item["dataRealShowType"]} class="${item["controlCss"]}" value="${realDataValue}" onclick="${item["onClick"]}"/>
@@ -94,9 +94,6 @@
                                     %endif
                                         <${radioItemData["inDataType"]} class="${radioItemData["inDataCss"]}"> ${radioItemData["inDataText"]}</${radioItemData["inDataType"]}>
                                 </${radioItemData["titleType"]}>
-                                <script type="text/javascript" language="javascript">
-
-                                </script>
                             %endfor
                         %endif
                     %elif item["controlType"] == 'select':

@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="robots" content="noodp,nodir,noydir">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Sign In - OFusion ConfigManagement</title>
+    <title>Reccem Login</title>
     <link href="../static/css/pages/login/OFusion_css.css"
           rel="stylesheet" type="text/css"/>
     <link rel="stylesheet" type="text/css" href="../static/js/EsayUI/themes/default/easyui.css"
@@ -13,18 +13,24 @@
     <script type="text/javascript" src="../static/js/EsayUI/jquery.easyui.min.js"></script>
 
 </head>
+<script style="text/javascript">
+    function Login() {
+        name = document.getElementById("username").value
+        pwd = document.getElementById("password").value
+        actionUrl = "http://localhost:8080/Login"
+        session =
+                alert(actionUrl)
+        window.location.href = actionUrl;
+    }
+</script>
 <body>
 <header role="banner" class="oTransitionalHeader">
     <div class="cols oPageCentered">
-        <div class="col col1of2 txtLeft"><a href="https://www.OFusion.com.cn/" class="oTransitionalPageLogo">BigO</a>
-        </div>
-        <div class="col col1of2 txtRight">
-            <nav class="linksContainer"><a href="" id="signup">注册</a></nav>
-        </div>
+    </div>
     </div>
 </header>
 <div id="main" role="main" class="oPageCentered oContentContainer">
-    <div class="oPageCentered oFormContainer"><h1>Welcome to OFusion!</h1>
+    <div class="oPageCentered oFormContainer"><h1>Welcome to Reccem!</h1>
 
         <form action="/login" name="login" id="login" class="oForm-login" autocomplete="on" method="post">
             <input type="text" name="username" id="username" value="" maxlength="16"
@@ -34,20 +40,17 @@
                    class="oFormJumbo oInputText easyui-validatebox" placeholder="密码" required="true"/>
             <footer class="oFormFooter cols">
                 <div class="col col1of3">
-                    <input type="submit" name="submit" id="submit" value="登入" class="oBtn oBtnPrimary"/>
+                    <input type="submit" name="submit" id="submit" value="登入" class="oBtn oBtnPrimary"
+                           onclick="Login()"/>
                 </div>
 
             </footer>
             <input type="hidden" name="ioBB" id="ioBB"></form>
-        <div class="oForgotLinks"><a href="/reset/password">忘记密码?</a> <a href="/reset/username">忘记用户名?
         </a></div>
-        </form>
-    </div>
+    </form>
+</div>
 </div>
 <footer role="contentinfo" class="oTransitionalFooter">
-    <a class="oTransitionalPageLogo" href="https://www.OFusion.com.cn/">OFusion</a>
-
-    <div class="oSupportInfo">&#169; 2012-2113 OFusion Corporation.</div>
 </footer>
 </body>
 </html>
