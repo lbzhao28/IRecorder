@@ -76,8 +76,6 @@ class RecSelect:
 
             if(op == 'select'):
                 dic = []
-                return render.RecSearch(outdic=dic,outfilename =filename,configPage = configPage,QuestionNote = QuestionNote,flag = flag,isbofang=isbofang);
-
             if(op == 'Search'):
                 ReccemList = web.input()
                 startdate = ReccemList['startdate']
@@ -96,7 +94,8 @@ class RecSelect:
                     totalmin, totalmax, channeldn, teldnis, pageno, pagesize)
                 dic = SearchList["message"]
 
-                return render.RecSearch(outdic=dic,outfilename =filename,configPage = configPage,QuestionNote = QuestionNote,flag = flag,isbofang=isbofang);
+
+            return render.RecSearch(outdic=dic,outfilename =filename,configPage = configPage,QuestionNote = QuestionNote,flag = flag,isbofang=isbofang);
 
         except:
                 logger.error("exception occur, see the traceback.log")
