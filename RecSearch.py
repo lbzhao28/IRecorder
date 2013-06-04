@@ -34,33 +34,48 @@ class RecSelect:
             filename = None;
             webs = web.input();   # 获得前台传入进来的参数
 
-            isbofang = "N";
+            isbofang = "N";      # 变量用于控制前台是否播放
+
             if "filename" in webs:
                 filename = webs["filename"];
 
             if "isbofang" in webs:
                 isbofang = webs["isbofang"];
 
+
+            flag = "add";         # falg 用于在前台判断质检结果 是否新增
+            QuestionNote = "";    # QuestionNote 前台备注字段
+
+            if filename is None or filename.strip() == '':  # filename如果为空，则创建问卷 ，则从web中间的session取
+                logger.debug("filename is None")
+                if "session_tRecorderConfigPage" in web.ctx.session:
+                    configPage = web.ctx.session.session_tRecorderConfigPage;
+                else:
+                    tRacorderQuestion = None;
+                    configPage = getRecorderConfigPage(tRacorderQuestion)    # 创建问卷页面控件 configPage
+                    web.ctx.session.session_tRecorderConfigPage = configPage; # session 缓存起来
+                    #return render.error(error = 'no filename')
+            else:
+                #web.ctx.session.session_tRecorderConfigPage = None;
+                tRacorderQuestion = RacorderClient.GetRacorderQuestionByfilename(filename);
+
+                if tRacorderQuestion is not None and len(tRacorderQuestion)>0 and tRacorderQuestion["message"] is not None:
+                    localtRacorderQuestion = tRacorderQuestion["message"];
+                    flag = "edit";
+                    QuestionNote = localtRacorderQuestion["remark"]
+                    configPage = getRecorderConfigPage(tRacorderQuestion)             # 创建问卷页面控件 configPage
+                else:
+                    if "session_tRecorderConfigPage" in web.ctx.session:
+                        configPage = web.ctx.session.session_tRecorderConfigPage;
+                    else:
+                        tRacorderQuestion = None;
+                        configPage = getRecorderConfigPage(tRacorderQuestion)    # 创建问卷页面控件 configPage
+                        web.ctx.session.session_tRecorderConfigPage = configPage; # session 缓存起来
+
+
+
             if(op == 'select'):
                 dic = []
-
-                configPage = getRecorderConfigPage(filename)    # 创建问卷页面控件 configPage
-
-                flag = "add";         # falg 用于在前台判断质检结果 是否新增
-                QuestionNote = "";    #QuestionNote 前台备注字段
-
-                if filename is None or filename.strip() == '':
-                    logger.debug("filename is None")
-                    #return render.error(error = 'no filename')
-                else:
-                    if filename is None or filename.strip() == '':
-                        logger.debug("filename is None")
-                    else:
-                        tRacorderQuestion = web.ctx.session.session_tRacorderQuestion; #取得缓存里面录音的质检结果 如果没有质检过则为 None
-                        if tRacorderQuestion is not None and len(tRacorderQuestion)>0 and tRacorderQuestion["message"] is not None:
-                            localtRacorderQuestion = tRacorderQuestion["message"];
-                            flag = "edit";
-                            QuestionNote = localtRacorderQuestion["remark"]
                 return render.RecSearch(outdic=dic,outfilename =filename,configPage = configPage,QuestionNote = QuestionNote,flag = flag,isbofang=isbofang);
 
             if(op == 'Search'):
@@ -81,20 +96,6 @@ class RecSelect:
                     totalmin, totalmax, channeldn, teldnis, pageno, pagesize)
                 dic = SearchList["message"]
 
-
-                configPage = getRecorderConfigPage(filename)    # 创建问卷页面控件 configPage
-                flag = "add";         # falg 用于在前台判断质检结果 是否新增
-                QuestionNote = "";    #QuestionNote 前台备注字段
-
-
-                if filename is None or filename.strip() == '':
-                    logger.debug("filename is None")
-                else:
-                    tRacorderQuestion = web.ctx.session.session_tRacorderQuestion; #取得缓存里面录音的质检结果 如果没有质检过则为 None
-                    if tRacorderQuestion is not None and len(tRacorderQuestion)>0 and tRacorderQuestion["message"] is not None:
-                        localtRacorderQuestion = tRacorderQuestion["message"];
-                        flag = "edit";
-                        QuestionNote = localtRacorderQuestion["remark"]
                 return render.RecSearch(outdic=dic,outfilename =filename,configPage = configPage,QuestionNote = QuestionNote,flag = flag,isbofang=isbofang);
 
         except:

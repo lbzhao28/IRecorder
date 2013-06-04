@@ -31,7 +31,6 @@ urls = (
         '/Saverqscoscr/(.*)','RacorderClient.RacorderSave',
         '/login', 'login.Login',
         '/RecSearch/(.*)', 'RecSearch.RecSelect',
-        '/frmRecScore/', 'frmRecScore'
     )
 
 app = web.application(urls,globals(),autoreload=True)
@@ -74,10 +73,9 @@ class rqscoscr():
                 if filename is None or filename.strip() == '':
                     return render.error(error = 'no filename')
                 else:
-
-                    configPage = getRecorderConfigPage(filename)    # 创建页面控件 configPage
-
-                    tRacorderQuestion = web.ctx.session.session_tRacorderQuestion; #取得缓存里面录音的质检结果 如果没有质检过则为 None
+                    tRacorderQuestion = RacorderClient.GetRacorderQuestionByfilename(filename);
+                    configPage = getRecorderConfigPage(tRacorderQuestion)    # 创建页面控件 configPage
+                    #tRacorderQuestion = web.ctx.session.session_tRacorderQuestion; #取得缓存里面录音的质检结果 如果没有质检过则为 None
 
                     flag = "add";         # falg 用于在前台判断质检结果 是否新增
                     QuestionNote = "";
@@ -100,26 +98,6 @@ class rqscoscr():
                 pass
             finally:
                 pass
-
-class frmRecScore():
-    def POST(self,filename):
-        pass
-
-    def GET(self):
-        try:
-            return render.frcRecScore();
-        except :
-            logger.error("exception occur, see the traceback.log")
-            #异常写入日志文件.
-            f = open('traceback.txt','a')
-            traceback.print_exc()
-            traceback.print_exc(file = f)
-            f.flush()
-            f.close()
-        else:
-            pass
-        finally:
-            pass
 
 
 def checkUserAuth(inWeb):

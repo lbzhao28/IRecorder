@@ -22,46 +22,35 @@ def getConfigPage():
     configPage = ConfigObj('pagesConf.conf')
     return configPage
 
-def getRecorderConfigPage(filename):
-    configPage = RecorderConfigPage(filename);
+def getRecorderConfigPage(tRacorderQuestion):
+    configPage = RecorderConfigPage(tRacorderQuestion);
     return configPage
 
 # 创建录音打分的页面
-def RecorderConfigPage(filename):
+def RecorderConfigPage(tRacorderQuestion):
 
-    #从Session 中取得filename 名字
+
     localtRacorderQuestion = {};
 
-    #session_tRacorderQuestion变量 ， 在其他页面需要用到
-    web.ctx.session.session_tRacorderQuestion = None;
 
-    if filename is not None and filename.strip != '':
-        #单条录音的文件的问题额答案
-        tRacorderQuestion = RacorderClient.GetRacorderQuestionByfilename(filename);
-
-        web.ctx.session.session_tRacorderQuestion =  tRacorderQuestion # 将tRacorderQuestion用Sesssion 保存起来
-
-
-        if tRacorderQuestion is not None and len(tRacorderQuestion)>0 and tRacorderQuestion["message"] is not None:
-            localtRacorderQuestion = tRacorderQuestion["message"];
+    #单条录音的文件的问题额答案
+    if tRacorderQuestion is not None and len(tRacorderQuestion)>0 and tRacorderQuestion["message"] is not None:
+        localtRacorderQuestion = tRacorderQuestion["message"];
 
 
     Recordertotal = 0;   #总分数
     RecorderscrvalsEval = [];  # 问题答案的json
     QuestionNote ="";          # 备注字段
 
-    print localtRacorderQuestion;
     configPage = ConfigObj()
 
 
+    #localtRacorderQuestion 问题答案信息
     if localtRacorderQuestion.keys() > 0 and len(localtRacorderQuestion)>0:
         Recordertotal = localtRacorderQuestion["total"];
         strRecorderscrvals = localtRacorderQuestion["scrvals"];
         Recorderscrvals =  strRecorderscrvals.replace("@","'");
         RecorderscrvalsEval = eval(Recorderscrvals);
-
-
-        web.ctx.session.session_QuestionNote =  QuestionNote # 将Note 用Sesssion 保存起来
 
     # 获取问卷信息
     tRacorderQuestionsMesage = RacorderClient.GetRacorderQuestionUrl("CEM");
@@ -70,7 +59,6 @@ def RecorderConfigPage(filename):
     else:
         tRacorderQuestions = tRacorderQuestionsMesage["message"];
         #return a config list
-
 
         SBaseName = 'Q' # 序号
 
@@ -226,9 +214,6 @@ def RecorderConfigPage(filename):
             configPage[Sname]['memoText']['controlID'] = 'idMemo'+str(i)
             configPage[Sname]['memoText']['hasRealDataValue'] = txtNote;
             configPage[Sname]['memoText']['placeholder'] = '备注'               # 如果有这个属性则可以进行编辑
-
-
-
 
 
     return configPage
