@@ -10,58 +10,89 @@ from configData import getConfig
 from logHelper import getLogger
 import  web
 
-
-
-def getOrderInfoOrder(inOrderid):
+# 根据条件查询录音
+def GetRaccemSearchUrl(instartdate, inenddate, incalltype, inagentid, intelno, inavailablein, totalmin, intotalmax,
+                       inchanneldn, inteldnis, inpageno, inpagesize):
     """get the order info from REST """
     try:
         logger = getLogger()
-        logger.debug("start GET Order Info according order id.")
+        logger.debug("start GET RaccemSearch Info ")
+        localURL = ""
 
-        if inOrderid is None:
-            return None
+        if instartdate is not None and instartdate != '':
+            localURL = localURL + '&startdate=' + instartdate
 
+        if inenddate is not None and inenddate != '':
+            localURL = localURL + '&enddate=' + inenddate
+
+        if  inagentid is not None and inagentid != '':
+            localURL = localURL + '&agentid=' + inagentid
+
+        if incalltype is not None and incalltype != '':
+            localURL += '&calltype=' + incalltype
+
+        if intelno is not None and intelno != '':
+            localURL += '&telno=' + intelno
+
+        if  inavailablein is not None and inavailablein != '':
+            localURL = localURL + '&available=' + inavailablein
+
+        if totalmin is not None and totalmin != '':
+            localURL = localURL + '&totalmin=' + totalmin
+
+        if intotalmax is not None and intotalmax != '':
+            localURL = localURL + '&intotalmax=' + intotalmax
+
+        if inchanneldn is not None and inchanneldn != '':
+            localURL = localURL + '&channeldn=' + inchanneldn
+
+        if inteldnis is not None and inteldnis != '':
+            localURL = localURL + '&teldnis=' + inteldnis
+
+        if inpageno is not None and inpageno != '':
+            localURL = localURL + '&pageno=' + inpageno
+
+        if inpagesize is not None and inpagesize != '':
+            localURL = localURL + '&pagesize=' + inpagesize
+
+        print localURL;
         buf = cStringIO.StringIO() #define in function.
         c = pycurl.Curl()
+        if localURL != '':
+            localURL = getConfig('RESTService', 'irecorderSearchListusr', 'str') + '?' + localURL
+            localURL = str(localURL)
+            c.setopt(pycurl.URL, localURL)
+            c.setopt(c.WRITEFUNCTION, buf.write)
+            c.setopt(c.VERBOSE, True)
+            c.setopt(pycurl.USERPWD,
+                getConfig('allowedUser1', 'UserName', 'str') + ':' + getConfig('allowedUser1', 'Password', 'str'))
+            c.perform()
 
+            http_code = c.getinfo(pycurl.HTTP_CODE)
+            #judge get success.
+            if http_code != 200:
+                return None
 
-        localURL = getConfig('RESTService','orderInfoOrderidUrl','str')+inOrderid
-        localURL = str(localURL)
-        c.setopt(pycurl.URL,localURL)
-        c.setopt(c.WRITEFUNCTION,buf.write)
-        c.setopt(c.VERBOSE, True)
-        c.setopt(pycurl.USERPWD,getConfig('allowedUser1','UserName','str')+':'+getConfig('allowedUser1','Password','str'))
-        c.perform()
-
-        http_code = c.getinfo(pycurl.HTTP_CODE)
-        #judge get success.
-        if http_code != 200:
-            return None
-
-        #get the data from json.
-        if (len(buf.getvalue())>0):
-            s = buf.getvalue()
-            localOrderInfo = json.loads(buf.getvalue())
+            #get the data from json.
+            if (len(buf.getvalue()) > 0):
+                s = buf.getvalue()
+                localRecorderSearchlist = json.loads(buf.getvalue())
+            else:
+                localRecorderSearchlist = None
+            buf.close()
+            c.close()
+            logger.debug("get localOrderInfo success.")
+            print localURL
         else:
-            localOrderInfo =  None
-        buf.close()
-        c.close()
+            localRecorderSearchlist = None
 
-        logger.debug("get localOrderInfo success.")
-
-        #we need change the data structure, so the html show simple.
-        if localOrderInfo is not None:
-            localOrderInfo = flatOrderInfoOrder(localOrderInfo)
-
-            print localOrderInfo
-        return localOrderInfo
+        return localRecorderSearchlist
     except pycurl.error, error:
         logger.error("exception occur, see the traceback.log")
 
-        #异常写入日志文件.
-        f = open('traceback.txt','a')
+        f = open('traceback.txt', 'a')
         traceback.print_exc()
-        traceback.print_exc(file = f)
+        traceback.print_exc(file=f)
         f.flush()
         f.close()
 
@@ -257,10 +288,9 @@ class RacorderSave:
         else:
             return None;
 
-
-
     def GET(self,filename):
         pass
+
 
 
 #ToDo:从Service 调出录音问题的所有的题目
