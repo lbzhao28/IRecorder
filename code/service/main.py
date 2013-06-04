@@ -242,7 +242,7 @@ class login:
             params  = web.input()
 
             if "id" not in params.keys() or "pwd" not in params.keys() or params["id"] is None or params["pwd"] is None:
-                return  {'message':False,'error': 'Must set the value of id and pwd.'}
+                return  {'message':None,'error': 'Must set the value of id and pwd.'}
             conn = msSqlConnect()
             cur = conn.cursor()
             sqlstr = "SELECT [LOGINID]"\
