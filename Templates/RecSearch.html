@@ -183,15 +183,15 @@ localScoreInfo = None
         channeldn = jQuery("#channeldn").val();
         teldnis = jQuery("#teldnis").val();
 
-        pagesize = 15
-        pageno = jQuery("#inpageno").val();
+        //pagesize = 15
+        //pageno = "10"
 
 
 
 
         actionUrl = "http://localhost:8080/RecSearch/Search?startdate=" + startdate + '&enddate=' + enddate + "&calltype=" + calltype +
                 "&agentid=" + agentid + "&telno=" + telno + "&available=" + available + "&totalmin=" + totalmin + "&totalmax=" + totalmax +
-                "&channeldn=" + channeldn + "&teldnis=" + teldnis + "&pageno=" + pageno + '&pagesize=' + pagesize;
+                "&channeldn=" + channeldn + "&teldnis=" + teldnis;
 
         actionUrl = actionUrl +"&filename="+filename+"&isbofang="+isbofang;
 
@@ -663,6 +663,10 @@ jQuery(document).ready(function (){
     <div width="100%">
         <table>
             <tr>
+                <td colspan="2"><img src="../static/img/Rayda2.jpg" alt="锐意恒达"></td>
+
+            </tr>
+            <tr>
                 <td width="55%" valign="top">
 
                         <table>
@@ -673,10 +677,10 @@ jQuery(document).ready(function (){
                                             <td width="77" >日期时间：</td>
                                             <td width="179" >
                                                 <input id="idStartDT" type="text" class="Wdate input-small search-query"
-                                                       onClick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})" style="width:140px"/></td>
+                                                       onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})" style="width:140px"/></td>
                                             <td width="228">--&nbsp;&nbsp;&nbsp;
                                                 <input name="text2" type="text" class="Wdate input-small search-query" id="idEndDT"
-                                                       onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})"  style="width:140px"/></td>
+                                                       onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})"  style="width:140px"/></td>
                                             <td width="214" >类型：
                                                 <select name="select" id="type"  style="width:140px">
                                                     <option value=""></option>
@@ -778,7 +782,7 @@ components..."
                          </table>
                 </td>
                 <td width="50%">
-                    <div class="bs-docs-div-compress">
+                    <div class="bs-docs-div-compress" style="height: 535;overflow: scroll;">
                         <label class="label label-info label-large">录音打分模板</label>
 
                         <table >
