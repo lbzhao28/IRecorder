@@ -21,6 +21,7 @@ render_txt = lambda message,error: message+error
 
 urls = (
     "/irecorderservice/irecorderlist","iRecorderList",
+    "/irecorderservice/irecorderlistcount","iRecorderListCount",
     "/irecorderservice/irecorderscore","iRecorderScore",
     "/irecorderservice/irecorderquestion","iRecorderQuestion",
     "/irecorderservice/login","login",
@@ -217,6 +218,74 @@ class iRecorderQuestion:
             f.flush()
             f.close()
 
+class iRecorderListCount:
+    @mimerender(
+        default = 'json',
+        html = render_html,
+        xml  = render_xml,
+        json = render_json,
+        txt  = render_txt
+    )
+    def GET(self):
+        """
+        Get login资源
+        author: J.Wong
+        return: JSON
+        """
+        try:
+            logger = getLogger()
+            logger.debug("start iRecorderListCount GET response")
+
+            #获取queryString
+            params  = web.input()
+
+            conn = msSqlConnect()
+            cur = conn.cursor()
+            sqlstr =  "SELECT COUNT(*) as TOTALCOUNT"\
+                     " FROM [T_RECORDER]"\
+                     " LEFT JOIN [TRQ_SCORE]"\
+                     " ON [T_RECORDER].[FILENAME] = [TRQ_SCORE].[RECKEY]"\
+                     " WHERE 1=1"
+            if "startdate" in params.keys() and params["startdate"] is not None:
+                sqlstr += " AND [T_RECORDER].[STARTTIME] >= '"+params["startdate"]+"'"
+            if "enddate" in params.keys() and params["enddate"] is not None:
+                sqlstr += " AND [T_RECORDER].[STARTTIME] <= '"+params["enddate"]+"'"
+            if "calltype" in params.keys() and params["calltype"] is not None:
+                sqlstr += " AND [T_RECORDER].[CALLTYPE] = '"+params["calltype"]+"'"
+            if "agentid" in params.keys() and params["agentid"] is not None:
+                sqlstr += " AND [T_RECORDER].[AGENTID] = '"+params["agentid"]+"'"
+            if "telno" in params.keys() and params["telno"] is not None:
+                sqlstr += " AND [T_RECORDER].[TELNO] = '"+params["telno"]+"'"
+            if "available" in params.keys() and params["available"] is not None:
+                sqlstr += " AND [T_RECORDER].[AVAILABLE] = '"+params["available"]+"'"
+            if "totalmin" in params.keys() and params["totalmin"] is not None:
+                sqlstr += " AND [TRQ_SCORE].[TOTAL] >= '"+params["totalmin"]+"'"
+            if "totalmax" in params.keys() and params["totalmax"] is not None:
+                sqlstr += " AND [TRQ_SCORE].[TOTAL] <= '"+params["totalmax"]+"'"
+            if "channeldn" in params.keys() and params["channeldn"] is not None:
+                sqlstr += " AND [T_RECORDER].[CHANNELDN] = '"+params["channeldn"]+"'"
+            if "teldnis" in params.keys() and params["teldnis"] is not None:
+                sqlstr += " AND [T_RECORDER].[TELDNIS] = '"+params["teldnis"]+"'"
+
+            cur.execute(sqlstr)
+            row = cur.fetchone()
+            logger.info("sql:"+str(sqlstr))
+            if row:
+                return {'message':str(row["TOTALCOUNT"]),'error': ''}
+            else:
+                return {'message':None,'error': 'No data match.'}
+        except:
+            logger.error("iRecorderListCount GET exception, see the traceback.log")
+            logger.error("sql:"+str(sqlstr))
+            #异常写入日志文件.
+            f = open('Logs/traceback.txt','a')
+            traceback.print_exc()
+            traceback.print_exc(file = f)
+            f.flush()
+            f.close()
+        finally:
+            conn.close()
+
 class login:
     """
     录音打分系统-登录
@@ -262,7 +331,7 @@ class login:
             else:
                 return {'message':False,'error': 'No data match.'}
         except:
-            logger.error("iRecorderQuestion GET exception, see the traceback.log")
+            logger.error("login GET exception, see the traceback.log")
             logger.error("sql:"+str(sqlstr))
             #异常写入日志文件.
             f = open('Logs/traceback.txt','a')

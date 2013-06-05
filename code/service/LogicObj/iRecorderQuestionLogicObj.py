@@ -43,7 +43,7 @@ class iRecorderQuestionLogicObj:
         return {
             'fid':iRecorderQuestionDic['FID'],
             'itemID':iRecorderQuestionDic['ITEMID'],
-            'itemDesc':unicode(iRecorderQuestionDic['ITEMDESC'],"cp936"),
+            'itemDesc':unicode(iRecorderQuestionDic['ITEMDESC'],"gbk"),
             'itemPerc':iRecorderQuestionDic['ITEMPERC'],
             'hasRemark':iRecorderQuestionDic['HASREMARK']
         }
