@@ -69,7 +69,6 @@ class RecSelect:
                         configPage = getRecorderConfigPage(tRacorderQuestion)    # 创建问卷页面控件 configPage
                         web.ctx.session.session_tRecorderConfigPage = configPage; # session 缓存起来
 
-
             startdate = "";
             enddate = "";
             calltype = "";
