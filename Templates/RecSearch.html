@@ -183,15 +183,15 @@ localScoreInfo = None
         channeldn = jQuery("#channeldn").val();
         teldnis = jQuery("#teldnis").val();
 
-        pagesize = 15
-        pageno = jQuery("#inpageno").val();
+        //pagesize = 15
+        //pageno = "10"
 
 
 
 
         actionUrl = "http://localhost:8080/RecSearch/Search?startdate=" + startdate + '&enddate=' + enddate + "&calltype=" + calltype +
                 "&agentid=" + agentid + "&telno=" + telno + "&available=" + available + "&totalmin=" + totalmin + "&totalmax=" + totalmax +
-                "&channeldn=" + channeldn + "&teldnis=" + teldnis + "&pageno=" + pageno + '&pagesize=' + pagesize;
+                "&channeldn=" + channeldn + "&teldnis=" + teldnis;
 
         actionUrl = actionUrl +"&filename="+filename+"&isbofang="+isbofang;
 
@@ -663,23 +663,26 @@ jQuery(document).ready(function (){
     <div width="100%">
         <table>
             <tr>
+                <td colspan="2"><img src="../static/img/Rayda2.jpg" alt="锐意恒达"></td>
+
+            </tr>
+            <tr>
                 <td width="55%" valign="top">
 
                         <table>
                             <tr>
                                 <td valign="top">
-
                                     <table   align="top" class="label label-normal">
                                         <tr tyle="background-color:#fff">
                                             <td width="77" >日期时间：</td>
                                             <td width="179" >
-                                                <input id="idStartDT" type="text" class="Wdate input-small search-query"
+                                                <input name="startdate" id="idStartDT"  class="Wdate input-small search-query"
                                                        onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})" style="width:140px"/></td>
                                             <td width="228">--&nbsp;&nbsp;&nbsp;
-                                                <input name="text2" type="text" class="Wdate input-small search-query" id="idEndDT"
+                                             <input name ="enddate" class="Wdate input-small search-query" id="idEndDT"
                                                        onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})"  style="width:140px"/></td>
                                             <td width="214" >类型：
-                                                <select name="select" id="type"  style="width:140px">
+                                                <select name="calltype" id="type"  style="width:140px">
                                                     <option value=""></option>
                                                     <option value="IN">IN</option>
                                                     <option value="OUT">OUT</option>
@@ -688,10 +691,10 @@ jQuery(document).ready(function (){
                                         <tr>
                                             <td >坐席工号：</td>
                                             <td >
-                                                <input name="text6" type="text" id="agentid" style="width:140px" />  &nbsp;&nbsp;</td>
+                                                <input name="agentid" type="text" id="agentid" style="width:140px" />  &nbsp;&nbsp;</td>
                                             <td> 分机：<input name="text" type="text" id="telno" value=""  style="width:140px"/></td>
                                             <td>状态：
-                                                <select name="select2" id="status" style="width:80px">
+                                                <select name="status" id="status" style="width:80px">
                                                     <option value=""></option>
                                                     <option value="1">1->完成</option>
                                                     <option value="3">3->重点</option>
@@ -700,13 +703,13 @@ jQuery(document).ready(function (){
                                         </tr>
                                         <tr>
                                             <td align="left">得分从:</td>
-                                            <td><input name="Input" id="totalmin" type="text" style="width:55px"/>
+                                            <td><input name="totalmin" id="totalmin" type="text" style="width:55px"/>
                                                 至
-                                                <input name="text3" type="text" id="totalmax" style="width:55px"/></td>
+                                                <input name="totalmax" type="text" id="totalmax" style="width:55px"/></td>
 
-                                            <td> 主叫：<input name="text4" type="text"  id="channeldn"  style="width:140px"/></td>
+                                            <td> 主叫：<input name="channeldn" type="text"  id="channeldn"  style="width:140px"/></td>
                                             <td>被叫：
-                                                <input name="text5" type="text" id="teldnis" style="width:140px" /></td>
+                                                <input name="teldnis" type="text" id="teldnis" style="width:140px" /></td>
                                         </tr>
                                     </table>
                                      <div align="top" id="formOrderList" style=" width: 750px; overflow:scroll;">
@@ -779,14 +782,13 @@ components..."
                          </table>
                 </td>
                 <td width="50%">
-                    <div class="bs-docs-div-compress">
+                    <div class="bs-docs-div-compress" style="height: 535;overflow: scroll;">
                         <label class="label label-info label-large">录音打分模板</label>
 
                         <table >
                             <tr>
                                 <td align="left"   class="label label-normal"  colspan="2">文件名： <span id="labrecfilename">${outfilename}</span></td>
                                 <td align="left" class="label label-normal" > 总得分：<span id="labscorenum">0</span></td>
-
                             </tr>
 
                             <tr  align="left" class="label label-normal" >
@@ -846,7 +848,6 @@ components..."
             </tr>
         </table>
     </div>
-
 </form>
 
 

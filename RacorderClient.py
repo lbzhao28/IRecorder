@@ -60,7 +60,9 @@ def GetRaccemSearchUrl(instartdate, inenddate, incalltype, inagentid, intelno, i
         c = pycurl.Curl()
         if localURL != '':
             localURL = getConfig('RESTService', 'irecorderSearchListusr', 'str') + '?' + localURL
+           # localURL = "http://127.0.0.1:8088/irecorderservice/irecorderlist?&pageno=1&pagesize=10"
             localURL = str(localURL)
+            print localURL
             c.setopt(pycurl.URL, localURL)
             c.setopt(c.WRITEFUNCTION, buf.write)
             c.setopt(c.VERBOSE, True)

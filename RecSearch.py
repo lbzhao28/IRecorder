@@ -69,7 +69,6 @@ class RecSelect:
                         configPage = getRecorderConfigPage(tRacorderQuestion)    # 创建问卷页面控件 configPage
                         web.ctx.session.session_tRecorderConfigPage = configPage; # session 缓存起来
 
-
             startdate = "";
             enddate = "";
             calltype = "";
@@ -94,15 +93,15 @@ class RecSelect:
                 startdate = webs['startdate']
                 pageSession["startdate"] =str(startdate)
             else:
-                startdatetime = str(time.strftime('%Y-%m-%d',time.localtime(time.time())))+" 00:00:00"
-                pageSession["startdate"] = startdatetime
+                localstartdate = str(time.strftime('%Y-%m-%d',time.localtime(time.time())))
+                pageSession["startdate"] = localstartdate
 
             if "enddate" in webs:
                 enddate = webs['enddate']
                 pageSession["enddate"] = str(enddate)
             else:
-                enddate =  str(time.strftime('%Y-%m-%d',time.localtime(time.time())))+" 23:59:59"
-                pageSession["enddate"] = str(enddate)
+                localenddate =  str(time.strftime('%Y-%m-%d',time.localtime(time.time())))
+                pageSession["enddate"] = str(localenddate)
 
             if "channeldn" in webs:
                 channeldn = webs['channeldn']
