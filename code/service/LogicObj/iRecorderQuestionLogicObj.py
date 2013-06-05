@@ -1,4 +1,4 @@
-__author__ = 'Administrator'
+__author__ = 'Johann Wong'
 #coding=UTF-8
 import sys
 import os

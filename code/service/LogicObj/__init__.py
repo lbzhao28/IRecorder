@@ -1,2 +1,2 @@
-__author__ = 'JohannWong'
-import iRecorderListLogicObj,iRecorderScoreLogicObj
+__author__ = 'Johann Wong'
+import iRecorderListLogicObj,iRecorderQuestionLogicObj,iRecorderScoreLogicObj

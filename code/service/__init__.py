@@ -1,3 +1,3 @@
-__author__ = 'JohannWong'
+__author__ = 'Johann Wong'
 import LogicObj,ModuleObj
 import configData,globalDefine,logHelper,main

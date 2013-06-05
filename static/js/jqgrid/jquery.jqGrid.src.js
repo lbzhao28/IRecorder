@@ -11613,7 +11613,7 @@ $.jgrid.extend({
                 exptype : "remote",
                 url : null,
                 oper: "oper",
-                tag: "excel",
+                tag: "report",
                 exportOptions : {}
             }, o || {});
             return this.each(function(){
