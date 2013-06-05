@@ -94,8 +94,8 @@ class RecSelect:
                 startdate = webs['startdate']
                 pageSession["startdate"] =str(startdate)
             else:
-                startdatetime = str(time.strftime('%Y-%m-%d',time.localtime(time.time())))+" 00:00:00"
-                pageSession["startdate"] = startdatetime
+                startdate = str(time.strftime('%Y-%m-%d',time.localtime(time.time())))+" 00:00:00"
+                pageSession["startdate"] = startdate
 
             if "enddate" in webs:
                 enddate = webs['enddate']

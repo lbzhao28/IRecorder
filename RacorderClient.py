@@ -61,6 +61,7 @@ def GetRaccemSearchUrl(instartdate, inenddate, incalltype, inagentid, intelno, i
         if localURL != '':
             localURL = getConfig('RESTService', 'irecorderSearchListusr', 'str') + '?' + localURL
             localURL = str(localURL)
+            print localURL
             c.setopt(pycurl.URL, localURL)
             c.setopt(c.WRITEFUNCTION, buf.write)
             c.setopt(c.VERBOSE, True)
