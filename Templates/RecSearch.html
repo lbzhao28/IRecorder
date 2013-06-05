@@ -2,16 +2,6 @@
 
 
 
-<link rel="Stylesheet" type="text/css" href="../static/css/jqgrid/jquery-ui-1.8.16.custom.css"/>
-<link rel="Stylesheet" type="text/css" href="../static/css/jqgrid/ui.jqgrid.css"/>
-<link href="../static/css/bootstrap.css" rel="stylesheet">
-<script type="text/javascript" src="../static/js/jquery-1.8.3.js"></script>
-<script type="text/javascript" src="../static/js/EsayUI/jquery.easyui.min.js"></script>
-<script type="text/javascript" src="../static/js/My97DatePicker/WdatePicker.js"></script>
-
-
-
-
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 <link href="http://${localURL}/static/css/bootstrap.css" rel="stylesheet" media="screen">
 <link href="http://${localURL}/static/css/docs.css" rel="stylesheet" media="screen">
@@ -39,9 +29,7 @@
     <title>录音查询</title>
     <meta charset="utf-8">
 
-    <%doc>
-    ##using Mako to create html file.
-</%doc>
+
 
 <%!
 import OrderClient
@@ -156,17 +144,21 @@ localScoreInfo = None
         actionUrl = "http://localhost:8080/RecSearch/Search?startdate=" + instartdate + '&enddate=' + enddate + "&calltype=" + incalltype +
                 "&agentid=" + inagentid + "&telno=" + intelno + "&available=" + inavailable + "&totalmin=" + intotalmin + "&totalmax=" + intotalmax +
                 "&channeldn=" + inchanneldn + "&teldnis=" + inteldnis + "&pageno=" + inpageno + '&pagesize=' + inpagesize;
-        alert(actionUrl);
+
         window.location.href = actionUrl;
     }
+
+
+    // 现在每次点击播放的时候重新刷一次页面， ToDo: 采用异步刷新的方式
     function showBoFang(hostName,filename) {
+        //需要刷新页面 其实点击播放按钮的时候，不会立即播放，会重新刷一次页面， 在页面加载事件里面播放 init 事件播放
         //var url = "http://"+hostName+"/Racorder/"+filename+"";  //每次点击后的url 需要重新指定
-        var url = "http://localhost/Racorder/10.4.48.29_20130502091255416_24_3205_37049_13918130810.wav"; //测试的录音的地址
-        var objPlayer = document.all("MediaPlayerWav");
-        if (objPlayer != null) {
-             objPlayer.URL = url;
-             alert(objPlayer.URL);
-        }
+        //var url = "http://localhost/Racorder/10.4.48.29_20130502091255416_24_3205_37049_13918130810.wav"; //测试的录音的地址
+        //var objPlayer = document.all("MediaPlayerWav");
+        //if (objPlayer != null) {
+        //     objPlayer.URL = url;
+         //    alert(objPlayer.URL);
+        //}
     //function StrSub()
 
 
@@ -177,12 +169,33 @@ localScoreInfo = None
         $("#labrecfilename").text(filename);
 
         var isbofang= "Y"
-        var localurl = window.location.href;
-        localurl = localurl +"&filename="+filename+"&isbofang="+isbofang;
+        //var localurl = window.location.href;
+        //localurl = localurl +"&filename="+filename+"&isbofang="+isbofang;
+
+        startdate = jQuery("#idStartDT").val();
+        enddate = jQuery("#idEndDT").val();
+        calltype = document.getElementById("type").value;
+        agentid = jQuery("#agentid").val();
+        telno = jQuery("#telno").val();
+        available = document.getElementById("status").value;
+        totalmin = jQuery("#totalmin").val();
+        totalmax = jQuery("#totalmax").val();
+        channeldn = jQuery("#channeldn").val();
+        teldnis = jQuery("#teldnis").val();
+
+        pagesize = 15
+        pageno = jQuery("#inpageno").val();
 
 
-        window.location.href = localurl;
 
+
+        actionUrl = "http://localhost:8080/RecSearch/Search?startdate=" + startdate + '&enddate=' + enddate + "&calltype=" + calltype +
+                "&agentid=" + agentid + "&telno=" + telno + "&available=" + available + "&totalmin=" + totalmin + "&totalmax=" + totalmax +
+                "&channeldn=" + channeldn + "&teldnis=" + teldnis + "&pageno=" + pageno + '&pagesize=' + pagesize;
+
+        actionUrl = actionUrl +"&filename="+filename+"&isbofang="+isbofang;
+
+        window.location.href = actionUrl;
 
         //点击后需要重新绑定问卷的信息
         //$.ajax({
@@ -251,8 +264,6 @@ jQuery(document).ready(function (){
     Number.prototype.mul = function (arg){
         return accMul(arg, this);
     }
-
-
 
     // 总分 object
     var objctscorenum =$("#labscorenum");
@@ -328,7 +339,6 @@ jQuery(document).ready(function (){
                         {
                             tatalscoreJS = tatalscoreJS.add(ScoreAnswerScore)
                         }
-
                         if(ScoreAnswerScore!=0)
                         {
                             var hasRemark =  $(ScroreAnswer).parent().prev("td").find("label").attr("name");
@@ -391,6 +401,25 @@ jQuery(document).ready(function (){
                     //alert(objPlayer.URL);
                 }
             }
+
+            //var  pageSession = ${pageSession}
+
+            //pageSession = {"startdate":"","enddate":"","calltype":"","agentid":"","telno":"",
+            //    "vailabl":"","totalmin":"","totalmax":"","channeldn":"","teldnis":"",
+            //    "pageno":"","pagesize":"","available":""};
+
+            jQuery("#idStartDT").val(${pageSession}['startdate']);
+            jQuery("#idEndDT").val(${pageSession}['enddate']);
+           //calltype = document.getElementById("type").value;
+            jQuery("#agentid").val(${pageSession}['agentid']);
+            jQuery("#telno").val(${pageSession}['telno']);
+             document.getElementById("status").value;
+            jQuery("#totalmin").val(${pageSession}['totalmin']);
+            jQuery("#totalmax").val(${pageSession}['totalmax']);
+            jQuery("#channeldn").val(${pageSession}['channeldn']);
+            jQuery("#teldnis").val(${pageSession}['teldnis']);
+
+
         }
 
 
@@ -469,8 +498,6 @@ jQuery(document).ready(function (){
                                 }
                                 tatalScore = tatalScore.add(ScoreAnswerScore)
                             }
-
-
                         }
                     }
             );
@@ -636,130 +663,123 @@ jQuery(document).ready(function (){
     <div width="100%">
         <table>
             <tr>
-                <td width="60%" align="top">
-                    <div>
+                <td width="55%" valign="top">
+
                         <table>
                             <tr>
-                                <td width="60%" align="top">
+                                <td valign="top">
 
-                                    <table width="718"  align="top" class="label label-normal">
-                                        <tr>
+                                    <table   align="top" class="label label-normal">
+                                        <tr tyle="background-color:#fff">
                                             <td width="77" >日期时间：</td>
-                                            <td width="153" >
+                                            <td width="179" >
                                                 <input id="idStartDT" type="text" class="Wdate input-small search-query"
-                                                       onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})" style="width:120px"/></td>
-                                            <td width="254">--&nbsp;
+                                                       onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})" style="width:140px"/></td>
+                                            <td width="228">--&nbsp;&nbsp;&nbsp;
                                                 <input name="text2" type="text" class="Wdate input-small search-query" id="idEndDT"
-                                                       onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})"  style="width:120px"/></td>
+                                                       onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})"  style="width:140px"/></td>
                                             <td width="214" >类型：
                                                 <select name="select" id="type"  style="width:140px">
                                                     <option value=""></option>
                                                     <option value="IN">IN</option>
                                                     <option value="OUT">OUT</option>
                                                 </select></td>
-
                                         </tr>
                                         <tr>
                                             <td >坐席工号：</td>
                                             <td >
-                                                <input name="text6" type="text" id="agentid" style="width:80px" />  &nbsp;&nbsp;</td>
-                                            <td> 分机：<input name="text" type="text" id="telno" value=""  style="width:120px"/></td>
+                                                <input name="text6" type="text" id="agentid" style="width:140px" />  &nbsp;&nbsp;</td>
+                                            <td> 分机：<input name="text" type="text" id="telno" value=""  style="width:140px"/></td>
                                             <td>状态：
-                                                <select name="select2" id="status" style="width:65px">
+                                                <select name="select2" id="status" style="width:80px">
                                                     <option value=""></option>
                                                     <option value="1">1->完成</option>
                                                     <option value="3">3->重点</option>
-                                                </select> &nbsp;
-                                                <button id="btnSearch">查 询</button>
-                                            </td>
-
-
+                                                </select>
+                                                <button id="btnSearch" style="width:50px">查 询</button>                                          </td>
                                         </tr>
                                         <tr>
                                             <td align="left">得分从:</td>
-                                            <td><input name="Input" id="totalmin" type="text" style="width:40px"/>
-                                                至&nbsp;
-                                                <input name="text3" type="text" id="totalmax" style="width:40px"/></td>
+                                            <td><input name="Input" id="totalmin" type="text" style="width:55px"/>
+                                                至
+                                                <input name="text3" type="text" id="totalmax" style="width:55px"/></td>
 
-                                            <td> 主叫：<input name="text4" type="text"  id="channeldn"  style="width:120px"/></td>
+                                            <td> 主叫：<input name="text4" type="text"  id="channeldn"  style="width:140px"/></td>
                                             <td>被叫：
-                                                <input name="text5" type="text" id="teldnis" style="width:120px" /></td>
-
-
+                                                <input name="text5" type="text" id="teldnis" style="width:140px" /></td>
                                         </tr>
                                     </table>
-                    <div align="top" id="formOrderList" style="width:740px;overflow:scroll;">
-                        <table class="table table-hover table-condensed">
-                            % if outdic is not None:
-                            <tr>
-                                <th>播放</th>
-                                <th style="width: 80">主机名</th>
-                                <th style="width: 80">主机名</th>
-                                <th>通道号</th>
-                                <th>分机</th>
-                                <th>开始时间</th>
-                                <th>结束时间</th>
-                                <th>通话时长</th>
-                                <th>坐席ID</th>
-                                <th>主叫</th>
-                                <th>被叫</th>
-                                <th>呼叫类型</th>
-                                <th>得分</th>
-                                <th>呼叫ID</th>
-                                <th>产品</th>
-                                <th>信息类型</th>
-                                <th>订单号</th>
-                                <th>状态</th>
-                                <th>备注</th>
-                                <th>标签</th>
-                            </tr>
-                            % for item in outdic:
-                            <tr>
-                                <% hostName = item['hostName'] %>
-                                <% fileName = item['fileName'] %>
-                                <th> <button type="button" class="btn" onclick="showBoFang('${hostName}','${fileName}')">播放</button></th>
-                                <th>${item["hostName"]}</th>
-                                <th>${item["fileName"]}</th>
-                                <th>${item["channelNO"]}</th>
-                                <th>${item["telNO"]}</th>
-                                <th>${item["startTime"]}</th>
-                                <th>${item["endTime"]}</th>
-                                <th>${item["spendTime"]}</th>
-                                <th>${item["agentID"]}</th>
-                                <th>${item["channelDN"]}</th>
-                                <th>${item["telDNIS"]}</th>
-                                <th>${item["callType"]}</th>
-                                <th>${item["total"]}</th>
-                                <th>${item["callID"]}</th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th>${item["available"]}</th>
-                                <th></th>
-                                <th></th>
-                            </tr>
-                            % endfor
-                            % endif
-                        </table>
-                    </div>
-                    <div align="top" >
-                        <object id="MediaPlayerWav" classid="CLSID:6BF52A52-394A-11d3-B153-00C04F79FAA6" width="740"
-                                height="45"
-                                codebase="http://activex.microsoft.com/activex/controls/mplayer/en/nsmp2inf.cab#Version=5,1,52,701standby=Loading Microsoft? Windows Media? Player
+                                     <div align="top" id="formOrderList" style=" width: 750px; overflow:scroll;">
+
+                                      <table  width="100%"  id="tbReccorder" class="label label-normal">
+                                            % if outdic is not None:
+                                            <tr style="background-color:#fff">
+                                                <th>播放</th>
+                                                <th>分机</th>
+                                                <th>坐席ID</th>
+                                                <th>开始时间</th>
+                                                <th>通话时长</th>
+                                                <th>呼叫类型</th>
+                                                <th>总分</th>
+                                                <th>主叫</th>
+                                                <th>被叫</th>
+
+                                                % for item in outdic:
+                                            <tr>
+                                                <% hostName = item['hostName'] %>
+                                                <% fileName = item['fileName'] %>
+                                                <th> <button type="button" class="btn" onclick="showBoFang('${hostName}','${fileName}')">播放</button></th>
+                                                <th>${item["telNO"]}</th>
+                                                <th>${item["agentID"]}</th>
+                                                <th >${item["startTime"]}</th>
+                                                <th>${item["spendTime"]}</th>
+                                                <th>${item["callType"]}</th>
+                                                <th>${item["total"]}</th>
+                                                <th>${item["telNO"]}</th>
+                                                <th>${item["telDNIS"]}</th>
+
+
+                                          % endfor
+                                      % endif
+                                            </table>
+
+                                         <div>
+                                            <table>
+                                                 <tr>
+                                                     <td>
+                                                         <button id = "btnFastBackward" type="button" class="btn" onclick="showFastPrev()"><i class="icon-fast-backward"></i></button>
+                                                         <button id = "btnBackward" type="button" class="btn" onclick="showPrev()"><i class="icon-backward"></i></button>
+                                                         <button id = "btnForward" type="button" class="btn" onclick="showNext(2,23)"><i class="icon-forward"></i></button>
+                                                         <button id = "btnFastForward" type="button" class="btn" onclick="showFastNext(2)"><i class="icon-fast-forward"></i></button>
+                                                         <input id="idPageIndex" type="text" class="input-small" placeholder="去往页"/>
+                                                         <button id = "btnCurrent" type="button" class="btn" onclick="showCurrent(2,2)"><i class="icon-arrow-right"></i></button>
+                                                     </td>
+                                                 </tr>
+                                             </table>
+                                         </div>
+                                     </div>
+
+
+                                    <object id="MediaPlayerWav" classid="CLSID:6BF52A52-394A-11d3-B153-00C04F79FAA6" width="740"
+                                            height="45"
+                                            codebase="http://activex.microsoft.com/activex/controls/mplayer/en/nsmp2inf.cab#Version=5,1,52,701standby=Loading Microsoft? Windows Media? Player
 components..."
-                                type="application/x-oleobject">
-                            <param name="URL" value="">
-                            <param name="UIMode" value="full">
-                            <param name="AutoStart" value="1">
-                            <param name="Enabled" value="1">
-                            <param name="EnableContextMenu" value="0">
-                            <param name="windowlessVideo" value="0">
-                            <param name='Volume' value='100'>
-                        </object>
-                    </div>
+                                            type="application/x-oleobject">
+                                        <param name="URL" value="">
+                                        <param name="UIMode" value="full">
+                                        <param name="AutoStart" value="1">
+                                        <param name="Enabled" value="1">
+                                        <param name="EnableContextMenu" value="0">
+                                        <param name="windowlessVideo" value="0">
+                                        <param name='Volume' value='100'>
+                                    </object>
+
+                           </td>
+                            </tr>
+                         </table>
                 </td>
-                <td align="40%">
-                    <div class="bs-docs-div-compress" style="width: 100%">
+                <td width="50%">
+                    <div class="bs-docs-div-compress">
                         <label class="label label-info label-large">录音打分模板</label>
 
                         <table >
@@ -786,11 +806,11 @@ components..."
                             </tr>
                             <tr>
                                 <td colspan="3" valign="top" style="border-top:solid 1 Lime;">
-                                    <div style="overflow:auto; width:100%; height:100%;">
-                                        <table class="myFullTable" cellpadding="0" cellspacing="0" border="0">
+                                    <div>
+                                        <table cellpadding="0" cellspacing="0" border="0">
                                             <tr>
                                                 <td id="jspnltdobj" valign="top" colspan="3">
-                                                    <div width="100%">
+                                                    <div>
                                                         <%
                                                         configPageRecorderScore = configPage
                                                         configUsing =copy.deepcopy(configPageRecorderScore)
@@ -804,10 +824,10 @@ components..."
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <td width=45>
+                                                <td>
                                                     <label class="label label-normal">总备注</label>
                                                 </td>
-                                                <td algin="left" colspan="2">
+                                                <td algin="left" coclass="myFullTable" lspan="2">
                                                     <input name=txtnote id=txtQuestionNote height="100"  type = text value="${QuestionNote}"  placeholder="备注"/>
                                                 </td>
                                             </tr>
