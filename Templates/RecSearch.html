@@ -1,11 +1,7 @@
 <html>
-
-
-
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 <link href="http://${localURL}/static/css/bootstrap.css" rel="stylesheet" media="screen">
 <link href="http://${localURL}/static/css/docs.css" rel="stylesheet" media="screen">
-
 <script src="http://${localURL}/static/js/jquery.js"></script>
 <script src="http://${localURL}/static/js/bootstrap.js"></script>
 <script src="http://${localURL}/static/js/My97DatePicker/WdatePicker.js"></script>
@@ -16,53 +12,31 @@
         var selectText = function(dropdown, selectedValue) {
             var options = $(dropdown).find("option");
             var matches = $.grep(options,
-                    function(n) { return $(n).text() == selectedValue; });
+                                 function(n) { return $(n).text() == selectedValue; });
             $(matches).attr("selected", "selected");
         };
     });
 </script>
-
-
-
-
 <head>
     <title>录音查询</title>
     <meta charset="utf-8">
-
-
+</head>
 
 <%!
-import OrderClient
 import json
-
 import configObjData
 from configObjData import getRecorderConfigPage
-
-import staticDbModule
-from staticDbModule import getDictStatic
-
 import configData
 from configData import getConfig
-
-
-#configPage = getRecorderConfigPage()
-
 localURL = getConfig('SERVERINFO','serverIP','str')
-
 import sys
 reload(sys)
 #convert the show code.
 sys.setdefaultencoding('utf8')
-
 import copy
 %>
-<%
-localScoreInfo = None
-%>
 
 
-
-</head>
 <script type="text/javascript">
     jQuery(document).ready(function () {
         jQuery("#btnSearch").click(function () {
@@ -124,10 +98,15 @@ localScoreInfo = None
     function submitSearch(pageno, pagesize) {
         startdate = jQuery("#idStartDT").val();
         enddate = jQuery("#idEndDT").val();
-        calltype = document.getElementById("type").value;
+
+        // calltype = document.getElementById("type").value;
+        calltype = jQuery("#type").val();
+
         agentid = jQuery("#agentid").val();
         telno = jQuery("#telno").val();
-        available = document.getElementById("status").value;
+        //available = document.getElementById("status").value;
+        available = jQuery("#available").val();
+
         totalmin = jQuery("#totalmin").val();
         totalmax = jQuery("#totalmax").val();
         channeldn = jQuery("#channeldn").val();
@@ -141,10 +120,9 @@ localScoreInfo = None
     }
     function SearchRecorder(instartdate, inenddate, incalltype, inagentid, intelno, inavailable, intotalmin, intotalmax, inchanneldn, inteldnis, inpageno, inpagesize) {
         //actionUrl ="http://localhost:8080/RecSearch/Search?startdate="+instartdate+'&enddate='+enddate+'&agentid='+inagentid+"&PAGEINDEX="+inpageindex;
-        actionUrl = "http://localhost:8080/RecSearch/Search?startdate=" + instartdate + '&enddate=' + enddate + "&calltype=" + incalltype +
+        actionUrl = "http://${localURL}/RecSearch/Search?startdate=" + instartdate + '&enddate=' + enddate + "&calltype=" + incalltype +
                 "&agentid=" + inagentid + "&telno=" + intelno + "&available=" + inavailable + "&totalmin=" + intotalmin + "&totalmax=" + intotalmax +
                 "&channeldn=" + inchanneldn + "&teldnis=" + inteldnis + "&pageno=" + inpageno + '&pagesize=' + inpagesize;
-
         window.location.href = actionUrl;
     }
 
@@ -153,13 +131,20 @@ localScoreInfo = None
     function showBoFang(hostName,filename) {
         //需要刷新页面 其实点击播放按钮的时候，不会立即播放，会重新刷一次页面， 在页面加载事件里面播放 init 事件播放
         //var url = "http://"+hostName+"/Racorder/"+filename+"";  //每次点击后的url 需要重新指定
-        //var url = "http://localhost/Racorder/10.4.48.29_20130502091255416_24_3205_37049_13918130810.wav"; //测试的录音的地址
+        //var url = "http://localhost/Racorder/Kalimba.mp3"; //测试的录音的地址
         //var objPlayer = document.all("MediaPlayerWav");
         //if (objPlayer != null) {
         //     objPlayer.URL = url;
-         //    alert(objPlayer.URL);
-        //}
-    //function StrSub()
+        //    alert(objPlayer.URL);
+        // }
+        //function StrSub()
+
+        // var url = "http://localhost/Racorder/Kalimba.mp3"; //测试的录音的地址
+        // var objPlayer = document.all("MediaPlayerWav");
+        // if (objPlayer != null) {
+        //     objPlayer.URL = url;
+        //     alert(objPlayer.URL);
+        //  }
 
 
         $("#labrecfilename").text(filename);
@@ -174,7 +159,7 @@ localScoreInfo = None
 
         startdate = jQuery("#idStartDT").val();
         enddate = jQuery("#idEndDT").val();
-        calltype = document.getElementById("type").value;
+        calltype = document.getElementById("calltype").value;
         agentid = jQuery("#agentid").val();
         telno = jQuery("#telno").val();
         available = document.getElementById("status").value;
@@ -189,13 +174,15 @@ localScoreInfo = None
 
 
 
-        actionUrl = "http://localhost:8080/RecSearch/Search?startdate=" + startdate + '&enddate=' + enddate + "&calltype=" + calltype +
+        actionUrl = "http://${localURL}/RecSearch/Search?startdate=" + startdate + '&enddate=' + enddate + "&calltype=" + calltype +
                 "&agentid=" + agentid + "&telno=" + telno + "&available=" + available + "&totalmin=" + totalmin + "&totalmax=" + totalmax +
                 "&channeldn=" + channeldn + "&teldnis=" + teldnis;
 
         actionUrl = actionUrl +"&filename="+filename+"&isbofang="+isbofang;
 
+        alert(actionUrl);
         window.location.href = actionUrl;
+
 
         //点击后需要重新绑定问卷的信息
         //$.ajax({
@@ -220,7 +207,7 @@ localScoreInfo = None
 
 
 
-        window.status = url;
+        // window.status = url;
     }
 
 
@@ -229,7 +216,7 @@ localScoreInfo = None
 
 
 
-　　<script type="text/javascript">
+<script type="text/javascript">
 jQuery(document).ready(function (){
     //加法函数，用来得到精确的加法结果
     //说明：javascript的加法结果会有误差，在两个浮点数相加的时候会比较明显。这个函数返回较为精确的加法结果。
@@ -297,78 +284,75 @@ jQuery(document).ready(function (){
         var tatalscoreGTJQ = 0   // 沟通技巧得分
         var tatalscoreJS = 0    // 结束得分
         $("#ComRacorder tr").each(function(i){
-                    if($(this).find("td").find("input[type='text'][name='txtSCORE']").length > 0)
-                    {
-                        var ScroreAnswer =  $(this).find("td").find("input[type='text'][name='txtSCORE']");
-                        var ScoreAnswerScoreStr = ScroreAnswer[0].value;
+                                      if($(this).find("td").find("input[type='text'][name='txtSCORE']").length > 0)
+                                      {
+                                          var ScroreAnswer =  $(this).find("td").find("input[type='text'][name='txtSCORE']");
+                                          var ScoreAnswerScoreStr = ScroreAnswer[0].value;
+                                          var  ScoreAnswerScore= 0
+                                          if(ScoreAnswerScoreStr.length <= 0)
+                                          {
+                                              ScoreAnswerScoreStr = 0;
+                                          }
+                                          else
+                                          {
+                                              ScoreAnswerScore = parseFloat(ScoreAnswerScoreStr);
+                                          }
 
+                                          var ScoreAnswerScore = parseFloat(ScoreAnswerScoreStr);
 
-                        var  ScoreAnswerScore= 0
+                                          var hasRemark =  $(ScroreAnswer).parent().prev("td").find("label").attr("name");
 
-                        if(ScoreAnswerScoreStr.length <= 0)
-                        {
-                            ScoreAnswerScoreStr = 0;
-                        }
-                        else
-                        {
-                            ScoreAnswerScore = parseFloat(ScoreAnswerScoreStr);
-                        }
+                                          if(hasRemark == "hasRemark1")    //建议
+                                          {
+                                              tatalscoreJj = tatalscoreJj.add(ScoreAnswerScore)
+                                          }
+                                          else if(hasRemark == "hasRemark2")  //开场白
+                                          {
+                                              tatalscoreKcb = tatalscoreKcb.add(ScoreAnswerScore)
+                                          }
 
-                        var ScoreAnswerScore = parseFloat(ScoreAnswerScoreStr);
+                                          else if(hasRemark == "hasRemark3")  // 提问
+                                          {
+                                              tatalscoreTw = tatalscoreTw.add(ScoreAnswerScore)
+                                          }
+                                          else if(hasRemark == "hasRemark4")  //沟通技巧
+                                          {
+                                              tatalscoreGTJQ = tatalscoreGTJQ.add(ScoreAnswerScore)
+                                          }
+                                          else if(hasRemark == "hasRemark5")  // 结束
+                                          {
+                                              tatalscoreJS = tatalscoreJS.add(ScoreAnswerScore)
+                                          }
+                                          if(ScoreAnswerScore!=0)
+                                          {
+                                              var hasRemark =  $(ScroreAnswer).parent().prev("td").find("label").attr("name");
+                                              if(hasRemark == "hasRemark1")
+                                              {
+                                                  tatalscoreJj = tatalscoreJj.add(ScoreAnswerScore)
+                                              }
+                                              else if(hasRemark == "hasRemark2")
+                                              {
+                                                  tatalscoreKcb = tatalscoreKcb.add(ScoreAnswerScore)
+                                              }
 
-                        var hasRemark =  $(ScroreAnswer).parent().prev("td").find("label").attr("name");
+                                              else if(hasRemark == "hasRemark3")
+                                              {
+                                                  tatalscoreTw = tatalscoreTw.add(ScoreAnswerScore)
+                                              }
+                                              else if(hasRemark == "hasRemark4")
+                                              {
+                                                  tatalscoreGTJQ = tatalscoreGTJQ.add(ScoreAnswerScore)
+                                              }
+                                              else if(hasRemark == "hasRemark5")
+                                              {
+                                                  tatalscoreJS = tatalscoreJS.add(ScoreAnswerScore)
+                                              }
+                                              tatalScore = tatalScore.add(ScoreAnswerScore)
+                                          }
 
-                        if(hasRemark == "hasRemark1")    //建议
-                        {
-                            tatalscoreJj = tatalscoreJj.add(ScoreAnswerScore)
-                        }
-                        else if(hasRemark == "hasRemark2")  //开场白
-                        {
-                            tatalscoreKcb = tatalscoreKcb.add(ScoreAnswerScore)
-                        }
+                                      }
 
-                        else if(hasRemark == "hasRemark3")  // 提问
-                        {
-                            tatalscoreTw = tatalscoreTw.add(ScoreAnswerScore)
-                        }
-                        else if(hasRemark == "hasRemark4")  //沟通技巧
-                        {
-                            tatalscoreGTJQ = tatalscoreGTJQ.add(ScoreAnswerScore)
-                        }
-                        else if(hasRemark == "hasRemark5")  // 结束
-                        {
-                            tatalscoreJS = tatalscoreJS.add(ScoreAnswerScore)
-                        }
-                        if(ScoreAnswerScore!=0)
-                        {
-                            var hasRemark =  $(ScroreAnswer).parent().prev("td").find("label").attr("name");
-                            if(hasRemark == "hasRemark1")
-                            {
-                                tatalscoreJj = tatalscoreJj.add(ScoreAnswerScore)
-                            }
-                            else if(hasRemark == "hasRemark2")
-                            {
-                                tatalscoreKcb = tatalscoreKcb.add(ScoreAnswerScore)
-                            }
-
-                            else if(hasRemark == "hasRemark3")
-                            {
-                                tatalscoreTw = tatalscoreTw.add(ScoreAnswerScore)
-                            }
-                            else if(hasRemark == "hasRemark4")
-                            {
-                                tatalscoreGTJQ = tatalscoreGTJQ.add(ScoreAnswerScore)
-                            }
-                            else if(hasRemark == "hasRemark5")
-                            {
-                                tatalscoreJS = tatalscoreJS.add(ScoreAnswerScore)
-                            }
-                            tatalScore = tatalScore.add(ScoreAnswerScore)
-                        }
-
-                    }
-
-                }
+                                  }
         );
         tatalScore = tatalScore.mul(0.5)
         objctscorenum.text(tatalScore);
@@ -394,11 +378,18 @@ jQuery(document).ready(function (){
 
             if(isbofang == "Y")
             {
-                var url = "http://localhost/Racorder/1017112694c.mp3"; //测试的录音的地址
+                //var url = "http://${localURL}/RaRecSound/2013.05.14/10.4.48.29_20130514085938916_23_3204_37046.wav"; //测试的录音的地址
+                //var objPlayer = document.all("MediaPlayerWav");
+                //if (objPlayer != null) {
+                //    objPlayer.URL = url;
+                //alert(objPlayer.URL);
+                // }
+
+                var url = "http://localhost/Racorder/Kalimba.mp3"; //测试的录音的地址
                 var objPlayer = document.all("MediaPlayerWav");
                 if (objPlayer != null) {
-                    objPlayer.URL = url;
-                    //alert(objPlayer.URL);
+                    objPlayer.src = url;
+                    alert(objPlayer.src);
                 }
             }
 
@@ -410,15 +401,25 @@ jQuery(document).ready(function (){
 
             jQuery("#idStartDT").val(${pageSession}['startdate']);
             jQuery("#idEndDT").val(${pageSession}['enddate']);
-           //calltype = document.getElementById("type").value;
+            //calltype = document.getElementById("type").value;
             jQuery("#agentid").val(${pageSession}['agentid']);
             jQuery("#telno").val(${pageSession}['telno']);
-             document.getElementById("status").value;
+            document.getElementById("status").value;
             jQuery("#totalmin").val(${pageSession}['totalmin']);
             jQuery("#totalmax").val(${pageSession}['totalmax']);
+            //totalmax = jQuery("#totalmax").val();
+            //totalmax = jQuery("#totalmax").val();
             jQuery("#channeldn").val(${pageSession}['channeldn']);
             jQuery("#teldnis").val(${pageSession}['teldnis']);
 
+            var statusdata= ${pageSession}['status']
+            var calltypedata = ${pageSession}['calltype']
+
+            var status = jQuery("#status");
+            var calltype = jQuery("#calltype")
+
+            status.val(statusdata);
+            calltype.val(calltypedata);
 
         }
 
@@ -434,72 +435,72 @@ jQuery(document).ready(function (){
             var tatalscoreGTJQ = 0   // 沟通技巧得分
             var tatalscoreJS = 0    // 结束得分
             $("#ComRacorder tr").each(function(i){
-                        if($(this).find("td").find("input[type='text'][name='txtSCORE']").length > 0)
-                        {
-                            var ScroreAnswer =  $(this).find("td").find("input[type='text'][name='txtSCORE']");
-                            var ScoreAnswerScoreStr = ScroreAnswer[0].value;
+                                          if($(this).find("td").find("input[type='text'][name='txtSCORE']").length > 0)
+                                          {
+                                              var ScroreAnswer =  $(this).find("td").find("input[type='text'][name='txtSCORE']");
+                                              var ScoreAnswerScoreStr = ScroreAnswer[0].value;
 
-                            var  ScoreAnswerScore= 0
+                                              var  ScoreAnswerScore= 0
 
-                            if(ScoreAnswerScoreStr.length <= 0)
-                            {
-                                ScoreAnswerScoreStr = 0;
-                            }
-                            else
-                            {
-                                ScoreAnswerScore = parseFloat(ScoreAnswerScoreStr);
-                            }
-                            var hasRemark =  $(ScroreAnswer).parent().prev("td").find("label").attr("name");
-                            if(hasRemark == "hasRemark1")
-                            {
-                                tatalscoreJj = tatalscoreJj.add(ScoreAnswerScore)
-                            }
-                            else if(hasRemark == "hasRemark2")
-                            {
-                                tatalscoreKcb = tatalscoreKcb.add(ScoreAnswerScore)
-                            }
+                                              if(ScoreAnswerScoreStr.length <= 0)
+                                              {
+                                                  ScoreAnswerScoreStr = 0;
+                                              }
+                                              else
+                                              {
+                                                  ScoreAnswerScore = parseFloat(ScoreAnswerScoreStr);
+                                              }
+                                              var hasRemark =  $(ScroreAnswer).parent().prev("td").find("label").attr("name");
+                                              if(hasRemark == "hasRemark1")
+                                              {
+                                                  tatalscoreJj = tatalscoreJj.add(ScoreAnswerScore)
+                                              }
+                                              else if(hasRemark == "hasRemark2")
+                                              {
+                                                  tatalscoreKcb = tatalscoreKcb.add(ScoreAnswerScore)
+                                              }
 
-                            else if(hasRemark == "hasRemark3")
-                            {
-                                tatalscoreTw = tatalscoreTw.add(ScoreAnswerScore)
-                            }
-                            else if(hasRemark == "hasRemark4")
-                            {
-                                tatalscoreGTJQ = tatalscoreGTJQ.add(ScoreAnswerScore)
-                            }
-                            else if(hasRemark == "hasRemark5")
-                            {
-                                tatalscoreJS = tatalscoreJS.add(ScoreAnswerScore)
-                            }
+                                              else if(hasRemark == "hasRemark3")
+                                              {
+                                                  tatalscoreTw = tatalscoreTw.add(ScoreAnswerScore)
+                                              }
+                                              else if(hasRemark == "hasRemark4")
+                                              {
+                                                  tatalscoreGTJQ = tatalscoreGTJQ.add(ScoreAnswerScore)
+                                              }
+                                              else if(hasRemark == "hasRemark5")
+                                              {
+                                                  tatalscoreJS = tatalscoreJS.add(ScoreAnswerScore)
+                                              }
 
-                            if(ScoreAnswerScore!=0)
-                            {
-                                var hasRemark =  $(ScroreAnswer).parent().prev("td").find("label").attr("name");
-                                if(hasRemark == "hasRemark1")
-                                {
-                                    tatalscoreJj = tatalscoreJj.add(ScoreAnswerScore)
-                                }
-                                else if(hasRemark == "hasRemark2")
-                                {
-                                    tatalscoreKcb = tatalscoreKcb.add(ScoreAnswerScore)
-                                }
+                                              if(ScoreAnswerScore!=0)
+                                              {
+                                                  var hasRemark =  $(ScroreAnswer).parent().prev("td").find("label").attr("name");
+                                                  if(hasRemark == "hasRemark1")
+                                                  {
+                                                      tatalscoreJj = tatalscoreJj.add(ScoreAnswerScore)
+                                                  }
+                                                  else if(hasRemark == "hasRemark2")
+                                                  {
+                                                      tatalscoreKcb = tatalscoreKcb.add(ScoreAnswerScore)
+                                                  }
 
-                                else if(hasRemark == "hasRemark3")
-                                {
-                                    tatalscoreTw = tatalscoreTw.add(ScoreAnswerScore)
-                                }
-                                else if(hasRemark == "hasRemark4")
-                                {
-                                    tatalscoreGTJQ = tatalscoreGTJQ.add(ScoreAnswerScore)
-                                }
-                                else if(hasRemark == "hasRemark5")
-                                {
-                                    tatalscoreJS = tatalscoreJS.add(ScoreAnswerScore)
-                                }
-                                tatalScore = tatalScore.add(ScoreAnswerScore)
-                            }
-                        }
-                    }
+                                                  else if(hasRemark == "hasRemark3")
+                                                  {
+                                                      tatalscoreTw = tatalscoreTw.add(ScoreAnswerScore)
+                                                  }
+                                                  else if(hasRemark == "hasRemark4")
+                                                  {
+                                                      tatalscoreGTJQ = tatalscoreGTJQ.add(ScoreAnswerScore)
+                                                  }
+                                                  else if(hasRemark == "hasRemark5")
+                                                  {
+                                                      tatalscoreJS = tatalscoreJS.add(ScoreAnswerScore)
+                                                  }
+                                                  tatalScore = tatalScore.add(ScoreAnswerScore)
+                                              }
+                                          }
+                                      }
             );
             tatalScore = tatalScore.mul(0.5)    // 总分数需要重新计算 乘以 0.5
             objctscorenum.text(tatalScore);
@@ -527,49 +528,46 @@ jQuery(document).ready(function (){
             var StrJson = "[";
             var j = 0; //定义j 用于取得 序列号
             $("#ComRacorder tr").each(function(i){
-                        if($(this).find("td").find("input[type='radio']").length > 0)
-                        {
-                            j++;
-                            var lblSEQUENCEID = "#lblSEQUENCEID"+j
-                            var mvalue=$(lblSEQUENCEID).text();// 可以记录问题的编号
-                            var raydio = null;
-                            var raydios = $(this).find("td").find("input[type='radio']");
-                            $(raydios).each(function(ra)
-                                    {
-                                        var raydiolocal = raydios[ra];
-                                        if(raydiolocal.checked)
-                                        {
-                                            raydio = raydiolocal;
-                                        }
-                                    }
-                            );
+                                          if($(this).find("td").find("input[type='radio']").length > 0)
+                                          {
+                                              j++;
+                                              var lblSEQUENCEID = "#lblSEQUENCEID"+j
+                                              var mvalue=$(lblSEQUENCEID).text();// 可以记录问题的编号
+                                              var raydio = null;
+                                              var raydios = $(this).find("td").find("input[type='radio']");
+                                              $(raydios).each(function(ra)
+                                                              {
+                                                                  var raydiolocal = raydios[ra];
+                                                                  if(raydiolocal.checked)
+                                                                  {
+                                                                      raydio = raydiolocal;
+                                                                  }
+                                                              }
+                                              );
 
-                            if($(raydio).length > 0 )
-                            {
-                                var subitemAnswer = $(raydio).val();
+                                              if($(raydio).length > 0 )
+                                              {
+                                                  var subitemAnswer = $(raydio).val();
 
-                                var questionobject = $(raydio).parent().parent().parent().prev("tr").find("td:last").find("label");
+                                                  var questionobject = $(raydio).parent().parent().parent().prev("tr").find("td:last").find("label");
 
-                                var questionostr = questionobject[0].id;
+                                                  var questionostr = questionobject[0].id;
 
-                                var Questionindex = questionostr.indexOf("ID_");
-                                var questionId =  questionostr.substring(Questionindex,questionostr.length);
+                                                  var Questionindex = questionostr.indexOf("ID_");
+                                                  var questionId =  questionostr.substring(Questionindex,questionostr.length);
 
-                                StrJson +="{'questionID':'"+ questionId+"','subitemAnswer':'"+subitemAnswer+"','";
+                                                  StrJson +="{'questionID':'"+ questionId+"','subitemAnswer':'"+subitemAnswer+"','";
 
-                                var ScroreAnswerobject = $(raydio).parent().parent().parent().next("tr").next("tr").find("td:last").find("input");
+                                                  var ScroreAnswerobject = $(raydio).parent().parent().parent().next("tr").next("tr").find("td:last").find("input");
 
-                                StrJson +="score"+"':'"+ScroreAnswerobject.val()+"','"
-                                var tMemoAnswerobject = $(raydio).parent().parent().parent().next("tr").next("tr").next("tr").find("td:last").find("input");
-                                StrJson +="note"+"':'"+tMemoAnswerobject.val()+"'},"
+                                                  StrJson +="score"+"':'"+ScroreAnswerobject.val()+"','"
+                                                  var tMemoAnswerobject = $(raydio).parent().parent().parent().next("tr").next("tr").next("tr").find("td:last").find("input");
+                                                  StrJson +="note"+"':'"+tMemoAnswerobject.val()+"'},"
 
-                            }
+                                              }
+                                          }
 
-
-
-                        }
-
-                    }
+                                      }
             );
             if(StrJson.length>2)
             {
@@ -627,26 +625,55 @@ jQuery(document).ready(function (){
 
             var result = false;
             $.ajax({
-                url:"/Saverqscoscr/"+retPost,
-                type:"POST",
-                cache:false,
-                data:strJson,
-                datatype:"json",
-                success:function(data){
-                    if(data!=null)
-                    {
-                        alert("保存成功")
-                        var flag = $("#RacorderIsAdd");
-                        flag.val("edit");
-                        result = true;
-                    }
-                    else
-                    {
-                        alert("保存失败")
-                        result = false;
-                    }
-                }
-            });
+                       url:"/Saverqscoscr/"+retPost,
+                       type:"POST",
+                       cache:false,
+                       data:strJson,
+                       datatype:"json",
+                       success:function(data){
+                           if(data!=null&&data!="None")
+                           {
+                               strJson = strJson.replace(/'/gm,"\"");  // 全部将 ’替换 为 “
+                               var dataJson = $.parseJSON(strJson);
+                               var localfileName =  dataJson["fileName"];
+
+
+                               var ssobject = jQuery("#10448292013040708595744333321437990.wav").html();
+                               alert(ssobject);
+
+
+                               // var ss = jQuery("#10\.4\.48.29_20130407085957443_33_3214_37990.wav").html();
+                               // alert(ss);
+                               //var fileName = localfileName.replace(".","a")
+                               //    alert(fileName);
+                               //    fileName = fileName.replace("_","a");
+                               //    alert(fileName);
+                               //var fileNametotal =     fileName+"total"
+
+
+                               // var total = dataJson["total"]
+
+                               //$(fileNametotal).val(total)
+                               // jQuery("#10.4.48.29_20130406090458726_21_3202_37045.wavtotal").html();
+
+
+                               // var fileNametotalobject = jQuery("#"+fileNametotal+"").val();
+                               // var fileNametotalobject = jQuery("#"+fileNametotal+"").val();
+
+                               //alert(fileNametotalobject);
+
+                               alert("保存成功")
+                               var flag = $("#RacorderIsAdd");
+                               flag.val("edit");
+                               result = true;
+                           }
+                           else
+                           {
+                               alert("保存失败")
+                               result = false;
+                           }
+                       }
+                   });
             return result;
 
 
@@ -660,152 +687,137 @@ jQuery(document).ready(function (){
 
 <body>
 <form id="form1" >
-    <div width="100%">
+    <div>
         <table>
             <tr>
                 <td colspan="2"><img src="../static/img/Rayda2.jpg" alt="锐意恒达"></td>
 
             </tr>
             <tr>
-                <td width="55%" valign="top">
+                <td width="40%" valign="top">
 
-                        <table>
-                            <tr>
-                                <td valign="top">
-                                    <table   align="top" class="label label-normal">
-                                        <tr tyle="background-color:#fff">
-                                            <td width="77" >日期时间：</td>
-                                            <td width="179" >
-                                                <input name="startdate" id="idStartDT"  class="Wdate input-small search-query"
-                                                       onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})" style="width:140px"/></td>
-                                            <td width="228">--&nbsp;&nbsp;&nbsp;
-                                             <input name ="enddate" class="Wdate input-small search-query" id="idEndDT"
-                                                       onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})"  style="width:140px"/></td>
-                                            <td width="214" >类型：
-                                                <select name="calltype" id="type"  style="width:140px">
-                                                    <option value=""></option>
-                                                    <option value="IN">IN</option>
-                                                    <option value="OUT">OUT</option>
-                                                </select></td>
-                                        </tr>
-                                        <tr>
-                                            <td >坐席工号：</td>
-                                            <td >
-                                                <input name="agentid" type="text" id="agentid" style="width:140px" />  &nbsp;&nbsp;</td>
-                                            <td> 分机：<input name="text" type="text" id="telno" value=""  style="width:140px"/></td>
-                                            <td>状态：
-                                                <select name="status" id="status" style="width:80px">
-                                                    <option value=""></option>
-                                                    <option value="1">1->完成</option>
-                                                    <option value="3">3->重点</option>
-                                                </select>
-                                                <button id="btnSearch" style="width:50px">查 询</button>                                          </td>
-                                        </tr>
-                                        <tr>
-                                            <td align="left">得分从:</td>
-                                            <td><input name="totalmin" id="totalmin" type="text" style="width:55px"/>
-                                                至
-                                                <input name="totalmax" type="text" id="totalmax" style="width:55px"/></td>
+                    <table>
+                        <tr>
+                            <td valign="top">
+                                <table   align="top" class="label label-normal">
+                                    <tr tyle="background-color:#fff">
+                                        <td width="77" >日期时间：</td>
+                                        <td width="179" >
+                                            <input name="startdate" id="idStartDT"  class="Wdate input-small search-query"
+                                                   onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})" style="width:140px"/></td>
+                                        <td width="228">--&nbsp;&nbsp;&nbsp;
+                                            <input name ="enddate" class="Wdate input-small search-query" id="idEndDT"
+                                                   onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})"  style="width:140px"/></td>
+                                        <td width="214" height="40" >类型：
+                                            <select name="calltype" id="calltype"  style="width:140px">
+                                                <option value=""></option>
+                                                <option value="IN">IN</option>
+                                                <option value="OUT">OUT</option>
+                                            </select></td>
+                                    </tr>
+                                    <tr>
+                                        <td >坐席工号：</td>
+                                        <td >
+                                            <input name="agentid" type="text" id="agentid" style="width:140px" />  &nbsp;&nbsp;</td>
+                                        <td> 分机：<input name="telno" type="text" id="telno" value=""  style="width:140px"/></td>
+                                        <td>状态：
+                                            <select name="status" id="status"  class="input-medium" style="width:80px"  height="10px">
+                                                <option value=""></option>
+                                                <option value="1">1->完成</option>
+                                                <option value="3">3->重点</option>
+                                            </select>
+                                            <button id="btnSearch" class="btn" style="width:50px">查 询</button>                                          </td>
+                                    </tr>
+                                    <tr>
+                                        <td align="left">得分从:</td>
+                                        <td><input name="totalmin" id="totalmin" type="text" style="width:55px"/>
+                                            至
+                                            <input name="totalmax" type="text" id="totalmax" style="width:55px"/></td>
 
-                                            <td> 主叫：<input name="channeldn" type="text"  id="channeldn"  style="width:140px"/></td>
-                                            <td>被叫：
-                                                <input name="teldnis" type="text" id="teldnis" style="width:140px" /></td>
+                                        <td> 主叫：<input name="channeldn" type="text"  id="channeldn"  style="width:140px"/></td>
+                                        <td>被叫：
+                                            <input name="teldnis" type="text" id="teldnis" style="width:140px" /></td>
+                                    </tr>
+                                </table>
+                                <div align="top" id="formOrderList" style="height:350px; overflow-y:scroll">
+                                    <table  width="100%"  id="tbReccorder" class="label label-normal">
+                                        % if outdic is not None:
+                                        <tr>
+                                            <th width="10%">播放</th>
+                                            <th width="10%">分机</th>
+                                            <th width="10%">坐席ID</th>
+                                            <th width="15%">开始时间</th>
+                                            <th width="15%">通话时长</th>
+                                            <th width="15%">呼叫类型</th>
+                                            <th width="10%">总分</th>
+                                            <th width="10%">主叫</th>
+                                            <th width="10%">被叫</th>
+
+                                            % for item in outdic:
+                                        <tr>
+                                            <% hostName = item['hostName'] %>
+                                            <% fileName = item['fileName'] %>
+                                        <th> <button type="button"  class="btn" onclick="showBoFang('${hostName}','${fileName}')">播放</button></th>
+                                        <th>${item["telNO"]}</th>
+                                        <th>${item["agentID"]}</th>
+                                        <th >${item["startTime"]}</th>
+                                        <th>${item["spendTime"]}</th>
+                                        <th>${item["callType"]}</th>
+                                        <th id = ${item["fileNameNo"]}>${item["total"]}</th>
+                                        <th>${item["telNO"]}</th>
+                                        <th>${item["telDNIS"]}</th>
+                                        % endfor
+                                        % endif
+                                    </table>
+                                </div>
+                                <div>
+                                    <table>
+                                        <tr>
+                                            <td>
+                                                <button id = "btnFastBackward" type="button" class="btn" onclick="showFastPrev()"><i class="icon-fast-backward"></i></button>
+                                                <button id = "btnBackward" type="button" class="btn" onclick="showPrev()"><i class="icon-backward"></i></button>
+                                                <button id = "btnForward" type="button" class="btn" onclick="showNext(2,23)"><i class="icon-forward"></i></button>
+                                                <button id = "btnFastForward" type="button" class="btn" onclick="showFastNext(2)"><i class="icon-fast-forward"></i></button>
+                                                <input id="idPageIndex" type="text" class="input-small" placeholder="去往页"/>
+                                                <button id = "btnCurrent" type="button" class="btn" onclick="showCurrent(2,2)"><i class="icon-arrow-right"></i></button>
+                                            </td>
                                         </tr>
                                     </table>
-                                     <div align="top" id="formOrderList" style=" width: 750px; overflow:scroll;">
+                                </div>
 
-                                      <table  width="100%"  id="tbReccorder" class="label label-normal">
-                                            % if outdic is not None:
-                                            <tr style="background-color:#fff">
-                                                <th>播放</th>
-                                                <th>分机</th>
-                                                <th>坐席ID</th>
-                                                <th>开始时间</th>
-                                                <th>通话时长</th>
-                                                <th>呼叫类型</th>
-                                                <th>总分</th>
-                                                <th>主叫</th>
-                                                <th>被叫</th>
-
-                                                % for item in outdic:
-                                            <tr>
-                                                <% hostName = item['hostName'] %>
-                                                <% fileName = item['fileName'] %>
-                                                <th> <button type="button" class="btn" onclick="showBoFang('${hostName}','${fileName}')">播放</button></th>
-                                                <th>${item["telNO"]}</th>
-                                                <th>${item["agentID"]}</th>
-                                                <th >${item["startTime"]}</th>
-                                                <th>${item["spendTime"]}</th>
-                                                <th>${item["callType"]}</th>
-                                                <th>${item["total"]}</th>
-                                                <th>${item["telNO"]}</th>
-                                                <th>${item["telDNIS"]}</th>
-
-
-                                          % endfor
-                                      % endif
-                                            </table>
-
-                                         <div>
-                                            <table>
-                                                 <tr>
-                                                     <td>
-                                                         <button id = "btnFastBackward" type="button" class="btn" onclick="showFastPrev()"><i class="icon-fast-backward"></i></button>
-                                                         <button id = "btnBackward" type="button" class="btn" onclick="showPrev()"><i class="icon-backward"></i></button>
-                                                         <button id = "btnForward" type="button" class="btn" onclick="showNext(2,23)"><i class="icon-forward"></i></button>
-                                                         <button id = "btnFastForward" type="button" class="btn" onclick="showFastNext(2)"><i class="icon-fast-forward"></i></button>
-                                                         <input id="idPageIndex" type="text" class="input-small" placeholder="去往页"/>
-                                                         <button id = "btnCurrent" type="button" class="btn" onclick="showCurrent(2,2)"><i class="icon-arrow-right"></i></button>
-                                                     </td>
-                                                 </tr>
-                                             </table>
-                                         </div>
-                                     </div>
-
-
-                                    <object id="MediaPlayerWav" classid="CLSID:6BF52A52-394A-11d3-B153-00C04F79FAA6" width="740"
-                                            height="45"
-                                            codebase="http://activex.microsoft.com/activex/controls/mplayer/en/nsmp2inf.cab#Version=5,1,52,701standby=Loading Microsoft? Windows Media? Player
-components..."
-                                            type="application/x-oleobject">
-                                        <param name="URL" value="">
-                                        <param name="UIMode" value="full">
-                                        <param name="AutoStart" value="1">
-                                        <param name="Enabled" value="1">
-                                        <param name="EnableContextMenu" value="0">
-                                        <param name="windowlessVideo" value="0">
-                                        <param name='Volume' value='100'>
-                                    </object>
-
-                           </td>
-                            </tr>
-                         </table>
+                                <embed src="" id="MediaPlayerWav"  width=750 height=50 type=audio/mpeg loop="false" autostart="true">
+                            </td>
+                            </td>
+                        </tr>
+                    </table>
                 </td>
-                <td width="50%">
-                    <div class="bs-docs-div-compress" style="height: 535;overflow: scroll;">
-                        <label class="label label-info label-large">录音打分模板</label>
+                <td align="left" width="45%">
+                    <table >
 
-                        <table >
-                            <tr>
-                                <td align="left"   class="label label-normal"  colspan="2">文件名： <span id="labrecfilename">${outfilename}</span></td>
-                                <td align="left" class="label label-normal" > 总得分：<span id="labscorenum">0</span></td>
-                            </tr>
+                        <tr>
+                            <td align="left"   class="label label-normal"  colspan="2">文件名： <span id="labrecfilename">${outfilename}</span></td>
+                            <td align="left" class="label label-normal" > 总得分：<span id="labscorenum">0</span></td>
+                        </tr>
 
-                            <tr  align="left" class="label label-normal" >
-                                <td  align="left" >
-                                    建议得分:<span id="labscoreJj">0</span>
-                                    开场白得分:<span id="labscoreKcb">0</span>
+                        <tr  align="left" class="label label-normal" >
+                            <td  align="left" >
+                                建议得分:<span id="labscoreJj">0</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                开场白得分:<span id="labscoreKcb">0</span>
 
-                                </td>
-                                <td align="left" >
-                                    提问得分:<span id="labscoreTw">0</span>
-                                    沟通技巧得分：<span id="labscoreGTJQ">0</span>
+                            </td>
+                            <td align="left" >
+                                提问得分:<span id="labscoreTw">0</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                沟通技巧得分：<span id="labscoreGTJQ">0</span>
 
-                                </td >
-                                <td  align="left" >结束得分:<span id="labscoreJS">0</span>
+                            </td >
+                            <td  align="left" >结束得分:<span id="labscoreJS">0</span></td>
+                        </tr>
+                    </table>
 
-                                </td>
-                            </tr>
+                    <div class="bs-docs-div-compress" style="height: 400px;overflow-y:scroll
+">
+
+                        <table>
                             <tr>
                                 <td colspan="3" valign="top" style="border-top:solid 1 Lime;">
                                     <div>
@@ -826,30 +838,28 @@ components..."
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <td>
+                                                <td algin="left" coclass="myFullTable" colspan="3">
                                                     <label class="label label-normal">总备注</label>
-                                                </td>
-                                                <td algin="left" coclass="myFullTable" lspan="2">
-                                                    <input name=txtnote id=txtQuestionNote height="100"  type = text value="${QuestionNote}"  placeholder="备注"/>
+                                                    <textarea name=txtnote id=txtQuestionNote height="100"  type = "textear" value="${QuestionNote}"  placeholder="备注"> </textarea>
                                                 </td>
                                             </tr>
                                         </table>
                                     </div></td>
                             </tr>
                         </table>
-                        <div>
-
-                            <input type="button" data-dismiss="modal"  aria-hidden="true" value="取消"/>
-                            <input type="button" class="btn btn-primary" id="btnConfirm" value="确定" />
-                            <input id="RacorderIsAdd" type="hidden" value="${flag}">
-                        </div>
                     </div>
+
+                    <div>
+                        &nbsp; <input type="button" class="btn btn-primary" id="btnCancel" value="取消" />
+                        &nbsp; &nbsp; &nbsp; <input type="button" class="btn btn-primary" id="btnConfirm" value="确定" />
+                        <input id="RacorderIsAdd" type="hidden" value="${flag}">
+                    </div>
+
                 </td>
             </tr>
         </table>
     </div>
 </form>
-
 
 </body>
 </html>

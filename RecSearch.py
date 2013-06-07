@@ -21,7 +21,7 @@ render = render_mako(
     directories=['templates'],
     input_encoding='utf-8',
     output_encoding='utf-8',
-)
+    )
 
 class RecSelect:
     def GET(self, op):
@@ -111,14 +111,14 @@ class RecSelect:
                 pageSession["teldnis"] =str(teldnis)
             if "totalmax" in webs:
                 totalmax = webs['totalmax']
-                pageSession[""] = str(totalmax)
+                pageSession["totalmax"] = str(totalmax)
             if "totalmin" in webs:
                 totalmin = webs['totalmin']
                 pageSession["totalmin"] = str(totalmin)
-            if "available" in webs:
-                available = webs['available']
-                pageSession["available"] =str(available)
-            if telno in webs:
+            if "status" in webs:
+                available = webs['status']
+                pageSession["status"] =str(available)
+            if "telno" in webs:
                 telno = webs['telno']
                 pageSession["telno"] = str(telno)
             if "agentid" in webs:
@@ -141,10 +141,16 @@ class RecSelect:
             SearchList = RacorderClient.GetRaccemSearchUrl(startdate, enddate, calltype, agentid, telno, available, totalmin, totalmax, channeldn, teldnis, pageno, pagesize)
             localdic = [];
             if SearchList is not None and "message" in SearchList and len(SearchList["message"])>0:
-                localdic = SearchList["message"]
+                localdics = SearchList["message"]
+                for item in localdics:
+                    item["fileNameNo"] = str(item["fileName"]).replace(".","").replace("_","")
+                    localdic.append(item);
+
+                    # from configData import getConfig
+                    # localURL = getConfig('SERVERINFO','serverIP','str')
 
             return render.RecSearch(outdic=localdic,outfilename=filename,configPage=configPage,QuestionNote=QuestionNote,
-                flag=flag, isbofang=isbofang,pageSession=pageSession);
+                                    flag=flag, isbofang=isbofang,pageSession=pageSession);
 
         except:
 
