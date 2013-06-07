@@ -1,6 +1,7 @@
 __author__ = 'Johann Wong'
 #encoding:utf-8
 from xlwt import Workbook,easyxf
+from dbConnection import msSqlConnectutf
 
 class iRecorderReport:
     """
@@ -19,7 +20,7 @@ class iRecorderReport:
 
         row_head_style = easyxf(
             'font: name SimSun, bold true;'
-            'pattern: pattern solid, fore_colour white;',
+            'pattern: pattern solid, fore_colour white;'
         )
 
         row_head.set_cell_text(0,'员工ID',row_head_style)
@@ -62,6 +63,24 @@ class iRecorderReport:
         row_head.set_cell_text(37,'评语14',row_head_style)
         row_head.set_cell_text(38,'评语15',row_head_style)
         row_head.set_cell_text(39,'总评',row_head_style)
+
+        row_content_style = easyxf(
+            'font: name SimSun, bold false;'
+            'pattern: pattern solid, fore_colour white;'
+        )
+
+        conn = msSqlConnectutf()
+        sqlstr = "SELECT [RECKEY]"\
+                 ",[T_RECORDER].[AGENTID]"\
+                 ",[T_RECORDER].[STARTTIME]"\
+                 ",[RATERS]"\
+                 ",[UPDT]"\
+                 ",[TOTAL]"\
+                 ",[SCRVALS]"\
+                 " FROM [TRQ_SCORE]"\
+                 " LEFT JOIN [T_RECORDER]"\
+                 " ON [TRQ_SCORE].[RECKEY] = [T_RECORDER].[FILENAME]"\
+                 " WHERE 1=1"
 
         workbook.save("write.xls")
 
