@@ -3,6 +3,8 @@ __author__ = 'Johann Wong'
 from xlwt import Workbook,easyxf
 from dbConnection import msSqlConnectutf
 from logHelper import getLogger
+import traceback
+import time
 
 class iRecorderReport:
     """
@@ -26,6 +28,8 @@ class iRecorderReport:
 
             row_head_style = easyxf(
                 'font: name SimSun, bold true;'
+                'borders: left thin, right thin, top thin, bottom thin;'
+                'alignment: wrap true;'
                 'pattern: pattern solid, fore_colour white;'
             )
 
@@ -73,6 +77,8 @@ class iRecorderReport:
 
             row_content_style = easyxf(
                 'font: name SimSun, bold false;'
+                'borders: left thin, right thin, top thin, bottom thin;'
+                'alignment: wrap true;'
                 'pattern: pattern solid, fore_colour white;'
             )
 
@@ -128,73 +134,75 @@ class iRecorderReport:
 
                 for scrval in scrvals:
                     if str(scrval["questionID"]) == 'C001':
-                        scoreFirst += int(scrval["score"])
+                        scoreFirst += float(scrval["score"])
                         row_report.set_cell_number(4,str(scrval["score"]),row_content_style)
                         row_report.set_cell_text(25,str(scrval["note"]),row_content_style)
                     elif str(scrval["questionID"]) == 'C002':
-                        scoreFirst += int(scrval["score"])
+                        scoreFirst += float(scrval["score"])
                         row_report.set_cell_number(5,str(scrval["score"]),row_content_style)
                         row_report.set_cell_text(26,str(scrval["note"]),row_content_style)
                     elif str(scrval["questionID"]) == 'C003':
-                        scoreFirst += int(scrval["score"])
+                        scoreFirst += float(scrval["score"])
                         row_report.set_cell_number(6,str(scrval["score"]),row_content_style)
                         row_report.set_cell_text(27,str(scrval["note"]),row_content_style)
                     elif str(scrval["questionID"]) == 'C004':
-                        scoreFirst += int(scrval["score"])
+                        scoreFirst += float(scrval["score"])
                         row_report.set_cell_number(7,str(scrval["score"]),row_content_style)
                         row_report.set_cell_text(28,str(scrval["note"]),row_content_style)
                     elif str(scrval["questionID"]) == 'C005':
-                        scoreQuestion += int(scrval["score"])
+                        scoreQuestion += float(scrval["score"])
                         row_report.set_cell_number(9,str(scrval["score"]),row_content_style)
                         row_report.set_cell_text(29,str(scrval["note"]),row_content_style)
                     elif str(scrval["questionID"]) == 'C006':
-                        scoreQuestion += int(scrval["score"])
+                        scoreQuestion += float(scrval["score"])
                         row_report.set_cell_number(10,str(scrval["score"]),row_content_style)
                         row_report.set_cell_text(30,str(scrval["note"]),row_content_style)
                     elif str(scrval["questionID"]) == 'C007':
-                        scoreQuestion += int(scrval["score"])
+                        scoreQuestion += float(scrval["score"])
                         row_report.set_cell_number(11,str(scrval["score"]),row_content_style)
                         row_report.set_cell_text(31,str(scrval["note"]),row_content_style)
                     elif str(scrval["questionID"]) == 'C008':
-                        scoreQuestion += int(scrval["score"])
+                        scoreQuestion += float(scrval["score"])
                         row_report.set_cell_number(12,str(scrval["score"]),row_content_style)
                         row_report.set_cell_text(32,str(scrval["note"]),row_content_style)
                     elif str(scrval["questionID"]) == 'C009':
-                        scoreSuggestion += int(scrval["score"])
+                        scoreSuggestion += float(scrval["score"])
                         row_report.set_cell_number(14,str(scrval["score"]),row_content_style)
                         row_report.set_cell_text(33,str(scrval["note"]),row_content_style)
                     elif str(scrval["questionID"]) == 'C010':
-                        scoreSuggestion += int(scrval["score"])
+                        scoreSuggestion += float(scrval["score"])
                         row_report.set_cell_number(15,str(scrval["score"]),row_content_style)
                         row_report.set_cell_text(34,str(scrval["note"]),row_content_style)
                     elif str(scrval["questionID"]) == 'C011':
-                        scoreSuggestion += int(scrval["score"])
+                        scoreSuggestion += float(scrval["score"])
                         row_report.set_cell_number(16,str(scrval["score"]),row_content_style)
                         row_report.set_cell_text(35,str(scrval["note"]),row_content_style)
                     elif str(scrval["questionID"]) == 'C012':
-                        scoreSuggestion += int(scrval["score"])
+                        scoreSuggestion += float(scrval["score"])
                         row_report.set_cell_number(17,str(scrval["score"]),row_content_style)
                         row_report.set_cell_text(36,str(scrval["note"]),row_content_style)
                     elif str(scrval["questionID"]) == 'C013':
-                        scoreEnd += int(scrval["score"])
+                        scoreEnd += float(scrval["score"])
                         row_report.set_cell_number(19,str(scrval["score"]),row_content_style)
                         row_report.set_cell_text(37,str(scrval["note"]),row_content_style)
                     elif str(scrval["questionID"]) == 'C014':
-                        scoreTech += int(scrval["score"])
+                        scoreTech += float(scrval["score"])
                         row_report.set_cell_number(21,str(scrval["score"]),row_content_style)
                         row_report.set_cell_text(38,str(scrval["note"]),row_content_style)
                     elif str(scrval["questionID"]) == 'C015':
-                        scoreTech += int(scrval["score"])
+                        scoreTech += float(scrval["score"])
                         row_report.set_cell_number(22,str(scrval["score"]),row_content_style)
                         row_report.set_cell_text(39,str(scrval["note"]),row_content_style)
 
-                    row_report.set_cell_number(8,str(scoreFirst),row_content_style)
-                    row_report.set_cell_number(13,str(scoreQuestion),row_content_style)
-                    row_report.set_cell_number(18,str(scoreSuggestion),row_content_style)
-                    row_report.set_cell_number(20,str(scoreEnd),row_content_style)
-                    row_report.set_cell_number(23,str(scoreTech),row_content_style)
+                row_report.set_cell_number(8,str(scoreFirst),row_content_style)
+                row_report.set_cell_number(13,str(scoreQuestion),row_content_style)
+                row_report.set_cell_number(18,str(scoreSuggestion),row_content_style)
+                row_report.set_cell_number(20,str(scoreEnd),row_content_style)
+                row_report.set_cell_number(23,str(scoreTech),row_content_style)
                 i += 1
 
+            for j in range(0,40):
+                sheet1.col(j).width = 5000
             return result
         except Exception,ex:
             logger.error("exception occur, see the traceback.log")
@@ -209,8 +217,8 @@ class iRecorderReport:
         else:
             pass
         finally:
-            workbook.save("录音打分报表.xls")
+            workbook.save(time.strftime('%Y-%m-%d-%H-%M-%S',time.localtime(time.time()))+".xls")
             conn.close()
 
 if __name__ == "__main__":
-    iRecorderReport().exportReport()
+    iRecorderReport().exportReport(dict())
