@@ -13,7 +13,7 @@ class iRecorderScoreModuleObj:
         try:
             logger = getLogger()
             logger.debug("start iRecorderScoreModuleObj.getiRecorderScoreByFileName")
-            conn = msSqlConnectutf()
+            conn = msSqlConnect()
             cur = conn.cursor()
             sqlstr = "SELECT [RECKEY]"\
             ",[RATERS]"\
@@ -151,7 +151,7 @@ class iRecorderScoreModuleObj:
             conn = msSqlConnectutf()
             cur = conn.cursor()
             sqlstr = "UPDATE [TRQ_SCORE]"\
-                     "SET"\
+                     " SET"\
                      "[RATERS] = '"+scoreDic['RATERS']+"'"\
                      ",[TOTAL] = '"+scoreDic['TOTAL']+"'"\
                      ",[UPDT] =  CONVERT(varchar(32), GETDATE(), 20)"\

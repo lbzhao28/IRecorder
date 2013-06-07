@@ -12,6 +12,7 @@ from LogicObj.iRecorderScoreLogicObj import iRecorderScoreLogicObj
 from LogicObj.iRecorderQuestionLogicObj import iRecorderQuestionLogicObj
 from ModuleObj.dbConnection import msSqlConnect
 
+
 mimerender = mimerender.WebPyMimeRender()
 
 render_xml = lambda message,error: '<message>%s</message><error>%s</error>'%(message,error)
@@ -25,6 +26,7 @@ urls = (
     "/irecorderservice/irecorderscore","iRecorderScore",
     "/irecorderservice/irecorderquestion","iRecorderQuestion",
     "/irecorderservice/login","login",
+    "/irecorderservice/report","report",
     )
 app = web.application(urls,globals())
 
@@ -341,6 +343,36 @@ class login:
             f.close()
         finally:
             conn.close()
+
+class report:
+    """
+    录音打分系统-报表
+    """
+    @mimerender(
+        default = 'json',
+        html = render_html,
+        xml  = render_xml,
+        json = render_json,
+        txt  = render_txt
+    )
+    def GET(self):
+        """
+        Get report资源
+        author: J.Wong
+        return: JSON
+        """
+        try:
+            logger = getLogger()
+            logger.debug("start report GET response")
+        except:
+            logger.error("report GET exception, see the traceback.log")
+            #异常写入日志文件.
+            f = open('Logs/traceback.txt','a')
+            traceback.print_exc()
+            traceback.print_exc(file = f)
+            f.flush()
+            f.close()
+
 
 if __name__ == "__main__":
     app.run()
