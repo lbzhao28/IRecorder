@@ -284,9 +284,18 @@ class RacorderSave:
             #传入参数
             data = web.data();
             #retStr 返回值
-            retStr= RacorderQuestionContact(data,strPost);
-            print retStr;
-            return retStr;
+            retStr= RacorderQuestionContact(data,strPost)
+            if retStr is not None and len(retStr)>0:
+                retStrJson = eval(retStr)
+                retStrJson = retStrJson["message"]
+                retStrJson["fileNameNo"] = str(retStrJson["fileName"]).replace(".","").replace("_","")
+                print retStrJson
+                retStrJson = json.dumps(retStrJson)
+                web.header('Content-Type', 'application/json')
+                print retStrJson
+                return retStrJson;
+            else:
+                return None;
         else:
             return None;
 

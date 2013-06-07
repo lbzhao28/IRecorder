@@ -633,34 +633,11 @@ jQuery(document).ready(function (){
                        success:function(data){
                            if(data!=null&&data!="None")
                            {
-                               strJson = strJson.replace(/'/gm,"\"");  // 全部将 ’替换 为 “
-                               var dataJson = $.parseJSON(strJson);
-                               var localfileName =  dataJson["fileName"];
 
+                               var localfileName =  data["fileNameNo"];
+                               var tatal = data["total"];
 
-                               var ssobject = jQuery("#10448292013040708595744333321437990.wav").html();
-                               alert(ssobject);
-
-
-                               // var ss = jQuery("#10\.4\.48.29_20130407085957443_33_3214_37990.wav").html();
-                               // alert(ss);
-                               //var fileName = localfileName.replace(".","a")
-                               //    alert(fileName);
-                               //    fileName = fileName.replace("_","a");
-                               //    alert(fileName);
-                               //var fileNametotal =     fileName+"total"
-
-
-                               // var total = dataJson["total"]
-
-                               //$(fileNametotal).val(total)
-                               // jQuery("#10.4.48.29_20130406090458726_21_3202_37045.wavtotal").html();
-
-
-                               // var fileNametotalobject = jQuery("#"+fileNametotal+"").val();
-                               // var fileNametotalobject = jQuery("#"+fileNametotal+"").val();
-
-                               //alert(fileNametotalobject);
+                               jQuery("#"+localfileName+"").text(tatal);     //重新把分数计算
 
                                alert("保存成功")
                                var flag = $("#RacorderIsAdd");
@@ -785,7 +762,26 @@ jQuery(document).ready(function (){
                                     </table>
                                 </div>
 
-                                <embed src="" id="MediaPlayerWav"  width=750 height=50 type=audio/mpeg loop="false" autostart="true">
+                             <embed src="" id="MediaPlayerWav"  width=750 height=50 type=audio/mpeg loop="false" autostart="true">
+
+
+                              <!--     Flash：type="application/x-shockwave-flash"；
+                                 Windows media player：type="application/x-mplayer2"；
+                                 Realplayer：type="audio/x-pn-realaudio-plugin"。
+                              -->
+                               <!-- <object id="MediaPlayerWav" classid="CLSID:6BF52A52-394A-11d3-B153-00C04F79FAA6" width="740"
+                                        height="45"
+                                        codebase="http://activex.microsoft.com/activex/controls/mplayer/en/nsmp2inf.cab#Version=5,1,52,701standby=Loading Microsoft? Windows Media? Player
+components..."
+                                        type="application/x-oleobject">
+                                    <param name="URL" value="">
+                                    <param name="UIMode" value="full">
+                                    <param name="AutoStart" value="1">
+                                    <param name="Enabled" value="1">
+                                    <param name="EnableContextMenu" value="0">
+                                    <param name="windowlessVideo" value="0">
+                                    <param name='Volume' value='100'>
+                                </object>-->
                             </td>
                             </td>
                         </tr>
