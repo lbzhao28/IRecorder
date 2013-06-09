@@ -1,7 +1,7 @@
 __author__ = 'Johann Wong'
 #encoding:utf-8
 from xlwt import Workbook,easyxf
-from dbConnection import msSqlConnectutf
+from dbConnection import msSqlConnect
 from logHelper import getLogger
 import traceback
 import time
@@ -82,7 +82,7 @@ class iRecorderReport:
                 'pattern: pattern solid, fore_colour white;'
             )
 
-            conn = msSqlConnectutf()
+            conn = msSqlConnect()
             cur = conn.cursor()
             sqlstr = "SELECT [RECKEY]"\
                      ",[T_RECORDER].[AGENTID]"\
@@ -116,7 +116,8 @@ class iRecorderReport:
             i=1
 
             for row in cur:
-                result.append(row)
+                resrow = self.__iReportDB2JSON(row)
+                result.append(resrow)
                 row_report = sheet1.row(i)
                 if isinstance(row['STARTTIME'], basestring) or row['STARTTIME'] is None:
                     startTime = row['STARTTIME']
@@ -213,6 +214,8 @@ class iRecorderReport:
 
             for j in range(0,40):
                 sheet1.col(j).width = 7000
+
+
         except Exception,ex:
             if logger is not None:
                 logger.error("exception occur, see the traceback.log")
@@ -230,10 +233,35 @@ class iRecorderReport:
         finally:
             if workbook is not None:
                 filename = time.strftime('%Y-%m-%d-%H-%M-%S',time.localtime(time.time()))+".xls"
-                workbook.save(filename)
+                workbook.save("./report/"+filename)
             if conn is not None:
                 conn.close()
             return {'result':result,'filename':filename}
 
-if __name__ == "__main__":
-    iRecorderReport().exportReport(dict())
+    def __iReportDB2JSON(self,iReportDic):
+        """
+        将数据库dict映射为JSON格式的dict，并转换部分字段为string
+        author: J.Wong
+        args: iReportDic,dict 查询数据库后获得的单条数据的dict
+        return: JSON,dict 对应资源说明文档之JSON格式的dict
+        """
+        if isinstance(iReportDic['STARTTIME'], basestring) or iReportDic['STARTTIME'] is None:
+            startTime = str(iReportDic['STARTTIME'])
+        else:
+            startTime =iReportDic['STARTTIME'].strftime('%Y-%m-%d %H:%M:%S')
+
+        if isinstance(iReportDic['UPDT'], basestring) or iReportDic['UPDT'] is None:
+            upTime = str(iReportDic['UPDT'])
+        else:
+            upTime =iReportDic['UPDT'].strftime('%Y-%m-%d %H:%M:%S')
+
+        return {
+            'fileName':str(iReportDic['RECKEY']),
+            'startTime':startTime,
+            'raters':str(iReportDic['RATERS']),
+            'agentID':str(iReportDic['AGENTID']),
+            'updt':upTime,
+            'total':str(iReportDic['TOTAL']),
+            'remark':iReportDic['REMARK'].decode('gbk').encode('utf8'),
+            'scrvals':iReportDic['SCRVALS'].decode('gbk').encode('utf8')
+        }
