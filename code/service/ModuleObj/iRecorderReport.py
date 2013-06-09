@@ -107,7 +107,7 @@ class iRecorderReport:
             if "totalmax" in params.keys() and params["totalmax"] is not None:
                 sqlstr += " AND [TRQ_SCORE].[TOTAL] <= '"+params["totalmax"]+"'"
             if "rater" in params.keys() and params["rater"] is not None:
-                sqlstr += " AND [T_RECORDER].[RATERS] = '"+params["rater"]+"'"
+                sqlstr += " AND [TRQ_SCORE].[RATERS] = '"+params["rater"]+"'"
             sqlstr += " ORDER BY [TRQ_SCORE].[UPDT]"
 
             cur.execute(sqlstr)
