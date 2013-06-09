@@ -43,6 +43,40 @@ import copy
             //默认只查询第1页
             submitSearch('1');
         });
+        // 导出报表
+        jQuery("#btnSearchReport").click(function(){
+            var result = false;
+            var strJson = ""
+            var retPost = "POST";
+
+           var startdate = jQuery("#idStartDT").val();
+           var enddate = jQuery("#idEndDT").val();
+           var agentid = jQuery("#agentid").val();
+           var totalmin = jQuery("#totalmin").val();
+           var totalmax = jQuery("#totalmax").val();
+            var rater = "sa";
+
+            $.ajax({
+                url:"/ReportExport/?&startdate="+startdate+"&enddate="+enddate+"&agentid="+agentid+"&totalmin="+totalmin+"&totalmax="+totalmax+"&rater="+rater,
+                type:"POST",
+                cache:false,
+                data:strJson,
+                datatype:"json",
+                success:function(data){
+                    if(data!=null&&data!="None")
+                    {
+                        alert("导出成功")
+                    }
+                    else
+                    {
+                        alert("导出失败")
+                    }
+                }
+            });
+            return result;
+
+
+        });
     })
     //第一页
     function showFastPrev() {
@@ -611,8 +645,6 @@ jQuery(document).ready(function (){
                        }
                    });
             return result;
-
-
         }
     }
     var  Racorderobj = new Racorderobj();
@@ -645,11 +677,13 @@ jQuery(document).ready(function (){
                                             <input name ="enddate" class="Wdate input-small search-query" id="idEndDT"
                                                    onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})"  style="width:140px"/></td>
                                         <td width="214" height="40" >类型：
-                                            <select name="calltype" id="calltype"  style="width:140px">
+                                            <select name="calltype" id="calltype"  style="width:80px">
                                                 <option value=""></option>
                                                 <option value="IN">IN</option>
                                                 <option value="OUT">OUT</option>
-                                            </select></td>
+                                            </select>
+                                            <button id="btnSearchReport" class="btn" style="width:50px">导出</button>
+                                        </td>
                                     </tr>
                                     <tr>
                                         <td >坐席工号：</td>

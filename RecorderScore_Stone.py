@@ -31,6 +31,7 @@ urls = (
         '/Saverqscoscr/(.*)','RacorderClient.RacorderSave',
         '/login', 'Login.Login',
         '/RecSearch/(.*)', 'RecSearch.RecSelect',
+        '/ReportExport/(.*)', 'RacorderClient.ReportExport',
     )
 
 app = web.application(urls,globals(),autoreload=True)
