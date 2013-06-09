@@ -71,7 +71,8 @@ class iRecorderList:
             else:
                 return {'message':iRecorderList,'error':''}
         except:
-            logger.error("iRecorderList GET exception, see the traceback.log")
+            if logger is not None:
+                logger.error("iRecorderList GET exception, see the traceback.log")
             #异常写入日志文件.
             f = open('Logs/traceback.txt','a')
             traceback.print_exc()
@@ -113,7 +114,8 @@ class iRecorderScore:
                     return {'message': iRecorderScore,'error':''}
             return  {'message':None,'error': 'Must set the value of filename.'}
         except:
-            logger.error("iRecorderScore GET exception, see the traceback.log")
+            if logger is not None:
+                logger.error("iRecorderScore GET exception, see the traceback.log")
             #异常写入日志文件.
             f = open('Logs/traceback.txt','a')
             traceback.print_exc()
@@ -143,7 +145,8 @@ class iRecorderScore:
             else:
                 return {'message': iRecorderScore,'error':''}
         except:
-            logger.error("iRecorderScore POST exception, see the traceback.log")
+            if logger is not None:
+                logger.error("iRecorderScore POST exception, see the traceback.log")
             #异常写入日志文件.
             f = open('Logs/traceback.txt','a')
             traceback.print_exc()
@@ -173,7 +176,8 @@ class iRecorderScore:
             else:
                 return {'message': iRecorderScore,'error':''}
         except:
-            logger.error("iRecorderScore PUT exception, see the traceback.log")
+            if logger is not None:
+                logger.error("iRecorderScore PUT exception, see the traceback.log")
             #异常写入日志文件.
             f = open('Logs/traceback.txt','a')
             traceback.print_exc()
@@ -217,7 +221,8 @@ class iRecorderQuestion:
 
             return  {'message':None,'error': 'Must set the value of fid.'}
         except:
-            logger.error("iRecorderQuestion GET exception, see the traceback.log")
+            if logger is not None:
+                logger.error("iRecorderQuestion GET exception, see the traceback.log")
             #异常写入日志文件.
             f = open('Logs/traceback.txt','a')
             traceback.print_exc()
@@ -286,8 +291,10 @@ class iRecorderListCount:
             else:
                 return {'message':None,'error': 'No data match.'}
         except:
-            logger.error("iRecorderListCount GET exception, see the traceback.log")
-            logger.error("sql:"+str(sqlstr))
+            if logger is not None:
+                logger.error("iRecorderListCount GET exception, see the traceback.log")
+                if sqlstr is not None:
+                    logger.error("sql:"+str(sqlstr))
             #异常写入日志文件.
             f = open('Logs/traceback.txt','a')
             traceback.print_exc()
@@ -344,8 +351,10 @@ class login:
             else:
                 return {'message':False,'error': 'No data match.'}
         except:
-            logger.error("login GET exception, see the traceback.log")
-            logger.error("sql:"+str(sqlstr))
+            if logger is not None:
+                logger.error("login GET exception, see the traceback.log")
+                if sqlstr is not None:
+                    logger.error("sql:"+str(sqlstr))
             #异常写入日志文件.
             f = open('Logs/traceback.txt','a')
             traceback.print_exc()
@@ -388,7 +397,8 @@ class report:
             else:
                 return{'message':iReportReturn['result'],'error':'','filename':str(iReportReturn['filename'])}
         except:
-            logger.error("report GET exception, see the traceback.log")
+            if logger is not None:
+                logger.error("report GET exception, see the traceback.log")
             #异常写入日志文件.
             f = open('Logs/traceback.txt','a')
             traceback.print_exc()

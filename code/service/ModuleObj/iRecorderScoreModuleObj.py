@@ -47,8 +47,10 @@ class iRecorderScoreModuleObj:
             else:
                 return 'No data.'
         except Exception,ex:
-            logger.error("exception occur, see the traceback.log")
-            logger.error("sql:"+str(sqlstr)+"\n filename:"+str(filename))
+            if logger is not None:
+                logger.error("exception occur, see the traceback.log")
+                if sqlstr is not None:
+                    logger.error("sql:"+str(sqlstr)+"\n filename:"+str(filename))
             #异常写入日志文件.
             f = open('Logs/traceback.txt','a')
             traceback.print_exc()
@@ -131,8 +133,10 @@ class iRecorderScoreModuleObj:
             else:
                 return 'No data.'
         except Exception,ex:
-            logger.error("exception occur, see the traceback.log")
-            logger.error("sql:"+str(sqlstr))
+            if logger is not None:
+                logger.error("exception occur, see the traceback.log")
+                if sqlstr is not None:
+                    logger.error("sql:"+str(sqlstr))
             #异常写入日志文件.
             f = open('Logs/traceback.txt','a')
             traceback.print_exc()
@@ -181,8 +185,10 @@ class iRecorderScoreModuleObj:
             logger.info("sql:"+str(sqlstr))
             return scoreDic['RECKEY']
         except Exception,ex:
-            logger.error("exception occur, see the traceback.log")
-            logger.error("sql:"+str(sqlstr))
+            if logger is not None:
+                logger.error("exception occur, see the traceback.log")
+                if sqlstr is not None:
+                    logger.error("sql:"+str(sqlstr))
             #异常写入日志文件.
             f = open('Logs/traceback.txt','a')
             traceback.print_exc()

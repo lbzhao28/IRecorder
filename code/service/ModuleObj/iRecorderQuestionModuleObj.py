@@ -36,8 +36,10 @@ class iRecorderQuestionModuleObj:
 
             return result
         except Exception,ex:
-            logger.error("exception occur, see the traceback.log")
-            logger.error("sql:"+str(sqlstr)+"\n fid:"+str(fid))
+            if logger is not None:
+                logger.error("exception occur, see the traceback.log")
+                if sqlstr is not None:
+                    logger.error("sql:"+str(sqlstr)+"\n fid:"+str(fid))
             #异常写入日志文件.
             f = open('Logs/traceback.txt','a')
             traceback.print_exc()
@@ -74,8 +76,10 @@ class iRecorderQuestionModuleObj:
 
             return len(result)
         except Exception,ex:
-            logger.error("exception occur, see the traceback.log")
-            logger.effof("sql:"+str(sqlstr)+"\n itemID:"+str(itemID))
+            if logger is not None:
+                logger.error("exception occur, see the traceback.log")
+                if sqlstr is not None:
+                    logger.effof("sql:"+str(sqlstr)+"\n itemID:"+str(itemID))
             #异常写入日志文件.
             f = open('Logs/traceback.txt','a')
             traceback.print_exc()

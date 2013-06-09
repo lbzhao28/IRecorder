@@ -10,13 +10,13 @@ class iRecorderReport:
     """
     录音打分系统报表导出
     author:J.Wong
-    args: params,string 查询报表的querystring
-    return: iRecorderReportList,list 对应的录音报表
     """
     def exportReport(self,params):
         """
         获取报表并导出至excel文档
         author: J.Wong
+        args: params,string 查询报表的querystring
+        return: iRecorderReportList,list 对应的录音报表
         """
         try:
             logger = getLogger()
@@ -206,8 +206,10 @@ class iRecorderReport:
             for j in range(0,40):
                 sheet1.col(j).width = 7000
         except Exception,ex:
-            logger.error("exception occur, see the traceback.log")
-            logger.error("sql:"+str(sqlstr))
+            if logger is not None:
+                logger.error("exception occur, see the traceback.log")
+                if sqlstr is not None:
+                    logger.error("sql:"+str(sqlstr))
             #异常写入日志文件.
             f = open('Logs/traceback.txt','a')
             traceback.print_exc()
