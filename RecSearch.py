@@ -23,12 +23,12 @@ render = render_mako(
     output_encoding='utf-8',
 )
 
+#查询服务
 class RecSelect:
     def GET(self, op):
 
         if "user_UserName" not in web.ctx.session:
-
-            web.seeother('/RecSearch/')
+            web.seeother('/login')
         else:
             UserName = str(web.ctx.session.user_UserName);
             logger = getLogger()  #初始化日志对象

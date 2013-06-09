@@ -427,7 +427,6 @@ def Login(username,password):
 #录音质检进行保存的动作
 class RacorderSave:
     def POST(self,retPost):
-
         if retPost is not None and str(retPost).strip() !="":
             strPost = str(retPost)
             #传入参数
@@ -451,7 +450,84 @@ class RacorderSave:
     def GET(self,filename):
         pass
 
+class ReportExport:
+    def POST(self,retPost):
+        localwebs = web.input();
+        #startdate enddate agentid totalmin totalmax rater
 
+        startdate = str(localwebs["startdate"]);
+        enddate =  str(localwebs["enddate"]);
+        agentid = str(localwebs["agentid"]);
+        totalmin =  str(localwebs["totalmin"]);
+        totalmax = str(localwebs["totalmax"]);
+        rater = str(localwebs["rater"]);
+
+        localURL = "";
+        if startdate is not None and startdate != '':
+            localURL = localURL + '&startdate=' + startdate
+
+        if enddate is not None and enddate != '':
+            localURL = localURL + '&enddate=' + enddate
+
+        if  agentid is not None and agentid != '':
+            localURL = localURL + '&agentid=' + agentid
+
+        if totalmin is not None and totalmin != '':
+            localURL += '&totalmin=' + totalmin
+
+        if totalmax is not None and totalmax != '':
+            localURL += '&totalmax=' + totalmax
+
+        if  rater is not None and rater != '':
+            localURL = localURL + '&rater=' + rater
+
+        try:
+            logger = getLogger()
+            logger.debug("start POST RacorderQuestionContact Info according contact id.")
+
+            #print jsonData
+            buf = cStringIO.StringIO() #define in function.
+            c = pycurl.Curl()
+            localURL = getConfig('RESTService','irecorderReportExportUrl','str')+"?"+localURL
+            localURL = str(localURL)
+            print localURL
+            c.setopt(pycurl.URL,localURL)
+            c.setopt(c.WRITEFUNCTION,buf.write)
+            c.setopt(c.VERBOSE, True)
+            c.setopt(pycurl.USERPWD,getConfig('allowedUser1','UserName','str')+':'+getConfig('allowedUser1','Password','str'))
+            c.perform()
+            #TODO: how to show succes code? 200 or OK?
+            http_code = c.getinfo(pycurl.HTTP_CODE)
+            #judge post success.
+            if http_code != 200:
+                return None
+
+            logger.debug(buf.getvalue())
+            retStr = buf.getvalue()
+
+            buf.close()
+            c.close()
+
+            logger.debug("RacorderQuestionContact success.")
+            return retStr
+
+        except pycurl.error, error:
+            logger.error("exception occur, see the traceback.log")
+
+            #异常写入日志文件.
+            f = open('traceback.txt','a')
+            traceback.print_exc()
+            traceback.print_exc(file = f)
+            f.flush()
+            f.close()
+            errno, errstr = error
+            print 'An error occurred: ', errstr
+        else:
+            pass
+        finally:
+            pass
+    def GET(self,retPost):
+        pass
 
 #ToDo:从Service 调出录音问题的所有的题目
 #现在用的是默认的集合值
