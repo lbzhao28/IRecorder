@@ -395,7 +395,7 @@ class report:
             if isinstance(iReportReturn['result'], basestring):
                 return {'message':None,'error':iReportReturn['result'],'filename':str(iReportReturn['filename'])}
             else:
-                return{'message':iReportReturn['result'],'error':'','filename':str(iReportReturn['filename'])}
+                return{'message':None,'error':'','filename':str(iReportReturn['filename'])}
         except:
             if logger is not None:
                 logger.error("report GET exception, see the traceback.log")
