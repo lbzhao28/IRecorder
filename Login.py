@@ -45,6 +45,7 @@ class Login:
         name, passwd = web.input().username, web.input().password
         ret = RacorderClient.Login(name,passwd);
         if ret:
+            web.ctx.session.user_UserName = name;
             web.seeother('/RecSearch/')
         else:
             return render.login(msg=u'用户名或密码错误！请重新输入！')

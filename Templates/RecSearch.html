@@ -141,7 +141,7 @@ import copy
 
 
     // 现在每次点击播放的时候重新刷一次页面， ToDo: 采用异步刷新的方式
-    function showBoFang(hostName,filename) {
+    function showBoFang(filePath,filename) {
         //需要刷新页面 其实点击播放按钮的时候，不会立即播放，会重新刷一次页面， 在页面加载事件里面播放 init 事件播放
         //var url = "http://"+hostName+"/Racorder/"+filename+"";  //每次点击后的url 需要重新指定
         //var url = "http://localhost/Racorder/Kalimba.mp3"; //测试的录音的地址
@@ -159,6 +159,7 @@ import copy
         //     alert(objPlayer.URL);
         //  }
 
+        alert(filePath);
 
         $("#labrecfilename").text(filename);
         //点击后需要重新绑定问卷的信息
@@ -181,46 +182,14 @@ import copy
         channeldn = jQuery("#channeldn").val();
         teldnis = jQuery("#teldnis").val();
 
-        //pagesize = 15
-        //pageno = "10"
-
-
-
 
         actionUrl = "http://${localURL}/RecSearch/Search?startdate=" + startdate + '&enddate=' + enddate + "&calltype=" + calltype +
                 "&agentid=" + agentid + "&telno=" + telno + "&available=" + available + "&totalmin=" + totalmin + "&totalmax=" + totalmax +
                 "&channeldn=" + channeldn + "&teldnis=" + teldnis;
 
-        actionUrl = actionUrl +"&filename="+filename+"&isbofang="+isbofang;
+        actionUrl = actionUrl +"&filename="+filename+"&isbofang="+isbofang+"&filePath="+filePath;
 
-        alert(actionUrl);
         window.location.href = actionUrl;
-
-
-        //点击后需要重新绑定问卷的信息
-        //$.ajax({
-        //    url:"/RecSearch/select?filename="+filename,
-        //    type:"GET",
-        //    cache:false,
-        //    data:strJson,
-        //    datatype:"json",
-        //   success:function(data){
-        //        if(data!=null)
-        //        {
-        //            //alert(${configPage});
-        //            window.location.reload();
-        //            result = true;
-        //        }
-        //        else
-        //        {
-        //            result = false;
-        //        }
-        //    }
-        //});
-
-
-
-        // window.status = url;
     }
 
 
@@ -311,31 +280,8 @@ jQuery(document).ready(function (){
                                               ScoreAnswerScore = parseFloat(ScoreAnswerScoreStr);
                                           }
 
-                                          var ScoreAnswerScore = parseFloat(ScoreAnswerScoreStr);
 
-                                          var hasRemark =  $(ScroreAnswer).parent().prev("td").find("label").attr("name");
 
-                                          if(hasRemark == "hasRemark1")    //建议
-                                          {
-                                              tatalscoreJj = tatalscoreJj.add(ScoreAnswerScore)
-                                          }
-                                          else if(hasRemark == "hasRemark2")  //开场白
-                                          {
-                                              tatalscoreKcb = tatalscoreKcb.add(ScoreAnswerScore)
-                                          }
-
-                                          else if(hasRemark == "hasRemark3")  // 提问
-                                          {
-                                              tatalscoreTw = tatalscoreTw.add(ScoreAnswerScore)
-                                          }
-                                          else if(hasRemark == "hasRemark4")  //沟通技巧
-                                          {
-                                              tatalscoreGTJQ = tatalscoreGTJQ.add(ScoreAnswerScore)
-                                          }
-                                          else if(hasRemark == "hasRemark5")  // 结束
-                                          {
-                                              tatalscoreJS = tatalscoreJS.add(ScoreAnswerScore)
-                                          }
                                           if(ScoreAnswerScore!=0)
                                           {
                                               var hasRemark =  $(ScroreAnswer).parent().prev("td").find("label").attr("name");
@@ -381,7 +327,8 @@ jQuery(document).ready(function (){
     var Racorderobj = function()
     {
         var _page = this;
-        _page.userid = "sa";
+        _page.userid = "${pageSession['UserName']}";
+        //alert(_page.userid);
         _page.tatalScore = 0.0;
         // 初始化事件
         this.init = function()
@@ -391,14 +338,11 @@ jQuery(document).ready(function (){
 
             if(isbofang == "Y")
             {
-                //var url = "http://${localURL}/RaRecSound/2013.05.14/10.4.48.29_20130514085938916_23_3204_37046.wav"; //测试的录音的地址
-                //var objPlayer = document.all("MediaPlayerWav");
-                //if (objPlayer != null) {
-                //    objPlayer.URL = url;
-                //alert(objPlayer.URL);
-                // }
+                var hostName = "10.4.48.29";
+                var filePath = "${filePath}";
+                var fileName = "${outfilename}"
+                var url = "http://"+hostName+"/RaRecSound/"+filePath+"/"+fileName+""; //测试的录音的地址
 
-                var url = "http:/Racorder/Kalimba.mp3"; //测试的录音的地址
 
                 var objPlayer = document.all("MediaPlayerWav");
                 if (objPlayer != null) {
@@ -406,22 +350,6 @@ jQuery(document).ready(function (){
                     alert(objPlayer.src);
                 }
             }
-
-            //var  pageSession = ${pageSession}
-
-            //pageSession = {"startdate":"","enddate":"","calltype":"","agentid":"","telno":"",
-            //    "vailabl":"","totalmin":"","totalmax":"","channeldn":"","teldnis":"",
-            //    "pageno":"","pagesize":"","available":""};
-
-
-
-          //  <input id="pageno" type="hidden" class="input-small"/>
-          //      <input id="pagesize" type="hidden" class="input-small"/>
-          //      <input id="pagecount" type="hidden" class="input-small"/>
-          //      <input id="rowcount" type="hidden" class="input-small"/>
-
-
-
             jQuery("#pageno").val(${pageSession}['pageno']);
              jQuery("#idPageIndex").val(${pageSession}['pageno']);
             jQuery("#pagesize").val(${pageSession}['pagesize']);
@@ -479,29 +407,6 @@ jQuery(document).ready(function (){
                                               {
                                                   ScoreAnswerScore = parseFloat(ScoreAnswerScoreStr);
                                               }
-                                              var hasRemark =  $(ScroreAnswer).parent().prev("td").find("label").attr("name");
-                                              if(hasRemark == "hasRemark1")
-                                              {
-                                                  tatalscoreJj = tatalscoreJj.add(ScoreAnswerScore)
-                                              }
-                                              else if(hasRemark == "hasRemark2")
-                                              {
-                                                  tatalscoreKcb = tatalscoreKcb.add(ScoreAnswerScore)
-                                              }
-
-                                              else if(hasRemark == "hasRemark3")
-                                              {
-                                                  tatalscoreTw = tatalscoreTw.add(ScoreAnswerScore)
-                                              }
-                                              else if(hasRemark == "hasRemark4")
-                                              {
-                                                  tatalscoreGTJQ = tatalscoreGTJQ.add(ScoreAnswerScore)
-                                              }
-                                              else if(hasRemark == "hasRemark5")
-                                              {
-                                                  tatalscoreJS = tatalscoreJS.add(ScoreAnswerScore)
-                                              }
-
                                               if(ScoreAnswerScore!=0)
                                               {
                                                   var hasRemark =  $(ScroreAnswer).parent().prev("td").find("label").attr("name");
@@ -545,8 +450,6 @@ jQuery(document).ready(function (){
         $("#btnConfirm").click (function(){
             //_page.forConfirm();
             _page.forConfirm()
-
-
         });
 
 
@@ -789,8 +692,10 @@ jQuery(document).ready(function (){
                                             % for item in outdic:
                                         <tr>
                                             <% hostName = item['hostName'] %>
+                                            <% fileNameNo = item['fileNameNo'] %>
+                                            <% filePathNo = item['filePathNo'] %>
                                             <% fileName = item['fileName'] %>
-                                        <th> <button type="button"  class="btn" onclick="showBoFang('${hostName}','${fileName}')">播放</button></th>
+                                        <th> <button type="button"  class="btn" onclick="showBoFang('${filePathNo}','${fileName}')">播放</button></th>
                                         <th>${item["telNO"]}</th>
                                         <th>${item["agentID"]}</th>
                                         <th >${item["startTime"]}</th>
