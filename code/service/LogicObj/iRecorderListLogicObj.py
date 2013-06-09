@@ -61,6 +61,7 @@ class iRecorderListLogicObj:
         return: JSON,dict 对应资源说明文档之JSON格式的dict
         """
         return {
+            #iRecorderDic['ENDTIME'].strftime('%Y-%m-%d %H:%M:%S')
             'hostName':iRecorderDic['HOSTNAME'],
             'fileName':iRecorderDic['FILENAME'],
             'channelNO':iRecorderDic['CHANNELNO'],

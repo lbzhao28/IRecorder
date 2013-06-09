@@ -41,26 +41,39 @@ import copy
     jQuery(document).ready(function () {
         jQuery("#btnSearch").click(function () {
             //默认只查询第1页
-            submitSearch('1', '10');
+            submitSearch('1');
         });
     })
+    //第一页
     function showFastPrev() {
         submitSearch('1');
     }
-
-    function showFastNext(pageCount) {
+    //最尾页
+    function showFastNext() {
+        var pageCount =jQuery("#pagecount").val()
         submitSearch(pageCount);
     }
 
-    function showCurrent(pageIndex, pageCount) {
+    //当前页
+    function showCurrent() {
         //alert(pageIndex);
+        //pageIndex, pageCount
+
+        var pageIndex = jQuery("#idPageIndex").val();
+        var pageCount =jQuery("#pagecount").val()
+
         var intPageIndex = parseInt(pageIndex);
+        if(isNaN(intPageIndex))
+        {
+            alert("输入页码不对")
+            return;
+        }
+
         var intPageCount = parseInt(pageCount);
 
         if (intPageIndex < 1) {
             intPageIndex = 1;
         }
-
         if (intPageIndex > intPageCount) {
             intPageIndex = intPageCount;
         }
@@ -70,20 +83,24 @@ import copy
     }
 
 
-    function showPrev(pageIndex) {
+    // 上一页
+    function showPrev() {
         //alert(pageIndex);
+        var pageIndex =jQuery("#pageno").val()
         var intPageIndex = parseInt(pageIndex);
         intPageIndex = intPageIndex - 1;
 
         if (intPageIndex < 1) {
             intPageIndex = 1;
         }
-
         var localPageIndex = String(intPageIndex);
         submitSearch(localPageIndex);
     }
 
-    function showNext(pageIndex, pageCount) {
+    //下一页
+    function showNext() {
+        var pageIndex =jQuery("#pageno").val()
+        var pageCount = jQuery("#pagecount").val();
         var intPageIndex = parseInt(pageIndex);
         var intPageCount = parseInt(pageCount);
         intPageIndex = intPageIndex + 1;
@@ -95,18 +112,14 @@ import copy
         submitSearch(localPageIndex);
     }
 
-    function submitSearch(pageno, pagesize) {
+    function submitSearch(pageno) {
+        pagesize = jQuery("#pagesize").val();
         startdate = jQuery("#idStartDT").val();
         enddate = jQuery("#idEndDT").val();
-
-        // calltype = document.getElementById("type").value;
-        calltype = jQuery("#type").val();
-
+        calltype = jQuery("#calltype").val();
         agentid = jQuery("#agentid").val();
         telno = jQuery("#telno").val();
-        //available = document.getElementById("status").value;
-        available = jQuery("#available").val();
-
+        available = jQuery("#status").val();
         totalmin = jQuery("#totalmin").val();
         totalmax = jQuery("#totalmax").val();
         channeldn = jQuery("#channeldn").val();
@@ -385,7 +398,8 @@ jQuery(document).ready(function (){
                 //alert(objPlayer.URL);
                 // }
 
-                var url = "http://localhost/Racorder/Kalimba.mp3"; //测试的录音的地址
+                var url = "http:/Racorder/Kalimba.mp3"; //测试的录音的地址
+
                 var objPlayer = document.all("MediaPlayerWav");
                 if (objPlayer != null) {
                     objPlayer.src = url;
@@ -398,6 +412,21 @@ jQuery(document).ready(function (){
             //pageSession = {"startdate":"","enddate":"","calltype":"","agentid":"","telno":"",
             //    "vailabl":"","totalmin":"","totalmax":"","channeldn":"","teldnis":"",
             //    "pageno":"","pagesize":"","available":""};
+
+
+
+          //  <input id="pageno" type="hidden" class="input-small"/>
+          //      <input id="pagesize" type="hidden" class="input-small"/>
+          //      <input id="pagecount" type="hidden" class="input-small"/>
+          //      <input id="rowcount" type="hidden" class="input-small"/>
+
+
+
+            jQuery("#pageno").val(${pageSession}['pageno']);
+             jQuery("#idPageIndex").val(${pageSession}['pageno']);
+            jQuery("#pagesize").val(${pageSession}['pagesize']);
+            jQuery("#pagecount").val(${pageSession}['pagecount']);
+            jQuery("#rowcount").val(${pageSession}['rowcount']);
 
             jQuery("#idStartDT").val(${pageSession}['startdate']);
             jQuery("#idEndDT").val(${pageSession}['enddate']);
@@ -574,6 +603,10 @@ jQuery(document).ready(function (){
                 StrJson= StrJson.substring(0,StrJson.length-1);
             }
             StrJson +="]"
+
+
+
+
             return StrJson;
         }
 
@@ -590,6 +623,24 @@ jQuery(document).ready(function (){
             var remark = $("#txtQuestionNote").val();
 
             var scrvals = _page.GetRacorderAnwser();
+
+
+            //pageSession
+            //pageSession.
+            //17
+
+
+            var datascrvals = scrvals.replace(/'/gm,"\"");
+            var data = $.parseJSON(datascrvals)
+            //获取问题的个数
+            var tRacorderQuestions_count = ${pageSession["tRacorderQuestions_count"]}
+
+            if(tRacorderQuestions_count != data.length)
+            {
+                return false;
+            }
+
+
             scrvals = scrvals.replace(/'/gm,"@");
 
             var RacorderSaveJson = "{'fileName':'"+fileName+"','";
@@ -608,6 +659,12 @@ jQuery(document).ready(function (){
         this.forConfirm = function()
         {
             var  strJson = _page.GetRacorderScoreJsonStr();
+            if(strJson == false)
+            {
+                alert("您还有打分信息未选中")
+                return;
+            }
+
             strJson =  strJson.replace("[","\"[");
             strJson =  strJson.replace("]","]\"");
 
@@ -633,7 +690,6 @@ jQuery(document).ready(function (){
                        success:function(data){
                            if(data!=null&&data!="None")
                            {
-
                                var localfileName =  data["fileNameNo"];
                                var tatal = data["total"];
 
@@ -751,12 +807,23 @@ jQuery(document).ready(function (){
                                     <table>
                                         <tr>
                                             <td>
-                                                <button id = "btnFastBackward" type="button" class="btn" onclick="showFastPrev()"><i class="icon-fast-backward"></i></button>
+
+                                              <!--  pageno = ""
+                                                pagesize = ""
+                                                -->
+
+                                                <input id="pageno" type="hidden" class="input-small"/>
+                                                <input id="pagesize" type="hidden" class="input-small"/>
+                                                <input id="pagecount" type="hidden" class="input-small"/>
+                                                <input id="rowcount" type="hidden" class="input-small"/>
+
+
+                                                <button id = "btnFastBackward" type="button" class="btn" onclick="showFastPrev(1)"><i class="icon-fast-backward"></i></button>
                                                 <button id = "btnBackward" type="button" class="btn" onclick="showPrev()"><i class="icon-backward"></i></button>
-                                                <button id = "btnForward" type="button" class="btn" onclick="showNext(2,23)"><i class="icon-forward"></i></button>
-                                                <button id = "btnFastForward" type="button" class="btn" onclick="showFastNext(2)"><i class="icon-fast-forward"></i></button>
+                                                <button id = "btnForward" type="button" class="btn" onclick="showNext()"><i class="icon-forward"></i></button>
+                                                <button id = "btnFastForward" type="button" class="btn" onclick="showFastNext()"><i class="icon-fast-forward"></i></button>
                                                 <input id="idPageIndex" type="text" class="input-small" placeholder="去往页"/>
-                                                <button id = "btnCurrent" type="button" class="btn" onclick="showCurrent(2,2)"><i class="icon-arrow-right"></i></button>
+                                                <button id = "btnCurrent" type="button" class="btn" onclick="showCurrent()"><i class="icon-arrow-right"></i></button>
                                             </td>
                                         </tr>
                                     </table>

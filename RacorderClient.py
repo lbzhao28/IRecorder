@@ -12,7 +12,7 @@ import  web
 
 # 根据条件查询录音
 def GetRaccemSearchUrl(instartdate, inenddate, incalltype, inagentid, intelno, inavailablein, totalmin, intotalmax,
-                       inchanneldn, inteldnis, inpageno, inpagesize):
+                       inchanneldn, inteldnis,inpageno, inpagesize):
     """get the order info from REST """
     try:
         logger = getLogger()
@@ -49,17 +49,19 @@ def GetRaccemSearchUrl(instartdate, inenddate, incalltype, inagentid, intelno, i
         if inteldnis is not None and inteldnis != '':
             localURL = localURL + '&teldnis=' + inteldnis
 
+
         if inpageno is not None and inpageno != '':
             localURL = localURL + '&pageno=' + inpageno
 
         if inpagesize is not None and inpagesize != '':
             localURL = localURL + '&pagesize=' + inpagesize
 
+
         print localURL;
         buf = cStringIO.StringIO() #define in function.
         c = pycurl.Curl()
         if localURL != '':
-            localURL = getConfig('RESTService', 'irecorderSearchListusr', 'str') + '?' + localURL
+            localURL = getConfig('RESTService', 'irecorderSearchList', 'str') + '?' + localURL
            # localURL = "http://127.0.0.1:8088/irecorderservice/irecorderlist?&pageno=1&pagesize=10"
             localURL = str(localURL)
             print localURL
@@ -89,6 +91,96 @@ def GetRaccemSearchUrl(instartdate, inenddate, incalltype, inagentid, intelno, i
             localRecorderSearchlist = None
 
         return localRecorderSearchlist
+    except pycurl.error, error:
+        logger.error("exception occur, see the traceback.log")
+
+        f = open('traceback.txt', 'a')
+        traceback.print_exc()
+        traceback.print_exc(file=f)
+        f.flush()
+        f.close()
+
+        errno, errstr = error
+        print 'An error occurred: ', errstr
+    else:
+        pass
+    finally:
+        pass
+
+
+#数据录音查询有多少条数据
+def GetRaccemSearchUrlcount(instartdate, inenddate, incalltype, inagentid, intelno, inavailablein, totalmin, intotalmax,
+                       inchanneldn, inteldnis):
+    """get the GetRaccemSearchUrlcount info from REST """
+    try:
+        logger = getLogger()
+        logger.debug("start GET RaccemSearch Info ")
+        localURL = ""
+
+        if instartdate is not None and instartdate != '':
+            localURL = localURL + '&startdate=' + instartdate
+
+        if inenddate is not None and inenddate != '':
+            localURL = localURL + '&enddate=' + inenddate
+
+        if  inagentid is not None and inagentid != '':
+            localURL = localURL + '&agentid=' + inagentid
+
+        if incalltype is not None and incalltype != '':
+            localURL += '&calltype=' + incalltype
+
+        if intelno is not None and intelno != '':
+            localURL += '&telno=' + intelno
+
+        if  inavailablein is not None and inavailablein != '':
+            localURL = localURL + '&available=' + inavailablein
+
+        if totalmin is not None and totalmin != '':
+            localURL = localURL + '&totalmin=' + totalmin
+
+        if intotalmax is not None and intotalmax != '':
+            localURL = localURL + '&intotalmax=' + intotalmax
+
+        if inchanneldn is not None and inchanneldn != '':
+            localURL = localURL + '&channeldn=' + inchanneldn
+
+        if inteldnis is not None and inteldnis != '':
+            localURL = localURL + '&teldnis=' + inteldnis
+
+        print localURL;
+        buf = cStringIO.StringIO() #define in function.
+        c = pycurl.Curl()
+        if localURL != '':
+            localURL = getConfig('RESTService', 'irecorderSearchListCount', 'str') + '?' + localURL
+            # localURL = "http://127.0.0.1:8088/irecorderservice/irecorderlist?&pageno=1&pagesize=10"
+            localURL = str(localURL)
+            print localURL
+            c.setopt(pycurl.URL, localURL)
+            c.setopt(c.WRITEFUNCTION, buf.write)
+            c.setopt(c.VERBOSE, True)
+            c.setopt(pycurl.USERPWD,
+                getConfig('allowedUser1', 'UserName', 'str') + ':' + getConfig('allowedUser1', 'Password', 'str'))
+            c.perform()
+
+            http_code = c.getinfo(pycurl.HTTP_CODE)
+            #judge get success.
+            if http_code != 200:
+                return None
+
+            #get the data from json.
+            if (len(buf.getvalue()) > 0):
+                s = buf.getvalue()
+                localRecorderSearchlistCount = json.loads(buf.getvalue())
+            else:
+                localRecorderSearchlistCount = None
+            buf.close()
+            c.close()
+            logger.debug("get GetRaccemSearchUrlcount success.")
+            print localURL
+        else:
+            localRecorderSearchlistCount = None
+
+        return localRecorderSearchlistCount
     except pycurl.error, error:
         logger.error("exception occur, see the traceback.log")
 
@@ -224,7 +316,7 @@ def GetRacorderQuestionByfilename(filename):
 def RacorderQuestionContact(storageData,retPost):
     try:
         logger = getLogger()
-        logger.debug("start POST Order Info according contact id.")
+        logger.debug("start POST RacorderQuestionContact Info according contact id.")
 
         jsonData = storageData;
 
@@ -275,7 +367,64 @@ def RacorderQuestionContact(storageData,retPost):
         pass
     finally:
         pass
-# 进行保存的动作
+
+def Login(username,password):
+    ret = False
+    try:
+        logger = getLogger()
+        logger.debug("start GET RacorderQuestion Info according fid id.")
+
+        if username is not None and username != '':
+            localURL = '&id=' + username
+
+        if password is not None and password != '':
+            localURL = localURL + '&pwd=' + password
+
+        buf = cStringIO.StringIO() #define in function.
+        c = pycurl.Curl()
+        localURL = getConfig('RESTService','irecorderloginUrl','str')+"?"+localURL
+        localURL = str(localURL)
+        print localURL
+        c.setopt(pycurl.URL,localURL)
+        c.setopt(c.WRITEFUNCTION,buf.write)
+        c.setopt(c.VERBOSE, True)
+        c.setopt(pycurl.USERPWD,getConfig('allowedUser1','UserName','str')+':'+getConfig('allowedUser1','Password','str'))
+        c.perform()
+
+        http_code = c.getinfo(pycurl.HTTP_CODE)
+        #judge get success.
+        if http_code != 200:
+            return False
+
+        #get the data from json.
+        if (len(buf.getvalue())>0):
+            s = buf.getvalue()
+            localRacorderQuestion = json.loads(buf.getvalue())
+        buf.close()
+        c.close()
+        logger.debug("get GetRacorderQuestionUrl success.")
+        #we need change the data structure, so the html show simple.
+        if localRacorderQuestion is not None:
+        #localRacorderQuestion = flatOrderInfoOrder(localRacorderQuestion)
+            ret = localRacorderQuestion["message"]
+    except pycurl.error, error:
+        logger.error("exception occur, see the traceback.log")
+
+        #异常写入日志文件.
+        f = open('traceback.txt','a')
+        traceback.print_exc()
+        traceback.print_exc(file = f)
+        f.flush()
+        f.close()
+
+        ret = False;
+        print 'An error occurred: ', "login"
+    else:
+        return ret
+    finally:
+        return ret;
+
+#录音质检进行保存的动作
 class RacorderSave:
     def POST(self,retPost):
 

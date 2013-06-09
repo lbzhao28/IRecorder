@@ -15,13 +15,19 @@
 </head>
 <script style="text/javascript">
     function Login() {
-        name = document.getElementById("username").value
-        pwd = document.getElementById("password").value
-        actionUrl = "http://localhost:8080/Login"
-        session =
-                alert(actionUrl)
-        window.location.href = actionUrl;
-    }
+       name = document.getElementById("username").value
+       pwd = document.getElementById("password").value
+       if(name == "" || pwd=="")
+       {
+           alert("用户名或密码不能为空")
+           return;
+       }
+       else
+       {
+
+       }
+   }
+
 </script>
 <body>
 <header role="banner" class="oTransitionalHeader">
@@ -31,7 +37,6 @@
 </header>
 <div id="main" role="main" class="oPageCentered oContentContainer">
     <div class="oPageCentered oFormContainer"><h1>Welcome to Reccem!</h1>
-
         <form action="/login" name="login" id="login" class="oForm-login" autocomplete="on" method="post">
             <input type="text" name="username" id="username" value="" maxlength="16"
                    class="oFormJumbo oInputText easyui-validatebox"
@@ -40,11 +45,10 @@
                    class="oFormJumbo oInputText easyui-validatebox" placeholder="密码" required="true"/>
             <footer class="oFormFooter cols">
                 <div class="col col1of3">
-                    <input type="submit" name="submit" id="submit" value="登入" class="oBtn oBtnPrimary"
-                           onclick="Login()"/>
+                    <input type="submit" name="submit" id="submit" value="登入" onclick="Login()" class="oBtn oBtnPrimary"/>
                 </div>
-
             </footer>
+            <div id="msg">${msg}</div>
             <input type="hidden" name="ioBB" id="ioBB"></form>
         </a></div>
     </form>

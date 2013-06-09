@@ -69,6 +69,7 @@ class RecSelect:
                         configPage = getRecorderConfigPage(tRacorderQuestion)    # 创建问卷页面控件 configPage
                         web.ctx.session.session_tRecorderConfigPage = configPage; # session 缓存起来
 
+
             startdate = "";
             enddate = "";
             calltype = "";
@@ -83,11 +84,14 @@ class RecSelect:
             pagesize = ""
             available = ""
 
-
+            tRacorderQuestions_count = 0
+            #取得session 变量，读取题目是江count 保存起来的
+            if "tRacorderQuestions_count" in  web.ctx.session:
+                 tRacorderQuestions_count = web.ctx.session.tRacorderQuestions_count;
             #pageSession 是否需要将用Session缓存起来
             pageSession = {"startdate":"","enddate":"","calltype":"","agentid":"","telno":"",
                            "vailabl":"","totalmin":"","totalmax":"","channeldn":"","teldnis":"",
-                           "pageno":"","pagesize":"","available":""};
+                           "pageno":"1","pagesize":"10","available":"","pagecount":"0","rowcount":"0","tRacorderQuestions_count":tRacorderQuestions_count};
 
             if "startdate" in webs:
                 startdate = webs['startdate']
@@ -131,29 +135,39 @@ class RecSelect:
             if "pagesize" in webs:
                 pagesize = webs['pagesize']
                 pageSession["pagesize"] =str(pagesize)
+            else:
+                pageSession["pagesize"] = 10;
 
             if "pageno" in webs:
                 pageno = webs['pageno']
                 pageSession["pageno"] =str(pageno)
+            else:
+                pageSession["pageno"] = 1;
 
 
-            print pageSession
-            SearchList = RacorderClient.GetRaccemSearchUrl(startdate, enddate, calltype, agentid, telno, available, totalmin, totalmax, channeldn, teldnis, pageno, pagesize)
-            localdic = [];
-            if SearchList is not None and "message" in SearchList and len(SearchList["message"])>0:
-                localdics = SearchList["message"]
-                for item in localdics:
-                    item["fileNameNo"] = str(item["fileName"]).replace(".","").replace("_","")
-                    localdic.append(item);
+             # 根据条件返回数据的条数
+            localdic = [];      # 录音的list 集合
+            SearchListMessage = RacorderClient.GetRaccemSearchUrlcount(startdate, enddate, calltype, agentid, telno, available, totalmin, totalmax, channeldn, teldnis)
 
-                    # from configData import getConfig
-                    # localURL = getConfig('SERVERINFO','serverIP','str')
+            if SearchListMessage is not None and "message" in SearchListMessage and len(SearchListMessage["message"])>0:
+                SearchListMessageCount = int(SearchListMessage["message"]);
+                varPagesize = int(pageSession["pagesize"]);
+                pagecount = 0;
+                pagecount  = int(SearchListMessageCount/varPagesize)
+                if(SearchListMessageCount%varPagesize > 0):
+                    pagecount = pagecount +1;
+                pageSession["pagecount"] = pagecount;
+                pageSession["rowcount"] =int(SearchListMessageCount)
 
+                SearchList = RacorderClient.GetRaccemSearchUrl(startdate, enddate, calltype, agentid, telno, available, totalmin, totalmax, channeldn, teldnis, pageno, pagesize)
+                if SearchList is not None and "message" in SearchList and len(SearchList["message"])>0:
+                    localdics = SearchList["message"]
+                    for item in localdics:
+                        item["fileNameNo"] = str(item["fileName"]).replace(".","").replace("_","")
+                        localdic.append(item);
             return render.RecSearch(outdic=localdic,outfilename=filename,configPage=configPage,QuestionNote=QuestionNote,
                                     flag=flag, isbofang=isbofang,pageSession=pageSession);
-
         except:
-
             logger.error("exception occur, see the traceback.log")
             #异常写入日志文件.
             f = open('traceback.txt', 'a')
@@ -161,7 +175,6 @@ class RecSelect:
             traceback.print_exc(file=f)
             f.flush()
             f.close()
-
         finally:
             pass
 

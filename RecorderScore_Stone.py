@@ -1,6 +1,5 @@
 __author__ = 'stone'
 #encoding:utf-8
-#File:RecorderScore.py
 import web
 from web.contrib.template import render_mako
 
@@ -10,6 +9,7 @@ import configData
 from configData import getConfig
 from logHelper import getLogger
 import RacorderClient
+import Login
 
 
 
@@ -29,7 +29,7 @@ web.config.debug = False
 urls = (
         '/rqscoscr/(.*)','rqscoscr',
         '/Saverqscoscr/(.*)','RacorderClient.RacorderSave',
-        '/login', 'login.Login',
+        '/login', 'Login.Login',
         '/RecSearch/(.*)', 'RecSearch.RecSelect',
     )
 
