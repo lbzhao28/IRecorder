@@ -70,9 +70,9 @@
                     %elif item["controlType"] == 'input':
                         %if item["controlShowType"] == 'text':
                             %if "placeholder" in item:
-                                <${item["controlType"]} name=${item["controlName"]} id=${item["controlID"]} type = ${item["controlShowType"]} class="${item["controlCss"]}" value="${realDataValue}" placeholder="${item["placeholder"]}"/>
+                                <${item["controlType"]} name=${item["controlName"]} id=${item["controlID"]} type = ${item["controlShowType"]} class="${item["controlCss"]}" value="${realDataValue}" placeholder="${item["placeholder"]}" style="height:25px"/>
                             %else:
-                                <${item["controlType"]} name=${item["controlName"]} id=${item["controlID"]} readonly=true type = ${item["controlShowType"]} class="${item["controlCss"]}" value="${realDataValue}"/>
+                                <${item["controlType"]} name=${item["controlName"]} id=${item["controlID"]} readonly=true type = ${item["controlShowType"]} class="${item["controlCss"]}" value="${realDataValue}"  style="height:25px"/>
                             %endif
                         %elif item["controlShowType"] == 'textDate':
                             <${item["controlType"]} name=${item["controlName"]} id=${item["controlID"]} type = ${item["dataRealShowType"]} class="${item["controlCss"]}" value="${realDataValue}" onclick="${item["onClick"]}"/>

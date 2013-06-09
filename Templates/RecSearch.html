@@ -54,7 +54,7 @@ import copy
            var agentid = jQuery("#agentid").val();
            var totalmin = jQuery("#totalmin").val();
            var totalmax = jQuery("#totalmax").val();
-            var rater = "sa";
+            var rater = jQuery("#rater").val();
 
             $.ajax({
                 url:"/ReportExport/?&startdate="+startdate+"&enddate="+enddate+"&agentid="+agentid+"&totalmin="+totalmin+"&totalmax="+totalmax+"&rater="+rater,
@@ -65,7 +65,11 @@ import copy
                 success:function(data){
                     if(data!=null&&data!="None")
                     {
-                        alert("导出成功")
+                        var localfileName =  data["filename"];
+                        var url = "http://${localURL}/report/"+localfileName;
+                        alert(url);
+
+                        //alert("导出成功")
                     }
                     else
                     {
@@ -158,18 +162,20 @@ import copy
         totalmax = jQuery("#totalmax").val();
         channeldn = jQuery("#channeldn").val();
         teldnis = jQuery("#teldnis").val();
-        if ((startdate == '') & (enddate == '') & (calltype == '') & (agentid == '') & (telno == '') & (available == '') & (totalmin == '') & (totalmax == '') & (channeldn == '') & (teldnis == '')) {
+        spendmin = jQuery("#spendmin").val();
+        spendmax = jQuery("#spendmax").val();
+        if ((startdate == '') & (enddate == '') & (calltype == '') & (agentid == '') & (telno == '') & (available == '') & (totalmin == '') & (totalmax == '') & (channeldn == '') & (teldnis == '') & (spendmin == '') & (spendmax == '')) {
             alert("请至少选择一个条件");
             return
         }
-        SearchRecorder(startdate, enddate, calltype, agentid, telno, available, totalmin, totalmax, channeldn, teldnis, pageno, pagesize);
+        SearchRecorder(startdate, enddate, calltype, agentid, telno, available, totalmin, totalmax, channeldn, teldnis, pageno, pagesize,spendmin,spendmax);
         //SearchRecorder(startdate,enddate,agentid,pageIndex);
     }
-    function SearchRecorder(instartdate, inenddate, incalltype, inagentid, intelno, inavailable, intotalmin, intotalmax, inchanneldn, inteldnis, inpageno, inpagesize) {
+    function SearchRecorder(instartdate, inenddate, incalltype, inagentid, intelno, inavailable, intotalmin, intotalmax, inchanneldn, inteldnis, inpageno, inpagesize,spendmin,spendmax) {
         //actionUrl ="http://localhost:8080/RecSearch/Search?startdate="+instartdate+'&enddate='+enddate+'&agentid='+inagentid+"&PAGEINDEX="+inpageindex;
         actionUrl = "http://${localURL}/RecSearch/Search?startdate=" + instartdate + '&enddate=' + enddate + "&calltype=" + incalltype +
                 "&agentid=" + inagentid + "&telno=" + intelno + "&available=" + inavailable + "&totalmin=" + intotalmin + "&totalmax=" + intotalmax +
-                "&channeldn=" + inchanneldn + "&teldnis=" + inteldnis + "&pageno=" + inpageno + '&pagesize=' + inpagesize;
+                "&channeldn=" + inchanneldn + "&teldnis=" + inteldnis + "&pageno=" + inpageno + '&pagesize=' + inpagesize+ "&spendmin=" + spendmin + '&spendmax=' + spendmax;
         window.location.href = actionUrl;
     }
 
@@ -411,6 +417,9 @@ jQuery(document).ready(function (){
 
             status.val(statusdata);
             calltype.val(calltypedata);
+
+           jQuery("#spendmin").val(${pageSession}['spendmin']);
+           jQuery("#spendmax").val(${pageSession}['spendmax']);
 
         }
 
@@ -708,6 +717,13 @@ jQuery(document).ready(function (){
                                         <td>被叫：
                                             <input name="teldnis" type="text" id="teldnis" style="width:140px" /></td>
                                     </tr>
+                                    <tr><td align="left">通话时长:</td>
+                                        <td><input name="spendmin" id="spendmin" type="text" style="width:55px"/>
+                                            至
+                                            <input name="spendmax" type="text" id="spendmax" style="width:55px"/></td>
+
+                                        <td clospan='2'>评分人：<input name="rater" type="text" placeholder="条件为导出专用" id="rater" style="width:128px;height:25px"/></td></td>
+                                    </tr>
                                 </table>
                                 <div align="top" id="formOrderList" style="height:350px; overflow-y:scroll">
                                     <table  width="100%"  id="tbReccorder" class="label label-normal">
@@ -791,9 +807,10 @@ components..."
                             </td>
                             </td>
                         </tr>
+
                     </table>
                 </td>
-                <td align="left" width="45%">
+                <td align="left" width="45%" valign="top">
                     <table >
 
                         <tr>
@@ -807,12 +824,11 @@ components..."
                                 开场白得分:<span id="labscoreKcb">0</span>
 
                             </td>
-                            <td align="left" >
-                                提问得分:<span id="labscoreTw">0</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                沟通技巧得分：<span id="labscoreGTJQ">0</span>
-
+                            <td align="center" >
+                               &nbsp;&nbsp;提问得分:<span id="labscoreTw">0</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                沟通技巧得分：&nbsp;&nbsp;<span id="labscoreGTJQ">0</span>
                             </td >
-                            <td  align="left" >结束得分:<span id="labscoreJS">0</span></td>
+                            <td  align="center" >结束得分:<span id="labscoreJS">0</span></td>
                         </tr>
                     </table>
 

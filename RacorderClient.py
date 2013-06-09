@@ -12,7 +12,7 @@ import  web
 
 # 根据条件查询录音
 def GetRaccemSearchUrl(instartdate, inenddate, incalltype, inagentid, intelno, inavailablein, totalmin, intotalmax,
-                       inchanneldn, inteldnis,inpageno, inpagesize):
+                       inchanneldn, inteldnis,inpageno, inpagesize,spendmin,spendmax):
     """get the order info from REST """
     try:
         logger = getLogger()
@@ -57,6 +57,11 @@ def GetRaccemSearchUrl(instartdate, inenddate, incalltype, inagentid, intelno, i
             localURL = localURL + '&pagesize=' + inpagesize
 
 
+        if spendmin is not None and spendmin != '':
+            localURL = localURL + '&spendmin=' + spendmin
+
+        if spendmax is not None and spendmax != '':
+            localURL = localURL + '&spendmax=' + spendmax
         print localURL;
         buf = cStringIO.StringIO() #define in function.
         c = pycurl.Curl()
@@ -110,7 +115,7 @@ def GetRaccemSearchUrl(instartdate, inenddate, incalltype, inagentid, intelno, i
 
 #数据录音查询有多少条数据
 def GetRaccemSearchUrlcount(instartdate, inenddate, incalltype, inagentid, intelno, inavailablein, totalmin, intotalmax,
-                       inchanneldn, inteldnis):
+                       inchanneldn, inteldnis,spendmin,spendmax):
     """get the GetRaccemSearchUrlcount info from REST """
     try:
         logger = getLogger()
@@ -140,6 +145,12 @@ def GetRaccemSearchUrlcount(instartdate, inenddate, incalltype, inagentid, intel
 
         if intotalmax is not None and intotalmax != '':
             localURL = localURL + '&intotalmax=' + intotalmax
+
+        if spendmin is not None and spendmin != '':
+            localURL = localURL + '&spendmin=' + spendmin
+
+        if spendmax is not None and spendmax != '':
+            localURL = localURL + '&spendmax=' + spendmax
 
         if inchanneldn is not None and inchanneldn != '':
             localURL = localURL + '&channeldn=' + inchanneldn
@@ -502,13 +513,16 @@ class ReportExport:
             if http_code != 200:
                 return None
 
-            logger.debug(buf.getvalue())
-            retStr = buf.getvalue()
+            retStr = json.loads(buf.getvalue())
+            #retStrData = eval(retStr);
 
             buf.close()
             c.close()
 
             logger.debug("RacorderQuestionContact success.")
+            retStr = json.dumps(retStr)
+
+            web.header('Content-Type', 'application/json')
             return retStr
 
         except pycurl.error, error:

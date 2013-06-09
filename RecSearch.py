@@ -92,6 +92,8 @@ class RecSelect:
             pageno = ""
             pagesize = ""
             available = ""
+            spendmin = ""
+            spendmax = ""
 
             tRacorderQuestions_count = 0
             #取得session 变量，读取题目是江count 保存起来的
@@ -155,10 +157,19 @@ class RecSelect:
                 pageSession["pageno"] = 1;
 
 
+            if "spendmin" in webs:
+                spendmin = webs['spendmin']
+                pageSession["spendmin"] = str(spendmin)
+
+            if "spendmax" in webs:
+                spendmax = webs['spendmax']
+                pageSession["spendmax"] = str(spendmax)
+
+
                 # 根据条件返回数据的条数
             localdic = [];      # 录音的list 集合
             SearchListMessage = RacorderClient.GetRaccemSearchUrlcount(startdate, enddate, calltype, agentid, telno,
-                available, totalmin, totalmax, channeldn, teldnis)
+                available, totalmin, totalmax, channeldn, teldnis,spendmin,spendmax)
 
             if SearchListMessage is not None and "message" in SearchListMessage and len(SearchListMessage["message"]) > 0:
                 SearchListMessageCount = int(SearchListMessage["message"]);
@@ -171,7 +182,7 @@ class RecSelect:
                 pageSession["rowcount"] = int(SearchListMessageCount)
 
                 SearchList = RacorderClient.GetRaccemSearchUrl(startdate, enddate, calltype, agentid, telno, available,
-                    totalmin, totalmax, channeldn, teldnis, pageno, pagesize)
+                    totalmin, totalmax, channeldn, teldnis, pageno, pagesize,spendmin,spendmax)
                 if SearchList is not None and "message" in SearchList and len(SearchList["message"]) > 0:
                     localdics = SearchList["message"]
                     print localdics
