@@ -233,7 +233,8 @@ class iRecorderReport:
         finally:
             if workbook is not None:
                 filename = time.strftime('%Y-%m-%d-%H-%M-%S',time.localtime(time.time()))+".xls"
-                workbook.save("./report/"+filename)
+                #workbook.save("./report/"+filename)
+                workbook.save("./static/"+filename)
             if conn is not None:
                 conn.close()
             return {'result':result,'filename':filename}

@@ -29,6 +29,8 @@ from configObjData import getRecorderConfigPage
 import configData
 from configData import getConfig
 localURL = getConfig('SERVERINFO','serverIP','str')
+localServerURL = getConfig('SERVERINFO','serverIPServer','str')
+
 import sys
 reload(sys)
 #convert the show code.
@@ -66,10 +68,8 @@ import copy
                     if(data!=null&&data!="None")
                     {
                         var localfileName =  data["filename"];
-                        var url = "http://${localURL}/report/"+localfileName;
-                        alert(url);
-
-                        //alert("导出成功")
+                        var url = "http://${localServerURL}/static/"+localfileName;
+                        window.open(url);
                     }
                     else
                     {
@@ -169,7 +169,6 @@ import copy
             return
         }
         SearchRecorder(startdate, enddate, calltype, agentid, telno, available, totalmin, totalmax, channeldn, teldnis, pageno, pagesize,spendmin,spendmax);
-        //SearchRecorder(startdate,enddate,agentid,pageIndex);
     }
     function SearchRecorder(instartdate, inenddate, incalltype, inagentid, intelno, inavailable, intotalmin, intotalmax, inchanneldn, inteldnis, inpageno, inpagesize,spendmin,spendmax) {
         //actionUrl ="http://localhost:8080/RecSearch/Search?startdate="+instartdate+'&enddate='+enddate+'&agentid='+inagentid+"&PAGEINDEX="+inpageindex;
@@ -182,25 +181,6 @@ import copy
 
     // 现在每次点击播放的时候重新刷一次页面， ToDo: 采用异步刷新的方式
     function showBoFang(filePath,filename) {
-        //需要刷新页面 其实点击播放按钮的时候，不会立即播放，会重新刷一次页面， 在页面加载事件里面播放 init 事件播放
-        //var url = "http://"+hostName+"/Racorder/"+filename+"";  //每次点击后的url 需要重新指定
-        //var url = "http://localhost/Racorder/Kalimba.mp3"; //测试的录音的地址
-        //var objPlayer = document.all("MediaPlayerWav");
-        //if (objPlayer != null) {
-        //     objPlayer.URL = url;
-        //    alert(objPlayer.URL);
-        // }
-        //function StrSub()
-
-        // var url = "http://localhost/Racorder/Kalimba.mp3"; //测试的录音的地址
-        // var objPlayer = document.all("MediaPlayerWav");
-        // if (objPlayer != null) {
-        //     objPlayer.URL = url;
-        //     alert(objPlayer.URL);
-        //  }
-
-        alert(filePath);
-
         $("#labrecfilename").text(filename);
         //点击后需要重新绑定问卷的信息
 
@@ -208,9 +188,6 @@ import copy
         $("#labrecfilename").text(filename);
 
         var isbofang= "Y"
-        //var localurl = window.location.href;
-        //localurl = localurl +"&filename="+filename+"&isbofang="+isbofang;
-
         startdate = jQuery("#idStartDT").val();
         enddate = jQuery("#idEndDT").val();
         calltype = document.getElementById("calltype").value;
@@ -387,7 +364,6 @@ jQuery(document).ready(function (){
                 var objPlayer = document.all("MediaPlayerWav");
                 if (objPlayer != null) {
                     objPlayer.src = url;
-                    alert(objPlayer.src);
                 }
             }
             jQuery("#pageno").val(${pageSession}['pageno']);
