@@ -27,7 +27,7 @@ class iRecorderQuestionModuleObj:
                      ",[HASREMARK]"\
                      " FROM [TRQ_SCRIPT]"\
                      " WHERE [TRQ_SCRIPT].[FID] = %s" \
-                     " ORDER BY [ITEMDESC]"
+                     " ORDER BY [ITEMID]"
             cur.execute(sqlstr,fid)
             logger.info("sql:"+str(sqlstr)+"\n fid:"+str(fid))
             result = []
