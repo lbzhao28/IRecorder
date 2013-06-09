@@ -60,11 +60,21 @@ class iRecorderListLogicObj:
         args: iRecorderDic,dict 查询数据库后获得的单条数据的dict
         return: JSON,dict 对应资源说明文档之JSON格式的dict
         """
+        if isinstance(iRecorderDic['STARTTIME'], basestring) or iRecorderDic['STARTTIME'] is None:
+            startTime = iRecorderDic['STARTTIME']
+        else:
+            startTime =iRecorderDic['STARTTIME'].strftime('%Y-%m-%d %H:%M:%S')
+
+        if isinstance(iRecorderDic['ENDTIME'], basestring) or iRecorderDic['ENDTIME'] is None:
+            endTime = iRecorderDic['ENDTIME']
+        else:
+            endTime =iRecorderDic['ENDTIME'].strftime('%Y-%m-%d %H:%M:%S')
+
         return {
             'hostName':iRecorderDic['HOSTNAME'],
             'fileName':iRecorderDic['FILENAME'],
             'channelNO':iRecorderDic['CHANNELNO'],
-            'startTime':iRecorderDic['STARTTIME'].strftime('%Y-%m-%d %H:%M:%S'),
+            'startTime':startTime,
             'spendTime':iRecorderDic['SPENDTIME'],
             'available':iRecorderDic['AVAILABLE'],
             'agentID':iRecorderDic['AGENTID'],
@@ -74,6 +84,6 @@ class iRecorderListLogicObj:
             'channelDN':iRecorderDic['CHANNELDN'],
             'telDNIS':iRecorderDic['TELDNIS'],
             'callID':iRecorderDic['CALLID'],
-            'endTime':iRecorderDic['ENDTIME'].strftime('%Y-%m-%d %H:%M:%S'),
+            'endTime':endTime,
             'total':str(iRecorderDic['TOTAL'])
         }

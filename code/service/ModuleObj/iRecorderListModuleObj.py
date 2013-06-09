@@ -61,7 +61,8 @@ class iRecorderListModuleObj:
         else:
            pass
         finally:
-            conn.close()
+            if conn is not None:
+                conn.close()
 
     def getiRecorderListByParams(self,params):
         """
@@ -148,4 +149,5 @@ class iRecorderListModuleObj:
         else:
             pass
         finally:
-            conn.close()
+            if conn is not None:
+                conn.close()

@@ -59,7 +59,8 @@ class iRecorderScoreModuleObj:
         else:
             pass
         finally:
-            conn.close()
+            if conn is not None:
+                conn.close()
 
     def postiRecorderScoreByJson(self,scoreDic):
         try:
@@ -142,7 +143,8 @@ class iRecorderScoreModuleObj:
         else:
             pass
         finally:
-            conn.close()
+            if conn is not None:
+                conn.close()
 
     def putiRecorderScoreByJson(self,scoreDic):
         try:
@@ -191,4 +193,5 @@ class iRecorderScoreModuleObj:
         else:
             pass
         finally:
-            conn.close()
+            if conn is not None:
+                conn.close()

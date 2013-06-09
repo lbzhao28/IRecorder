@@ -11,14 +11,19 @@ from LogicObj.iRecorderListLogicObj import iRecorderListLogicObj
 from LogicObj.iRecorderScoreLogicObj import iRecorderScoreLogicObj
 from LogicObj.iRecorderQuestionLogicObj import iRecorderQuestionLogicObj
 from ModuleObj.dbConnection import msSqlConnect
-
+from ModuleObj.iRecorderReport import iRecorderReport
 
 mimerender = mimerender.WebPyMimeRender()
 
 render_xml = lambda message,error: '<message>%s</message><error>%s</error>'%(message,error)
 render_json = lambda **args: json.dumps(args)
 render_html = lambda message,error: '<html><body>Message:%s<br />Error:%s</body></html>'%(message,error)
-render_txt = lambda message,error: message+error
+render_txt = lambda message,error: message+';'+error+';'
+
+render_xml_report = lambda message,error,filename: '<message>%s</message><error>%s</error><filename>%s</filename>'%(message,error,filename)
+render_json_report = lambda **args: json.dumps(args)
+render_html_report = lambda message,error,filename: '<html><body>Message:%s<br />Error:%s<br />Filename:%s</body></html>'%(message,error,filename)
+render_txt_report = lambda message,error,filename: message+';'+error+';'+filename+';'
 
 urls = (
     "/irecorderservice/irecorderlist","iRecorderList",
@@ -221,6 +226,10 @@ class iRecorderQuestion:
             f.close()
 
 class iRecorderListCount:
+    """
+    录音打分系统-录音列表计数
+    author:J.Wong
+    """
     @mimerender(
         default = 'json',
         html = render_html,
@@ -286,11 +295,13 @@ class iRecorderListCount:
             f.flush()
             f.close()
         finally:
-            conn.close()
+            if conn is not None:
+                conn.close()
 
 class login:
     """
     录音打分系统-登录
+    author:J.Wong
     """
     @mimerender(
         default = 'json',
@@ -342,18 +353,20 @@ class login:
             f.flush()
             f.close()
         finally:
-            conn.close()
+            if conn is not None:
+                conn.close()
 
 class report:
     """
     录音打分系统-报表
+    author: J.Wong
     """
     @mimerender(
         default = 'json',
-        html = render_html,
-        xml  = render_xml,
-        json = render_json,
-        txt  = render_txt
+        html = render_html_report,
+        xml  = render_xml_report,
+        json = render_json_report,
+        txt  = render_txt_report
     )
     def GET(self):
         """
@@ -364,6 +377,16 @@ class report:
         try:
             logger = getLogger()
             logger.debug("start report GET response")
+
+            #获取queryString
+            params  = web.input()
+
+            iRecorderReportObj = iRecorderReport()
+            iReportReturn = iRecorderReportObj.exportReport(params)
+            if isinstance(iReportReturn['result'], basestring):
+                return {'message':None,'error':iReportReturn['result'],'filename':str(iReportReturn['filename'])}
+            else:
+                return{'message':iReportReturn['result'],'error':'','filename':str(iReportReturn['filename'])}
         except:
             logger.error("report GET exception, see the traceback.log")
             #异常写入日志文件.

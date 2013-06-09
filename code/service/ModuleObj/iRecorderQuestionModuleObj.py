@@ -48,7 +48,8 @@ class iRecorderQuestionModuleObj:
         else:
             pass
         finally:
-            conn.close()
+            if conn is not None:
+                conn.close()
 
     def getQuestionCount(self,itemID):
         """
@@ -85,4 +86,5 @@ class iRecorderQuestionModuleObj:
         else:
             pass
         finally:
-            conn.close()
+            if conn is not None:
+                conn.close()

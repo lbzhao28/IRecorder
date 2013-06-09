@@ -98,6 +98,8 @@ class iRecorderReport:
                      " WHERE 1=1"
             if "startdate" in params.keys() and params["startdate"] is not None:
                 sqlstr += " AND [T_RECORDER].[STARTTIME] >= '"+params["startdate"]+"'"
+            if "enddate" in params.keys() and params["enddate"] is not None:
+                sqlstr += " AND [T_RECORDER].[STARTTIME] <= '"+params["enddate"]+"'"
             if "agentid" in params.keys() and params["agentid"] is not None:
                 sqlstr += " AND [T_RECORDER].[AGENTID] = '"+params["agentid"]+"'"
             if "totalmin" in params.keys() and params["totalmin"] is not None:
@@ -202,8 +204,7 @@ class iRecorderReport:
                 i += 1
 
             for j in range(0,40):
-                sheet1.col(j).width = 5000
-            return result
+                sheet1.col(j).width = 7000
         except Exception,ex:
             logger.error("exception occur, see the traceback.log")
             logger.error("sql:"+str(sqlstr))
@@ -213,12 +214,16 @@ class iRecorderReport:
             traceback.print_exc(file = f)
             f.flush()
             f.close()
-            return ex.message
+            result = ex.message
         else:
             pass
         finally:
-            workbook.save(time.strftime('%Y-%m-%d-%H-%M-%S',time.localtime(time.time()))+".xls")
-            conn.close()
+            if workbook is not None:
+                filename = time.strftime('%Y-%m-%d-%H-%M-%S',time.localtime(time.time()))+".xls"
+                workbook.save(filename)
+            if conn is not None:
+                conn.close()
+            return {'result':result,'filename':filename}
 
 if __name__ == "__main__":
     iRecorderReport().exportReport(dict())
