@@ -71,6 +71,7 @@ class iRecorderListLogicObj:
             endTime =iRecorderDic['ENDTIME'].strftime('%Y-%m-%d %H:%M:%S')
 
         return {
+            #iRecorderDic['ENDTIME'].strftime('%Y-%m-%d %H:%M:%S')
             'hostName':iRecorderDic['HOSTNAME'],
             'fileName':iRecorderDic['FILENAME'],
             'channelNO':iRecorderDic['CHANNELNO'],
