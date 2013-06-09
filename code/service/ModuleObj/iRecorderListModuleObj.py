@@ -128,7 +128,9 @@ class iRecorderListModuleObj:
             if "teldnis" in params.keys() and params["teldnis"] is not None:
                 sqlstr += " AND [T_RECORDER].[TELDNIS] = '"+params["teldnis"]+"'"
             if "spendmin" in params.keys() and params["spendmin"] is not None:
-                sqlstr == " AND [T_RECORDER].[SPENDTIME] >= '"+params["spendmin"]+"'"
+                sqlstr += " AND [T_RECORDER].[SPENDTIME] >= '"+params["spendmin"]+"'"
+            if "spendmax" in params.keys() and params["spendmax"] is not None:
+                sqlstr += " AND [T_RECORDER].[SPENDTIME] <= '"+params["spendmax"]+"'"
             sqlstr += ")t"\
                       " WHERE ROWNUMBER BETWEEN "+str(startIndex)+\
                       " AND "+str(endIndex)
