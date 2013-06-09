@@ -330,13 +330,12 @@ jQuery(document).ready(function (){
 
                                   }
         );
-        tatalScore = tatalScore.mul(0.5)
-        objctscorenum.text(tatalScore);
-        labscoreJj.text(tatalscoreJj);
-        labscoreKcb.text( tatalscoreKcb);
-        labscoreTw.text( tatalscoreTw);
-        labscoreGTJQ.text( tatalscoreGTJQ);
-        labscoreJS.text( tatalscoreJS);
+        objctscorenum.text(tatalScore.mul(0.5));
+        labscoreJj.text(tatalscoreJj.mul(0.5));
+        labscoreKcb.text( tatalscoreKcb.mul(0.5));
+        labscoreTw.text( tatalscoreTw.mul(0.5));
+        labscoreGTJQ.text( tatalscoreGTJQ.mul(0.5));
+        labscoreJS.text( tatalscoreJS.mul(0.5));
 
     }
 
@@ -455,13 +454,13 @@ jQuery(document).ready(function (){
                                           }
                                       }
             );
-            tatalScore = tatalScore.mul(0.5)    // 总分数需要重新计算 乘以 0.5
-            objctscorenum.text(tatalScore);
-            labscoreJj.text(tatalscoreJj);
-            labscoreKcb.text( tatalscoreKcb);
-            labscoreTw.text( tatalscoreTw);
-            labscoreGTJQ.text( tatalscoreGTJQ);
-            labscoreJS.text( tatalscoreJS);
+            //tatalScore = tatalScore.mul(0.5)    // 总分数需要重新计算 乘以 0.5
+            objctscorenum.text(tatalScore.mul(0.5));
+            labscoreJj.text(tatalscoreJj.mul(0.5));
+            labscoreKcb.text( tatalscoreKcb.mul(0.5));
+            labscoreTw.text( tatalscoreTw.mul(0.5));
+            labscoreGTJQ.text( tatalscoreGTJQ.mul(0.5));
+            labscoreJS.text( tatalscoreJS.mul(0.5));
 
         }
 

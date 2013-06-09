@@ -41,7 +41,7 @@ def GetRaccemSearchUrl(instartdate, inenddate, incalltype, inagentid, intelno, i
             localURL = localURL + '&totalmin=' + totalmin
 
         if intotalmax is not None and intotalmax != '':
-            localURL = localURL + '&intotalmax=' + intotalmax
+            localURL = localURL + '&totalmax=' + intotalmax
 
         if inchanneldn is not None and inchanneldn != '':
             localURL = localURL + '&channeldn=' + inchanneldn
